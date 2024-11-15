@@ -11,15 +11,15 @@
 ## Application
 ## Build
 
-	docker build -t bank-backend .
+	docker build -t pi-bank-backend .
  
 ## PULL
 
-	docker pull ghcr.io/tivmof/bank-backend:latest
+	docker pull ghcr.io/tivmof/pi-bank-backend:latest
 
 ## Run
 
-	docker run --name online_bank -d -p 8080:8080 ghcr.io/tivmof/bank-backend:latest
+	docker run --name online_bank -d -p 8080:8080 ghcr.io/tivmof/pi-bank-backend:latest
  
 ## Clean
 
