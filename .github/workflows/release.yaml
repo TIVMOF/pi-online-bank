@@ -52,7 +52,7 @@ jobs:
       - name: "Configure Git"
         run: |
           git fetch
-          git checkout master  # Checkout the branch you want to release from
+          git checkout main  # Checkout the branch you want to release from
           git config user.name "$GITHUB_ACTOR"
           git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
 
