@@ -50,14 +50,14 @@ jobs:
 
       - name: Initialize Buildx
         run: |
-          docker buildx create --name codbex-builder || true
-          docker buildx use codbex-builder
+          docker buildx create --name builder || true
+          docker buildx use builder
 
       - name: Build and Push Docker Image
         run: |
           echo ${{ secrets.DOCKER_PASSWORD }} | docker login ghcr.io -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
-          docker buildx build --tag online_bank -o type=image --platform=linux/arm64,linux/amd64 .
-          docker buildx build --push --tag ghcr.io/tivmof/online_bank:${{ inputs.release-version }} -o type=image --platform=linux/arm64,linux/amd64 .
+          docker buildx build --tag bank-backend -o type=image --platform=linux/arm64,linux/amd64 .
+          docker buildx build --push --tag ghcr.io/tivmof/bank-backend:${{ inputs.release-version }} -o type=image --platform=linux/arm64,linux/amd64 .
 
       - name: Create and Push Release Branch
         run: |
