@@ -40,7 +40,7 @@ jobs:
         run: |
           cd ./pi-bank-backend
           echo "@codbex:registry=https://npm.pkg.github.com
-          //npm.pkg.github.com/:_authToken=${{ secrets.PASSWORD }}" > .npmrc
+          //npm.pkg.github.com/:_authToken=${{ secrets.DOCKER_PASSWORD }}" > .npmrc
           npm install
           rm -rf .npmrc
 
