@@ -43,7 +43,7 @@ jobs:
 
       - name: Build Docker Image
         run: |
-          docker buildx build --tag online_bank -o type=image --platform=linux/arm64,linux/amd64 .
+          docker buildx build --tag pi-bank-backend -o type=image --platform=linux/arm64,linux/amd64 .
           
       - name: Login to GitHub Container Registry
         run: |
@@ -51,4 +51,4 @@ jobs:
 
       - name: Push Docker Image to GitHub Container Registry
         run: |
-          docker buildx build --push --tag ghcr.io/tivmof/online-bank:latest -o type=image --platform=linux/arm64,linux/amd64 .
+          docker buildx build --push --tag ghcr.io/tivmof/pi-bank-backend:latest -o type=image --platform=linux/arm64,linux/amd64 .
