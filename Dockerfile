@@ -1,14 +1,9 @@
-# Docker descriptor for online_bank
-# License - http://www.eclipse.org/legal/epl-v20.html
+FROM ghcr.io/codbex/codbex-gaia:0.26.0
 
-FROM dirigiblelabs/dirigible:latest
+COPY pi-bank-backend target/dirigible/repository/root/registry/public/pi-bank-backend
 
-COPY dirigible-bank-server target/dirigible/repository/root/registry/public/dirigible-bank-server
-COPY dirigible-bank-server-data target/dirigible/repository/root/registry/public/dirigible-bank-server-data
-COPY dirigible-bank-server-api target/dirigible/repository/root/registry/public/dirigible-bank-server-api
+ENV DIRIGIBLE_HOME_URL=/services/web/pi-bank-backend/gen/pi-bank-backend/index.html
 
-ENV DIRIGIBLE_HOME_URL=/services/web/dirigible-bank-server/gen/index.html
+ENV DIRIGIBLE_MULTI_TENANT_MODE=false
 
-ENV DIRIGIBLE_SINGLE_TENANT_MODE_ENABLED=true
-
-EXPOSE 8080
+EXPOSE 80

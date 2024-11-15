@@ -20,6 +20,35 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Install NodeJS
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+  
+      - name: Install TypeScript compiler
+        run: npm i -g typescript
+  
+      - name: TypeScript Build
+        run: |
+          cd pi-bank-backend
+          tsc --pretty > tsc-output.log 2>&1 || true
+
+          grep -v 'TS2688' tsc-output.log > filtered-tsc-output.log
+
+          cat filtered-tsc-output.log
+
+          if grep -q 'error TS' filtered-tsc-output.log; then
+              exit 1
+          fi
+
+      - name: Install Dependencies
+        run: |
+          cd ./pi-bank-backend
+          echo "@codbex:registry=https://npm.pkg.github.com
+          //npm.pkg.github.com/:_authToken=${{ secrets.DOCKER_PASSWORD }}" > .npmrc
+          npm install
+          rm -rf .npmrc
+
       - name: "Configure Git"
         run: |
           git fetch
@@ -29,14 +58,14 @@ jobs:
 
       - name: Initialize Buildx
         run: |
-          docker buildx create --name codbex-builder || true
-          docker buildx use codbex-builder
+          docker buildx create --name builder || true
+          docker buildx use builder
 
       - name: Build and Push Docker Image
         run: |
           echo ${{ secrets.DOCKER_PASSWORD }} | docker login ghcr.io -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
-          docker buildx build --tag online_bank -o type=image --platform=linux/arm64,linux/amd64 .
-          docker buildx build --push --tag ghcr.io/tivmof/online_bank:${{ inputs.release-version }} -o type=image --platform=linux/arm64,linux/amd64 .
+          docker buildx build --tag pi-bank-backend -o type=image --platform=linux/arm64,linux/amd64 .
+          docker buildx build --push --tag ghcr.io/tivmof/pi-bank-backend:${{ inputs.release-version }} -o type=image --platform=linux/arm64,linux/amd64 .
 
       - name: Create and Push Release Branch
         run: |

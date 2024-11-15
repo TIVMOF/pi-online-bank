@@ -3,7 +3,7 @@ name: Pull Request - Server
 on:
   pull_request:
     branches: 
-      - master
+      - main
 
 jobs:
   main:
@@ -15,11 +15,40 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Install NodeJS
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+  
+      - name: Install TypeScript compiler
+        run: npm i -g typescript
+  
+      - name: TypeScript Build
+        run: |
+          cd pi-bank-backend
+          tsc --pretty > tsc-output.log 2>&1 || true
+
+          grep -v 'TS2688' tsc-output.log > filtered-tsc-output.log
+
+          cat filtered-tsc-output.log
+
+          if grep -q 'error TS' filtered-tsc-output.log; then
+              exit 1
+          fi
+
+      - name: Install Dependencies
+        run: |
+          cd ./pi-bank-backend
+          echo "@codbex:registry=https://npm.pkg.github.com
+          //npm.pkg.github.com/:_authToken=${{ secrets.DOCKER_PASSWORD }}" > .npmrc
+          npm install
+          rm -rf .npmrc
+
       - name: Initialize Buildx
         run: |
-          docker buildx create --name codbex-builder || true
-          docker buildx use codbex-builder
+          docker buildx create --name builder || true
+          docker buildx use builder
 
       - name: Build Docker Image
         run: |
-          docker buildx build --tag online_bank -o type=image --platform=linux/arm64,linux/amd64 .
+          docker buildx build --tag pi-bank-backend -o type=image --platform=linux/arm64,linux/amd64 .

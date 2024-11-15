@@ -1,0 +1,10 @@
+{
+    "scripts": {
+        "login": "npm login --scope=@codbex --auth-type=legacy --registry=https://npm.pkg.github.com"
+    },
+    "dependencies": {
+        "@codbex/codbex-countries": "0.3.0",
+        "@codbex/codbex-currencies": "0.3.0",
+        "@codbex/ide-branding": "0.1.0"
+    }
+}
