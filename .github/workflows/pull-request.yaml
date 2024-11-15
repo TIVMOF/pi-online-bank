@@ -36,6 +36,14 @@ jobs:
               exit 1
           fi
 
+      - name: Install Dependencies
+        run: |
+          cd ./bank-backend
+          echo "@pi-online-bank:registry=https://npm.pkg.github.com
+          //npm.pkg.github.com/:_authToken=${{ secrets.PASSWORD }}" > .npmrc
+          npm install
+          rm -rf .npmrc
+
       - name: Initialize Buildx
         run: |
           docker buildx create --name builder || true
