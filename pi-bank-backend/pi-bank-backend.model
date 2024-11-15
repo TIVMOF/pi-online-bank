@@ -629,7 +629,7 @@
                         "widgetIsMajor": "true",
                         "widgetLength": "20",
                         "widgetSize": "",
-                        "widgetType": "TEXTBOX"
+                        "widgetType": "NUMBER"
                     },
                     {
                         "dataName": "TRANSACTIONS_DATE",
