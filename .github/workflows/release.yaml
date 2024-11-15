@@ -1,4 +1,4 @@
-name: Release - Server
+name: Release - PI Bank Backend
 
 on:
   workflow_dispatch:

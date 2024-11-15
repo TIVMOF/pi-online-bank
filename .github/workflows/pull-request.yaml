@@ -1,4 +1,4 @@
-name: Pull Request - Server
+name: Pull Request - PI Bank Backend
 
 on:
   pull_request:
