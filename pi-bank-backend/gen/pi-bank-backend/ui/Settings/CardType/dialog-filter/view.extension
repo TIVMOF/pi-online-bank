@@ -1,0 +1,5 @@
+{
+    "module": "pi-bank-backend/gen/pi-bank-backend/ui/Settings/CardType/dialog-filter/view.js",
+    "extensionPoint": "pi-bank-backend-dialog-window",
+    "description": "pi-bank-backend - Application Dialog Window"
+}

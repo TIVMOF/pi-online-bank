@@ -1,5 +1,0 @@
-{
-    "module": "bank-backend/gen/bank-backend/ui/launchpad/menu-help.js",
-    "extensionPoint": "bank-backend-menu",
-    "description": "bank-backend - Application Menu"
-}

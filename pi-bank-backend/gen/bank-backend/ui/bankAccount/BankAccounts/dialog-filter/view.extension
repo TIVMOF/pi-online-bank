@@ -1,5 +1,0 @@
-{
-    "module": "bank-backend/gen/bank-backend/ui/bankAccount/BankAccounts/dialog-filter/view.js",
-    "extensionPoint": "bank-backend-dialog-window",
-    "description": "bank-backend - Application Dialog Window"
-}

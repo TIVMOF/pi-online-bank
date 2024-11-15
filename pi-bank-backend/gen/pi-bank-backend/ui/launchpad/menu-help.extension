@@ -1,0 +1,5 @@
+{
+    "module": "pi-bank-backend/gen/pi-bank-backend/ui/launchpad/menu-help.js",
+    "extensionPoint": "pi-bank-backend-menu",
+    "description": "pi-bank-backend - Application Menu"
+}

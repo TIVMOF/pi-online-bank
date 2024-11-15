@@ -3,7 +3,7 @@
     {
       "table": "CARDTYPE",
       "schema": "PUBLIC",
-      "file": "bank-backend/data/card-types.csv",
+      "file": "pi-bank-backend/data/card-types.csv",
       "header": true,
       "useHeaderNames": true,
       "delimField": ",",
@@ -14,7 +14,7 @@
     {
       "table": "BANKACCOUNTSTATUS",
       "schema": "PUBLIC",
-      "file": "bank-backend/data/bank-account-statuses.csv",
+      "file": "pi-bank-backend/data/bank-account-statuses.csv",
       "header": true,
       "useHeaderNames": true,
       "delimField": ",",
@@ -25,7 +25,7 @@
     {
       "table": "BANKACCOUNTTYPE",
       "schema": "PUBLIC",
-      "file": "bank-backend/data/bank-account-types.csv",
+      "file": "pi-bank-backend/data/bank-account-types.csv",
       "header": true,
       "useHeaderNames": true,
       "delimField": ",",
