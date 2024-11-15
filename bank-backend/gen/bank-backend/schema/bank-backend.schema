@@ -1,0 +1,304 @@
+{
+    "schema": {
+        "structures": [
+            {
+                "name": "USERS",
+                "type": "TABLE",
+                "columns": [
+                    {
+                        "type": "INTEGER",
+                        "primaryKey": true,
+                        "identity": true,
+                        "nullable": true,
+                        "name": "USERS_ID"
+                    },
+                    {
+                        "type": "VARCHAR",
+                        "length": 900,
+                        "name": "USERS_USERNAME"
+                    },
+                    {
+                        "type": "VARCHAR",
+                        "length": 255,
+                        "name": "USERS_PASSWORD"
+                    },
+                    {
+                        "type": "VARCHAR",
+                        "length": 255,
+                        "nullable": true,
+                        "name": "USERS_NAME"
+                    },
+                    {
+                        "type": "VARCHAR",
+                        "length": 700,
+                        "name": "USERS_EMAIL"
+                    },
+                    {
+                        "type": "VARCHAR",
+                        "length": 20,
+                        "name": "USERS_PHONE"
+                    },
+                    {
+                        "type": "INTEGER",
+                        "nullable": true,
+                        "name": "USERS_COUNTRY"
+                    }
+                ]
+            },
+            {
+                "name": "BANKACCOUNTS",
+                "type": "TABLE",
+                "columns": [
+                    {
+                        "type": "INTEGER",
+                        "primaryKey": true,
+                        "identity": true,
+                        "nullable": true,
+                        "name": "BANKACCOUNTS_ID"
+                    },
+                    {
+                        "type": "VARCHAR",
+                        "length": 500,
+                        "nullable": true,
+                        "name": "BANKACCOUNTS_NAME"
+                    },
+                    {
+                        "type": "VARCHAR",
+                        "length": 20,
+                        "name": "BANKACCOUNTS_PROPERTY3"
+                    },
+                    {
+                        "type": "INTEGER",
+                        "nullable": true,
+                        "name": "BANKACCOUNTS_USERS"
+                    },
+                    {
+                        "type": "DOUBLE",
+                        "name": "BANKACCOUNTS_AMOUNT"
+                    },
+                    {
+                        "type": "INTEGER",
+                        "nullable": true,
+                        "name": "BANKACCOUNTS_CURRENCY"
+                    },
+                    {
+                        "type": "INTEGER",
+                        "nullable": true,
+                        "name": "BANKACCOUNTS_BANKACCOUNTTYPE"
+                    },
+                    {
+                        "type": "INTEGER",
+                        "nullable": true,
+                        "name": "BANKACCOUNTS_BANKACCOUNTSTATUS"
+                    },
+                    {
+                        "type": "DATE",
+                        "name": "BANKACCOUNTS_CREATIONDATE"
+                    }
+                ]
+            },
+            {
+                "name": "CARDS",
+                "type": "TABLE",
+                "columns": [
+                    {
+                        "type": "INTEGER",
+                        "primaryKey": true,
+                        "identity": true,
+                        "nullable": true,
+                        "name": "CARDS_ID"
+                    },
+                    {
+                        "type": "VARCHAR",
+                        "length": 255,
+                        "name": "CARDS_CARDNUMBER"
+                    },
+                    {
+                        "type": "DATE",
+                        "nullable": true,
+                        "name": "CARDS_EXPIRATIONDATE"
+                    },
+                    {
+                        "type": "INTEGER",
+                        "name": "CARDS_CARDTYPE"
+                    },
+                    {
+                        "type": "INTEGER",
+                        "nullable": true,
+                        "name": "CARDS_BANKACCOUNTS"
+                    }
+                ]
+            },
+            {
+                "name": "BANKACCOUNTTYPE",
+                "type": "TABLE",
+                "columns": [
+                    {
+                        "type": "INTEGER",
+                        "primaryKey": true,
+                        "identity": true,
+                        "nullable": true,
+                        "name": "BANKACCOUNTTYPE_ID"
+                    },
+                    {
+                        "type": "VARCHAR",
+                        "length": 255,
+                        "name": "BANKACCOUNTTYPE_NAME"
+                    }
+                ]
+            },
+            {
+                "name": "BANKACCOUNTSTATUS",
+                "type": "TABLE",
+                "columns": [
+                    {
+                        "type": "INTEGER",
+                        "primaryKey": true,
+                        "identity": true,
+                        "nullable": true,
+                        "name": "BANKACCOUNTSTATUS_ID"
+                    },
+                    {
+                        "type": "VARCHAR",
+                        "length": 255,
+                        "name": "BANKACCOUNTSTATUS_NAME"
+                    }
+                ]
+            },
+            {
+                "name": "CARDTYPE",
+                "type": "TABLE",
+                "columns": [
+                    {
+                        "type": "INTEGER",
+                        "primaryKey": true,
+                        "identity": true,
+                        "nullable": true,
+                        "name": "CARDTYPE_ID"
+                    },
+                    {
+                        "type": "VARCHAR",
+                        "length": 255,
+                        "nullable": true,
+                        "name": "CARDTYPE_NAME"
+                    }
+                ]
+            },
+            {
+                "name": "TRANSACTIONS",
+                "type": "TABLE",
+                "columns": [
+                    {
+                        "type": "INTEGER",
+                        "primaryKey": true,
+                        "identity": true,
+                        "nullable": true,
+                        "name": "TRANSACTIONS_ID"
+                    },
+                    {
+                        "type": "INTEGER",
+                        "nullable": true,
+                        "name": "TRANSACTIONS_RECIEVER"
+                    },
+                    {
+                        "type": "INTEGER",
+                        "nullable": true,
+                        "name": "TRANSACTIONS_SENDER"
+                    },
+                    {
+                        "type": "DOUBLE",
+                        "nullable": true,
+                        "name": "TRANSACTIONS_AMOUNT"
+                    },
+                    {
+                        "type": "DATE",
+                        "nullable": true,
+                        "name": "TRANSACTIONS_DATE"
+                    }
+                ]
+            },
+            {
+                "name": "Users_Country",
+                "type": "foreignKey",
+                "table": "USERS",
+                "constraintName": "Users_Country",
+                "columns": "USERS_COUNTRY",
+                "referencedTable": "COUNTRY",
+                "referencedColumns": "COUNTRY_ID"
+            },
+            {
+                "name": "BankAccounts_Users",
+                "type": "foreignKey",
+                "table": "BANKACCOUNTS",
+                "constraintName": "BankAccounts_Users",
+                "columns": "BANKACCOUNTS_USERS",
+                "referencedTable": "USERS",
+                "referencedColumns": "USERS_ID"
+            },
+            {
+                "name": "BankAccounts_Currency",
+                "type": "foreignKey",
+                "table": "BANKACCOUNTS",
+                "constraintName": "BankAccounts_Currency",
+                "columns": "BANKACCOUNTS_CURRENCY",
+                "referencedTable": "CURRENCY",
+                "referencedColumns": "CURRENCY_ID"
+            },
+            {
+                "name": "BankAccounts_BankAccountType",
+                "type": "foreignKey",
+                "table": "BANKACCOUNTS",
+                "constraintName": "BankAccounts_BankAccountType",
+                "columns": "BANKACCOUNTS_BANKACCOUNTTYPE",
+                "referencedTable": "BANKACCOUNTTYPE",
+                "referencedColumns": "BANKACCOUNTTYPE_ID"
+            },
+            {
+                "name": "BankAccounts_BankAccountStatus",
+                "type": "foreignKey",
+                "table": "BANKACCOUNTS",
+                "constraintName": "BankAccounts_BankAccountStatus",
+                "columns": "BANKACCOUNTS_BANKACCOUNTSTATUS",
+                "referencedTable": "BANKACCOUNTSTATUS",
+                "referencedColumns": "BANKACCOUNTSTATUS_ID"
+            },
+            {
+                "name": "Cards_CardType",
+                "type": "foreignKey",
+                "table": "CARDS",
+                "constraintName": "Cards_CardType",
+                "columns": "CARDS_CARDTYPE",
+                "referencedTable": "CARDTYPE",
+                "referencedColumns": "CARDTYPE_ID"
+            },
+            {
+                "name": "Cards_BankAccounts",
+                "type": "foreignKey",
+                "table": "CARDS",
+                "constraintName": "Cards_BankAccounts",
+                "columns": "CARDS_BANKACCOUNTS",
+                "referencedTable": "BANKACCOUNTS",
+                "referencedColumns": "BANKACCOUNTS_ID"
+            },
+            {
+                "name": "Transactions_BankAccounts",
+                "type": "foreignKey",
+                "table": "TRANSACTIONS",
+                "constraintName": "Transactions_BankAccounts",
+                "columns": "TRANSACTIONS_RECIEVER",
+                "referencedTable": "BANKACCOUNTS",
+                "referencedColumns": "BANKACCOUNTS_ID"
+            },
+            {
+                "name": "Transactions_BankAccounts",
+                "type": "foreignKey",
+                "table": "TRANSACTIONS",
+                "constraintName": "Transactions_BankAccounts",
+                "columns": "TRANSACTIONS_SENDER",
+                "referencedTable": "BANKACCOUNTS",
+                "referencedColumns": "BANKACCOUNTS_ID"
+            }
+        ]
+    },
+    "datasource": "DefaultDB"
+}

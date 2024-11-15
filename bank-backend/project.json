@@ -1,6 +1,19 @@
 {
     "guid": "dirigible-bank-server",
-    "dependencies": [],
+    "dependencies": [
+        {
+            "guid": "codbex-currencies",
+            "type": "git",
+            "url": "https://github.com/codbex/codbex-currencies.git",
+            "branch": "main"
+        },
+        {
+            "guid": "codbex-countries",
+            "type": "git",
+            "url": "https://github.com/codbex/codbex-countries.git",
+            "branch": "main"
+        }
+    ],
     "actions": [
         {
             "name": "Build TypeScript",

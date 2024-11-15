@@ -1,5 +1,0 @@
-{
-    "module": "dirigible-bank-server/gen/dirigible-bank-server/ui/launchpad/menu-help.js",
-    "extensionPoint": "dirigible-bank-server-menu",
-    "description": "dirigible-bank-server - Application Menu"
-}

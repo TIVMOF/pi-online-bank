@@ -1,0 +1,5 @@
+{
+    "module": "bank-backend/gen/bank-backend/ui/launchpad/Home/view.js",
+    "extensionPoint": "bank-backend-view",
+    "description": "bank-backend - Application View"
+}
