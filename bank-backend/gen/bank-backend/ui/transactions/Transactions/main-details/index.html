@@ -80,7 +80,7 @@
                     	<div class="fd-col fd-col-md--2">
                         	<fd-form-label for="idDate" dg-required="false" dg-colon="true">Date</fd-form-label>
                         </div>
-                        <div class="fd-col  fd-col-md--8 ">
+                        <div class="fd-col  fd-col-md--2 ">
 	                        <fd-form-input-message-group dg-inactive="{{ forms.details['Date'].$valid }}">
 	                            <fd-input id="idDate"
 	                                name="Date"
@@ -88,13 +88,9 @@
 									ng-required="false"
 	                                ng-model="entity.Date"
 	                                ng-readonly="action === 'select'"
-	                                ng-minlength="${property.minLength} || 0"
-	                                ng-maxlength="${property.maxLength} || -1"
-	                                dg-input-rules="{ patterns: [''] }"
-	                                type="text"
-	                                placeholder="Enter Date">
+	                                type="date">
 	                            </fd-input>
-	                            <fd-form-message dg-type="error">The value doesn't match the required pattern ''</fd-form-message>
+	                            <fd-form-message dg-type="error">Incorrect Input</fd-form-message>
 	                        </fd-form-input-message-group>
 	                        <i class="sap-icon--information" role="presentation" onclick="javascript:alert('')"></i>
 	                    </div>

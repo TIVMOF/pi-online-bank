@@ -52,7 +52,7 @@
 							<fd-list-byline dg-align="left">
 								{{optionsSenderValue(next.Sender)}} |
 								{{next.Amount}} |
-								{{next.Date}}
+								{{next.Date | date: "dd/MMM/yyyy"}}
 							</fd-list-byline>
 						</fd-list-content>
 					</fd-list-link>

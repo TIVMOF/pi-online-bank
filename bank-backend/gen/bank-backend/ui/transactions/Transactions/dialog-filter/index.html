@@ -76,18 +76,29 @@
                     </fd-form-item>
                     <fd-form-item class="fd-row">
                     	<div class="fd-col fd-col-md--2">
-                        	<fd-form-label for="idDate" dg-colon="true">Date</fd-form-label>
+                        	<fd-form-label for="idDateFrom" dg-colon="true">From Date</fd-form-label>
                         </div>
-                        <div class="fd-col fd-col-md--8">
+                        <div class="fd-col fd-col-md--2">
 	                        <fd-form-input-message-group dg-inactive="{{ forms.details['Date'].$valid }}">
-	                            <fd-input id="idDate"
+	                            <fd-input id="idDateFrom"
 	                                name="Date"
 	                                state="{{ forms.details['Date'].$valid ? '' : 'error' }}"
-	                                ng-model="entity.Date"
-	                                ng-minlength="${property.minLength} || 0"
-	                                ng-maxlength="${property.maxLength} || -1"
-	                                type="text"
-	                                placeholder="Enter Date">
+	                                ng-model="entity.DateFrom"
+	                                type="date">
+	                            </fd-input>
+	                            <fd-form-message dg-type="error">Incorrect Input</fd-form-message>
+	                        </fd-form-input-message-group>
+	                    </div>
+                    	<div class="fd-col fd-col-md--2">
+                        	<fd-form-label for="idDateTo" dg-colon="true">To Date</fd-form-label>
+                        </div>
+                        <div class="fd-col fd-col-md--2">
+	                        <fd-form-input-message-group dg-inactive="{{ forms.details['Date'].$valid }}">
+	                            <fd-input id="idDateTo"
+	                                name="Date"
+	                                state="{{ forms.details['Date'].$valid ? '' : 'error' }}"
+	                                ng-model="entity.DateTo"
+	                                type="date">
 	                            </fd-input>
 	                            <fd-form-message dg-type="error">Incorrect Input</fd-form-message>
 	                        </fd-form-input-message-group>
