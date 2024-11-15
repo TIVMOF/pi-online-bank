@@ -44,7 +44,7 @@ jobs:
       - name: Install Dependencies
         run: |
           cd ./pi-bank-backend
-          echo "@pi-bank-backend:registry=https://npm.pkg.github.com
+          echo "@pi-online-bank:registry=https://npm.pkg.github.com
           //npm.pkg.github.com/:_authToken=${{ secrets.PASSWORD }}" > .npmrc
           npm install
           rm -rf .npmrc
