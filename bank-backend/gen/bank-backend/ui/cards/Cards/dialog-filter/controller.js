@@ -21,6 +21,7 @@ angular.module('page', ["ideUI", "ideView"])
 			$scope.selectedMainEntityKey = params.selectedMainEntityKey;
 			$scope.selectedMainEntityId = params.selectedMainEntityId;
 			$scope.optionsCardType = params.optionsCardType;
+			$scope.optionsBankAccounts = params.optionsBankAccounts;
 		}
 
 		$scope.filter = function () {

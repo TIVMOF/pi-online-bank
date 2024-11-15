@@ -119,14 +119,17 @@ class BankAccountsService {
     }
 
     private validateEntity(entity: any): void {
-        if (entity.Amount === null || entity.Amount === undefined) {
-            throw new ValidationError(`The 'Amount' property is required, provide a valid value`);
+        if (entity.Name?.length > 500) {
+            throw new ValidationError(`The 'Name' exceeds the maximum length of [500] characters`);
         }
         if (entity.IBAN === null || entity.IBAN === undefined) {
             throw new ValidationError(`The 'IBAN' property is required, provide a valid value`);
         }
         if (entity.IBAN?.length > 20) {
             throw new ValidationError(`The 'IBAN' exceeds the maximum length of [20] characters`);
+        }
+        if (entity.Amount === null || entity.Amount === undefined) {
+            throw new ValidationError(`The 'Amount' property is required, provide a valid value`);
         }
         for (const next of validationModules) {
             next.validate(entity);

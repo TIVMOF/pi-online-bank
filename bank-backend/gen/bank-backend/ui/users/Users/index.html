@@ -48,13 +48,12 @@
 						navigated="next.Id === selectedEntity.Id"
 						ng-click="action == 'select' ? selectEntity(next) : ''">
 						<fd-list-content
-							item-title="{{next.FName}}">
+							item-title="{{next.Username}}">
 							<fd-list-byline dg-align="left">
-								{{next.LName}} |
-								<a href="mailto:{{next.Email}}" class="fd-link">{{next.Email}}</a> |
 								{{next.Password}} |
+								{{next.FName}} |
+								<a href="mailto:{{next.Email}}" class="fd-link">{{next.Email}}</a> |
 								<a href="tel:{{next.Phone}}" class="fd-link">{{next.Phone}}</a> |
-								{{next.Username}} |
 								{{optionsCountryValue(next.Country)}}
 							</fd-list-byline>
 						</fd-list-content>

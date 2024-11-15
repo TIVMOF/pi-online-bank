@@ -21,21 +21,21 @@
                 <fd-form-group dg-header="{{formHeaders[action]}}" name="entityForm" class="fd-container fd-form-layout-grid-container">
                     <fd-form-item class="fd-row">
                     	<div class="fd-col fd-col-md--2">
-                        	<fd-form-label for="idFName" dg-required="true" dg-colon="true">FName</fd-form-label>
+                        	<fd-form-label for="idUsername" dg-required="true" dg-colon="true">Username</fd-form-label>
                         </div>
                         <div class="fd-col  fd-col-md--8 ">
-	                        <fd-form-input-message-group dg-inactive="{{ forms.details['FName'].$valid }}">
-	                            <fd-input id="idFName"
-	                                name="FName"
-	                                state="{{ forms.details['FName'].$valid ? '' : 'error' }}"
+	                        <fd-form-input-message-group dg-inactive="{{ forms.details['Username'].$valid }}">
+	                            <fd-input id="idUsername"
+	                                name="Username"
+	                                state="{{ forms.details['Username'].$valid ? '' : 'error' }}"
 									ng-required="true"
-	                                ng-model="entity.FName"
+	                                ng-model="entity.Username"
 	                                ng-readonly="action === 'select'"
 	                                ng-minlength="0.0 || 0"
 	                                ng-maxlength="20.0 || -1"
 	                                dg-input-rules="{ patterns: [''] }"
 	                                type="text"
-	                                placeholder="Enter FName">
+	                                placeholder="Enter Username">
 	                            </fd-input>
 	                            <fd-form-message dg-type="error">The value doesn't match the required pattern ''</fd-form-message>
 	                        </fd-form-input-message-group>
@@ -44,21 +44,44 @@
                     </fd-form-item>
                     <fd-form-item class="fd-row">
                     	<div class="fd-col fd-col-md--2">
-                        	<fd-form-label for="idLName" dg-required="true" dg-colon="true">LName</fd-form-label>
+                        	<fd-form-label for="idPassword" dg-required="true" dg-colon="true">Password</fd-form-label>
                         </div>
                         <div class="fd-col  fd-col-md--8 ">
-	                        <fd-form-input-message-group dg-inactive="{{ forms.details['LName'].$valid }}">
-	                            <fd-input id="idLName"
-	                                name="LName"
-	                                state="{{ forms.details['LName'].$valid ? '' : 'error' }}"
+	                        <fd-form-input-message-group dg-inactive="{{ forms.details['Password'].$valid }}">
+	                            <fd-input id="idPassword"
+	                                name="Password"
+	                                state="{{ forms.details['Password'].$valid ? '' : 'error' }}"
 									ng-required="true"
-	                                ng-model="entity.LName"
+	                                ng-model="entity.Password"
 	                                ng-readonly="action === 'select'"
 	                                ng-minlength="0.0 || 0"
 	                                ng-maxlength="20.0 || -1"
 	                                dg-input-rules="{ patterns: [''] }"
 	                                type="text"
-	                                placeholder="Enter LName">
+	                                placeholder="Enter Password">
+	                            </fd-input>
+	                            <fd-form-message dg-type="error">The value doesn't match the required pattern ''</fd-form-message>
+	                        </fd-form-input-message-group>
+	                        <i class="sap-icon--information" role="presentation" onclick="javascript:alert('')"></i>
+	                    </div>
+                    </fd-form-item>
+                    <fd-form-item class="fd-row">
+                    	<div class="fd-col fd-col-md--2">
+                        	<fd-form-label for="idFName" dg-required="false" dg-colon="true">FName</fd-form-label>
+                        </div>
+                        <div class="fd-col  fd-col-md--8 ">
+	                        <fd-form-input-message-group dg-inactive="{{ forms.details['FName'].$valid }}">
+	                            <fd-input id="idFName"
+	                                name="FName"
+	                                state="{{ forms.details['FName'].$valid ? '' : 'error' }}"
+									ng-required="false"
+	                                ng-model="entity.FName"
+	                                ng-readonly="action === 'select'"
+	                                ng-minlength="0.0 || 0"
+	                                ng-maxlength="20.0 || -1"
+	                                dg-input-rules="{ patterns: [''] }"
+	                                type="text"
+	                                placeholder="Enter FName">
 	                            </fd-input>
 	                            <fd-form-message dg-type="error">The value doesn't match the required pattern ''</fd-form-message>
 	                        </fd-form-input-message-group>
@@ -93,29 +116,6 @@
                     </fd-form-item>
                     <fd-form-item class="fd-row">
                     	<div class="fd-col fd-col-md--2">
-                        	<fd-form-label for="idPassword" dg-required="true" dg-colon="true">Password</fd-form-label>
-                        </div>
-                        <div class="fd-col  fd-col-md--8 ">
-	                        <fd-form-input-message-group dg-inactive="{{ forms.details['Password'].$valid }}">
-	                            <fd-input id="idPassword"
-	                                name="Password"
-	                                state="{{ forms.details['Password'].$valid ? '' : 'error' }}"
-									ng-required="true"
-	                                ng-model="entity.Password"
-	                                ng-readonly="action === 'select'"
-	                                ng-minlength="0.0 || 0"
-	                                ng-maxlength="20.0 || -1"
-	                                dg-input-rules="{ patterns: [''] }"
-	                                type="text"
-	                                placeholder="Enter Password">
-	                            </fd-input>
-	                            <fd-form-message dg-type="error">The value doesn't match the required pattern ''</fd-form-message>
-	                        </fd-form-input-message-group>
-	                        <i class="sap-icon--information" role="presentation" onclick="javascript:alert('')"></i>
-	                    </div>
-                    </fd-form-item>
-                    <fd-form-item class="fd-row">
-                    	<div class="fd-col fd-col-md--2">
                         	<fd-form-label for="idPhone" dg-required="false" dg-colon="true">Phone</fd-form-label>
                         </div>
 						<div ng-show="action === 'select'" style="margin: 4px 0px; padding: 0px 10px" class="fd-col  fd-col-md--4 ">
@@ -134,29 +134,6 @@
 	                                dg-input-rules="{ patterns:['^[0-9]{0,14}$'] }"
 	                                type="tel"
 	                                placeholder="Enter Phone">
-	                            </fd-input>
-	                            <fd-form-message dg-type="error">The value doesn't match the required pattern ''</fd-form-message>
-	                        </fd-form-input-message-group>
-	                        <i class="sap-icon--information" role="presentation" onclick="javascript:alert('')"></i>
-	                    </div>
-                    </fd-form-item>
-                    <fd-form-item class="fd-row">
-                    	<div class="fd-col fd-col-md--2">
-                        	<fd-form-label for="idUsername" dg-required="true" dg-colon="true">Username</fd-form-label>
-                        </div>
-                        <div class="fd-col  fd-col-md--8 ">
-	                        <fd-form-input-message-group dg-inactive="{{ forms.details['Username'].$valid }}">
-	                            <fd-input id="idUsername"
-	                                name="Username"
-	                                state="{{ forms.details['Username'].$valid ? '' : 'error' }}"
-									ng-required="true"
-	                                ng-model="entity.Username"
-	                                ng-readonly="action === 'select'"
-	                                ng-minlength="0.0 || 0"
-	                                ng-maxlength="20.0 || -1"
-	                                dg-input-rules="{ patterns: [''] }"
-	                                type="text"
-	                                placeholder="Enter Username">
 	                            </fd-input>
 	                            <fd-form-message dg-type="error">The value doesn't match the required pattern ''</fd-form-message>
 	                        </fd-form-input-message-group>

@@ -21,9 +21,9 @@ angular.module('page', ["ideUI", "ideView"])
 			$scope.selectedMainEntityKey = params.selectedMainEntityKey;
 			$scope.selectedMainEntityId = params.selectedMainEntityId;
 			$scope.optionsUsers = params.optionsUsers;
+			$scope.optionsCurrency = params.optionsCurrency;
 			$scope.optionsBankAccountType = params.optionsBankAccountType;
 			$scope.optionsBankAccountStatus = params.optionsBankAccountStatus;
-			$scope.optionsCurrency = params.optionsCurrency;
 		}
 
 		$scope.filter = function () {
@@ -49,14 +49,20 @@ angular.module('page', ["ideUI", "ideView"])
 			if (entity.Id !== undefined) {
 				filter.$filter.equals.Id = entity.Id;
 			}
-			if (entity.Amount !== undefined) {
-				filter.$filter.equals.Amount = entity.Amount;
+			if (entity.Name) {
+				filter.$filter.contains.Name = entity.Name;
 			}
 			if (entity.IBAN) {
 				filter.$filter.contains.IBAN = entity.IBAN;
 			}
 			if (entity.Users !== undefined) {
 				filter.$filter.equals.Users = entity.Users;
+			}
+			if (entity.Amount !== undefined) {
+				filter.$filter.equals.Amount = entity.Amount;
+			}
+			if (entity.Currency !== undefined) {
+				filter.$filter.equals.Currency = entity.Currency;
 			}
 			if (entity.BankAccountType !== undefined) {
 				filter.$filter.equals.BankAccountType = entity.BankAccountType;
@@ -69,9 +75,6 @@ angular.module('page', ["ideUI", "ideView"])
 			}
 			if (entity.CreationDateTo) {
 				filter.$filter.lessThanOrEqual.CreationDate = entity.CreationDateTo;
-			}
-			if (entity.Currency !== undefined) {
-				filter.$filter.equals.Currency = entity.Currency;
 			}
 			messageHub.postMessage("entitySearch", {
 				entity: entity,

@@ -191,7 +191,7 @@ angular.module('page', ["ideUI", "ideView", "entityApi"])
 			$scope.optionsReciever = response.data.map(e => {
 				return {
 					value: e.Id,
-					text: e.IBAN
+					text: e.Name
 				}
 			});
 		});
@@ -200,7 +200,7 @@ angular.module('page', ["ideUI", "ideView", "entityApi"])
 			$scope.optionsSender = response.data.map(e => {
 				return {
 					value: e.Id,
-					text: e.IBAN
+					text: e.Name
 				}
 			});
 		});

@@ -5,22 +5,20 @@ import { dao as daoApi } from "sdk/db";
 
 export interface UsersEntity {
     readonly Id: number;
-    FName: string;
-    LName: string;
-    Email: string;
-    Password: string;
-    Phone: string;
     Username: string;
+    Password: string;
+    FName?: string;
+    Email: string;
+    Phone: string;
     Country?: number;
 }
 
 export interface UsersCreateEntity {
-    readonly FName: string;
-    readonly LName: string;
-    readonly Email: string;
-    readonly Password: string;
-    readonly Phone: string;
     readonly Username: string;
+    readonly Password: string;
+    readonly FName?: string;
+    readonly Email: string;
+    readonly Phone: string;
     readonly Country?: number;
 }
 
@@ -32,72 +30,65 @@ export interface UsersEntityOptions {
     $filter?: {
         equals?: {
             Id?: number | number[];
-            FName?: string | string[];
-            LName?: string | string[];
-            Email?: string | string[];
-            Password?: string | string[];
-            Phone?: string | string[];
             Username?: string | string[];
+            Password?: string | string[];
+            FName?: string | string[];
+            Email?: string | string[];
+            Phone?: string | string[];
             Country?: number | number[];
         };
         notEquals?: {
             Id?: number | number[];
-            FName?: string | string[];
-            LName?: string | string[];
-            Email?: string | string[];
-            Password?: string | string[];
-            Phone?: string | string[];
             Username?: string | string[];
+            Password?: string | string[];
+            FName?: string | string[];
+            Email?: string | string[];
+            Phone?: string | string[];
             Country?: number | number[];
         };
         contains?: {
             Id?: number;
-            FName?: string;
-            LName?: string;
-            Email?: string;
-            Password?: string;
-            Phone?: string;
             Username?: string;
+            Password?: string;
+            FName?: string;
+            Email?: string;
+            Phone?: string;
             Country?: number;
         };
         greaterThan?: {
             Id?: number;
-            FName?: string;
-            LName?: string;
-            Email?: string;
-            Password?: string;
-            Phone?: string;
             Username?: string;
+            Password?: string;
+            FName?: string;
+            Email?: string;
+            Phone?: string;
             Country?: number;
         };
         greaterThanOrEqual?: {
             Id?: number;
-            FName?: string;
-            LName?: string;
-            Email?: string;
-            Password?: string;
-            Phone?: string;
             Username?: string;
+            Password?: string;
+            FName?: string;
+            Email?: string;
+            Phone?: string;
             Country?: number;
         };
         lessThan?: {
             Id?: number;
-            FName?: string;
-            LName?: string;
-            Email?: string;
-            Password?: string;
-            Phone?: string;
             Username?: string;
+            Password?: string;
+            FName?: string;
+            Email?: string;
+            Phone?: string;
             Country?: number;
         };
         lessThanOrEqual?: {
             Id?: number;
-            FName?: string;
-            LName?: string;
-            Email?: string;
-            Password?: string;
-            Phone?: string;
             Username?: string;
+            Password?: string;
+            FName?: string;
+            Email?: string;
+            Phone?: string;
             Country?: number;
         };
     },
@@ -136,20 +127,8 @@ export class UsersRepository {
                 autoIncrement: true,
             },
             {
-                name: "FName",
-                column: "USERS_FNAME",
-                type: "VARCHAR",
-                required: true
-            },
-            {
-                name: "LName",
-                column: "USERS_LNAME",
-                type: "VARCHAR",
-                required: true
-            },
-            {
-                name: "Email",
-                column: "USERS_EMAIL",
+                name: "Username",
+                column: "USERS_USERNAME",
                 type: "VARCHAR",
                 required: true
             },
@@ -160,14 +139,19 @@ export class UsersRepository {
                 required: true
             },
             {
-                name: "Phone",
-                column: "USERS_PHONE",
+                name: "FName",
+                column: "USERS_NAME",
+                type: "VARCHAR",
+            },
+            {
+                name: "Email",
+                column: "USERS_EMAIL",
                 type: "VARCHAR",
                 required: true
             },
             {
-                name: "Username",
-                column: "USERS_USERNAME",
+                name: "Phone",
+                column: "USERS_PHONE",
                 type: "VARCHAR",
                 required: true
             },

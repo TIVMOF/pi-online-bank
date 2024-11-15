@@ -83,21 +83,15 @@
                         	<fd-form-label for="idBankAccounts" dg-required="false" dg-colon="true">BankAccounts</fd-form-label>
                         </div>
                         <div class="fd-col  fd-col-md--8 ">
-	                        <fd-form-input-message-group dg-inactive="{{ forms.details['BankAccounts'].$valid }}">
-	                            <fd-input id="idBankAccounts"
-	                                name="BankAccounts"
-	                                state="{{ forms.details['BankAccounts'].$valid ? '' : 'error' }}"
-									ng-required="false"
-	                                ng-model="entity.BankAccounts"
-	                                ng-readonly="action === 'select'"
-	                                ng-minlength="${property.minLength} || 0"
-	                                ng-maxlength="${property.maxLength} || -1"
-	                                dg-input-rules="{ patterns: [''] }"
-	                                type="text"
-	                                placeholder="Enter BankAccounts">
-	                            </fd-input>
-	                            <fd-form-message dg-type="error">The value doesn't match the required pattern ''</fd-form-message>
-	                        </fd-form-input-message-group>
+	                        <fd-combobox-input id="idBankAccounts"
+	                            name="BankAccounts"
+	                            state="{{ forms.details['BankAccounts'].$valid ? '' : 'error' }}"
+	                            ng-required="false"
+	                            ng-model="entity.BankAccounts"
+	                            dg-disabled="action === 'select'"
+	                            dropdown-items="optionsBankAccounts"
+	                            dg-placeholder="Search BankAccounts ...">
+	                        </fd-combobox-input>
 	                        <i class="sap-icon--information" role="presentation" onclick="javascript:alert('')"></i>
 	                    </div>
                     </fd-form-item>

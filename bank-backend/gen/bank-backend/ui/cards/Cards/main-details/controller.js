@@ -41,6 +41,7 @@ angular.module('page', ["ideUI", "ideView", "entityApi"])
 			$scope.$apply(function () {
 				$scope.entity = {};
 				$scope.optionsCardType = [];
+				$scope.optionsBankAccounts = [];
 				$scope.action = 'select';
 			});
 		});
@@ -52,6 +53,7 @@ angular.module('page', ["ideUI", "ideView", "entityApi"])
 				}
 				$scope.entity = msg.data.entity;
 				$scope.optionsCardType = msg.data.optionsCardType;
+				$scope.optionsBankAccounts = msg.data.optionsBankAccounts;
 				$scope.action = 'select';
 			});
 		});
@@ -60,6 +62,7 @@ angular.module('page', ["ideUI", "ideView", "entityApi"])
 			$scope.$apply(function () {
 				$scope.entity = {};
 				$scope.optionsCardType = msg.data.optionsCardType;
+				$scope.optionsBankAccounts = msg.data.optionsBankAccounts;
 				$scope.action = 'create';
 			});
 		});
@@ -71,11 +74,13 @@ angular.module('page', ["ideUI", "ideView", "entityApi"])
 				}
 				$scope.entity = msg.data.entity;
 				$scope.optionsCardType = msg.data.optionsCardType;
+				$scope.optionsBankAccounts = msg.data.optionsBankAccounts;
 				$scope.action = 'update';
 			});
 		});
 
 		$scope.serviceCardType = "/services/ts/bank-backend/gen/bank-backend/api/Settings/CardTypeService.ts";
+		$scope.serviceBankAccounts = "/services/ts/bank-backend/gen/bank-backend/api/bankAccount/BankAccountsService.ts";
 
 		//-----------------Events-------------------//
 

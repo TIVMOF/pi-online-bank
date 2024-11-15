@@ -95,18 +95,13 @@
                         	<fd-form-label for="idBankAccounts" dg-colon="true">BankAccounts</fd-form-label>
                         </div>
                         <div class="fd-col fd-col-md--8">
-	                        <fd-form-input-message-group dg-inactive="{{ forms.details['BankAccounts'].$valid }}">
-	                            <fd-input id="idBankAccounts"
-	                                name="BankAccounts"
-	                                state="{{ forms.details['BankAccounts'].$valid ? '' : 'error' }}"
-	                                ng-model="entity.BankAccounts"
-	                                ng-minlength="${property.minLength} || 0"
-	                                ng-maxlength="${property.maxLength} || -1"
-	                                type="text"
-	                                placeholder="Enter BankAccounts">
-	                            </fd-input>
-	                            <fd-form-message dg-type="error">Incorrect Input</fd-form-message>
-	                        </fd-form-input-message-group>
+	                        <fd-combobox-input id="idBankAccounts"
+	                            name="BankAccounts"
+	                            state="{{ forms.details['BankAccounts'].$valid ? '' : 'error' }}"
+	                            ng-model="entity.BankAccounts"
+	                            dropdown-items="optionsBankAccounts"
+	                            dg-placeholder="Search BankAccounts ...">
+	                        </fd-combobox-input>
 	                    </div>
                     </fd-form-item>
                 </fd-form-group>

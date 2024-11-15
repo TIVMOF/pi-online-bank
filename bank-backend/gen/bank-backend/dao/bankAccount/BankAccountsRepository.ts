@@ -6,23 +6,25 @@ import { EntityUtils } from "../utils/EntityUtils";
 
 export interface BankAccountsEntity {
     readonly Id: number;
-    Amount: number;
+    Name?: string;
     IBAN: string;
     Users?: number;
+    Amount: number;
+    Currency?: number;
     BankAccountType?: number;
     BankAccountStatus?: number;
     CreationDate: Date;
-    Currency?: number;
 }
 
 export interface BankAccountsCreateEntity {
-    readonly Amount: number;
+    readonly Name?: string;
     readonly IBAN: string;
     readonly Users?: number;
+    readonly Amount: number;
+    readonly Currency?: number;
     readonly BankAccountType?: number;
     readonly BankAccountStatus?: number;
     readonly CreationDate: Date;
-    readonly Currency?: number;
 }
 
 export interface BankAccountsUpdateEntity extends BankAccountsCreateEntity {
@@ -33,73 +35,80 @@ export interface BankAccountsEntityOptions {
     $filter?: {
         equals?: {
             Id?: number | number[];
-            Amount?: number | number[];
+            Name?: string | string[];
             IBAN?: string | string[];
             Users?: number | number[];
+            Amount?: number | number[];
+            Currency?: number | number[];
             BankAccountType?: number | number[];
             BankAccountStatus?: number | number[];
             CreationDate?: Date | Date[];
-            Currency?: number | number[];
         };
         notEquals?: {
             Id?: number | number[];
-            Amount?: number | number[];
+            Name?: string | string[];
             IBAN?: string | string[];
             Users?: number | number[];
+            Amount?: number | number[];
+            Currency?: number | number[];
             BankAccountType?: number | number[];
             BankAccountStatus?: number | number[];
             CreationDate?: Date | Date[];
-            Currency?: number | number[];
         };
         contains?: {
             Id?: number;
-            Amount?: number;
+            Name?: string;
             IBAN?: string;
             Users?: number;
+            Amount?: number;
+            Currency?: number;
             BankAccountType?: number;
             BankAccountStatus?: number;
             CreationDate?: Date;
-            Currency?: number;
         };
         greaterThan?: {
             Id?: number;
-            Amount?: number;
+            Name?: string;
             IBAN?: string;
             Users?: number;
+            Amount?: number;
+            Currency?: number;
             BankAccountType?: number;
             BankAccountStatus?: number;
             CreationDate?: Date;
-            Currency?: number;
         };
         greaterThanOrEqual?: {
             Id?: number;
-            Amount?: number;
+            Name?: string;
             IBAN?: string;
             Users?: number;
+            Amount?: number;
+            Currency?: number;
             BankAccountType?: number;
             BankAccountStatus?: number;
             CreationDate?: Date;
-            Currency?: number;
         };
         lessThan?: {
             Id?: number;
-            Amount?: number;
+            Name?: string;
             IBAN?: string;
             Users?: number;
+            Amount?: number;
+            Currency?: number;
             BankAccountType?: number;
             BankAccountStatus?: number;
             CreationDate?: Date;
-            Currency?: number;
         };
         lessThanOrEqual?: {
             Id?: number;
-            Amount?: number;
+            Name?: string;
             IBAN?: string;
             Users?: number;
+            Amount?: number;
+            Currency?: number;
             BankAccountType?: number;
             BankAccountStatus?: number;
             CreationDate?: Date;
-            Currency?: number;
         };
     },
     $select?: (keyof BankAccountsEntity)[],
@@ -137,10 +146,9 @@ export class BankAccountsRepository {
                 autoIncrement: true,
             },
             {
-                name: "Amount",
-                column: "BANKACCOUNTS_AMOUNT",
-                type: "DOUBLE",
-                required: true
+                name: "Name",
+                column: "BANKACCOUNTS_NAME",
+                type: "VARCHAR",
             },
             {
                 name: "IBAN",
@@ -151,6 +159,17 @@ export class BankAccountsRepository {
             {
                 name: "Users",
                 column: "BANKACCOUNTS_USERS",
+                type: "INTEGER",
+            },
+            {
+                name: "Amount",
+                column: "BANKACCOUNTS_AMOUNT",
+                type: "DOUBLE",
+                required: true
+            },
+            {
+                name: "Currency",
+                column: "BANKACCOUNTS_CURRENCY",
                 type: "INTEGER",
             },
             {
@@ -168,11 +187,6 @@ export class BankAccountsRepository {
                 column: "BANKACCOUNTS_CREATIONDATE",
                 type: "DATE",
                 required: true
-            },
-            {
-                name: "Currency",
-                column: "BANKACCOUNTS_CURRENCY",
-                type: "INTEGER",
             }
         ]
     };

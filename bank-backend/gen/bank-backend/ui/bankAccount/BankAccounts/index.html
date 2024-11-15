@@ -48,14 +48,15 @@
 						navigated="next.Id === selectedEntity.Id"
 						ng-click="action == 'select' ? selectEntity(next) : ''">
 						<fd-list-content
-							item-title="{{next.Amount}}">
+							item-title="{{next.Name}}">
 							<fd-list-byline dg-align="left">
 								{{next.IBAN}} |
 								{{optionsUsersValue(next.Users)}} |
+								{{next.Amount}} |
+								{{optionsCurrencyValue(next.Currency)}} |
 								{{optionsBankAccountTypeValue(next.BankAccountType)}} |
 								{{optionsBankAccountStatusValue(next.BankAccountStatus)}} |
-								{{next.CreationDate | date: "dd/MMM/yyyy"}} |
-								{{optionsCurrencyValue(next.Currency)}}
+								{{next.CreationDate | date: "dd/MMM/yyyy"}}
 							</fd-list-byline>
 						</fd-list-content>
 					</fd-list-link>

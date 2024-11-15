@@ -14,18 +14,8 @@
                     },
                     {
                         "type": "VARCHAR",
-                        "length": 255,
-                        "name": "USERS_FNAME"
-                    },
-                    {
-                        "type": "VARCHAR",
-                        "length": 255,
-                        "name": "USERS_LNAME"
-                    },
-                    {
-                        "type": "VARCHAR",
-                        "length": 700,
-                        "name": "USERS_EMAIL"
+                        "length": 900,
+                        "name": "USERS_USERNAME"
                     },
                     {
                         "type": "VARCHAR",
@@ -34,13 +24,19 @@
                     },
                     {
                         "type": "VARCHAR",
-                        "length": 20,
-                        "name": "USERS_PHONE"
+                        "length": 255,
+                        "nullable": true,
+                        "name": "USERS_NAME"
                     },
                     {
                         "type": "VARCHAR",
-                        "length": 900,
-                        "name": "USERS_USERNAME"
+                        "length": 700,
+                        "name": "USERS_EMAIL"
+                    },
+                    {
+                        "type": "VARCHAR",
+                        "length": 20,
+                        "name": "USERS_PHONE"
                     },
                     {
                         "type": "INTEGER",
@@ -61,8 +57,10 @@
                         "name": "BANKACCOUNTS_ID"
                     },
                     {
-                        "type": "DOUBLE",
-                        "name": "BANKACCOUNTS_AMOUNT"
+                        "type": "VARCHAR",
+                        "length": 500,
+                        "nullable": true,
+                        "name": "BANKACCOUNTS_NAME"
                     },
                     {
                         "type": "VARCHAR",
@@ -73,6 +71,15 @@
                         "type": "INTEGER",
                         "nullable": true,
                         "name": "BANKACCOUNTS_USERS"
+                    },
+                    {
+                        "type": "DOUBLE",
+                        "name": "BANKACCOUNTS_AMOUNT"
+                    },
+                    {
+                        "type": "INTEGER",
+                        "nullable": true,
+                        "name": "BANKACCOUNTS_CURRENCY"
                     },
                     {
                         "type": "INTEGER",
@@ -87,11 +94,6 @@
                     {
                         "type": "DATE",
                         "name": "BANKACCOUNTS_CREATIONDATE"
-                    },
-                    {
-                        "type": "INTEGER",
-                        "nullable": true,
-                        "name": "BANKACCOUNTS_CURRENCY"
                     }
                 ]
             },
@@ -234,6 +236,15 @@
                 "referencedColumns": "USERS_ID"
             },
             {
+                "name": "BankAccounts_Currency",
+                "type": "foreignKey",
+                "table": "BANKACCOUNTS",
+                "constraintName": "BankAccounts_Currency",
+                "columns": "BANKACCOUNTS_CURRENCY",
+                "referencedTable": "CURRENCY",
+                "referencedColumns": "CURRENCY_ID"
+            },
+            {
                 "name": "BankAccounts_BankAccountType",
                 "type": "foreignKey",
                 "table": "BANKACCOUNTS",
@@ -250,15 +261,6 @@
                 "columns": "BANKACCOUNTS_BANKACCOUNTSTATUS",
                 "referencedTable": "BANKACCOUNTSTATUS",
                 "referencedColumns": "BANKACCOUNTSTATUS_ID"
-            },
-            {
-                "name": "BankAccounts_Currency",
-                "type": "foreignKey",
-                "table": "BANKACCOUNTS",
-                "constraintName": "BankAccounts_Currency",
-                "columns": "BANKACCOUNTS_CURRENCY",
-                "referencedTable": "CURRENCY",
-                "referencedColumns": "CURRENCY_ID"
             },
             {
                 "name": "Cards_CardType",

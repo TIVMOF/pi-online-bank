@@ -40,23 +40,20 @@ angular.module('page', ["ideUI", "ideView"])
 			if (entity.Id !== undefined) {
 				filter.$filter.equals.Id = entity.Id;
 			}
-			if (entity.FName) {
-				filter.$filter.contains.FName = entity.FName;
-			}
-			if (entity.LName) {
-				filter.$filter.contains.LName = entity.LName;
-			}
-			if (entity.Email) {
-				filter.$filter.contains.Email = entity.Email;
+			if (entity.Username) {
+				filter.$filter.contains.Username = entity.Username;
 			}
 			if (entity.Password) {
 				filter.$filter.contains.Password = entity.Password;
 			}
+			if (entity.FName) {
+				filter.$filter.contains.FName = entity.FName;
+			}
+			if (entity.Email) {
+				filter.$filter.contains.Email = entity.Email;
+			}
 			if (entity.Phone) {
 				filter.$filter.contains.Phone = entity.Phone;
-			}
-			if (entity.Username) {
-				filter.$filter.contains.Username = entity.Username;
 			}
 			if (entity.Country !== undefined) {
 				filter.$filter.equals.Country = entity.Country;

@@ -120,9 +120,9 @@ angular.module('page', ["ideUI", "ideView", "entityApi"])
 				entity: entity,
 				selectedMainEntityId: entity.Id,
 				optionsUsers: $scope.optionsUsers,
+				optionsCurrency: $scope.optionsCurrency,
 				optionsBankAccountType: $scope.optionsBankAccountType,
 				optionsBankAccountStatus: $scope.optionsBankAccountStatus,
-				optionsCurrency: $scope.optionsCurrency,
 			});
 		};
 
@@ -133,9 +133,9 @@ angular.module('page', ["ideUI", "ideView", "entityApi"])
 			messageHub.postMessage("createEntity", {
 				entity: {},
 				optionsUsers: $scope.optionsUsers,
+				optionsCurrency: $scope.optionsCurrency,
 				optionsBankAccountType: $scope.optionsBankAccountType,
 				optionsBankAccountStatus: $scope.optionsBankAccountStatus,
-				optionsCurrency: $scope.optionsCurrency,
 			});
 		};
 
@@ -144,9 +144,9 @@ angular.module('page', ["ideUI", "ideView", "entityApi"])
 			messageHub.postMessage("updateEntity", {
 				entity: $scope.selectedEntity,
 				optionsUsers: $scope.optionsUsers,
+				optionsCurrency: $scope.optionsCurrency,
 				optionsBankAccountType: $scope.optionsBankAccountType,
 				optionsBankAccountStatus: $scope.optionsBankAccountStatus,
-				optionsCurrency: $scope.optionsCurrency,
 			});
 		};
 
@@ -184,24 +184,33 @@ angular.module('page', ["ideUI", "ideView", "entityApi"])
 			messageHub.showDialogWindow("BankAccounts-filter", {
 				entity: $scope.filterEntity,
 				optionsUsers: $scope.optionsUsers,
+				optionsCurrency: $scope.optionsCurrency,
 				optionsBankAccountType: $scope.optionsBankAccountType,
 				optionsBankAccountStatus: $scope.optionsBankAccountStatus,
-				optionsCurrency: $scope.optionsCurrency,
 			});
 		};
 
 		//----------------Dropdowns-----------------//
 		$scope.optionsUsers = [];
+		$scope.optionsCurrency = [];
 		$scope.optionsBankAccountType = [];
 		$scope.optionsBankAccountStatus = [];
-		$scope.optionsCurrency = [];
 
 
 		$http.get("/services/ts/bank-backend/gen/bank-backend/api/users/UsersService.ts").then(function (response) {
 			$scope.optionsUsers = response.data.map(e => {
 				return {
 					value: e.Id,
-					text: e.FName
+					text: e.Username
+				}
+			});
+		});
+
+		$http.get("/services/ts/codbex-currencies/gen/codbex-currencies/api/Currencies/CurrencyService.ts").then(function (response) {
+			$scope.optionsCurrency = response.data.map(e => {
+				return {
+					value: e.Id,
+					text: e.Code
 				}
 			});
 		});
@@ -224,19 +233,18 @@ angular.module('page', ["ideUI", "ideView", "entityApi"])
 			});
 		});
 
-		$http.get("/services/ts/codbex-currencies/gen/codbex-currencies/api/Currencies/CurrencyService.ts").then(function (response) {
-			$scope.optionsCurrency = response.data.map(e => {
-				return {
-					value: e.Id,
-					text: e.Code
-				}
-			});
-		});
-
 		$scope.optionsUsersValue = function (optionKey) {
 			for (let i = 0; i < $scope.optionsUsers.length; i++) {
 				if ($scope.optionsUsers[i].value === optionKey) {
 					return $scope.optionsUsers[i].text;
+				}
+			}
+			return null;
+		};
+		$scope.optionsCurrencyValue = function (optionKey) {
+			for (let i = 0; i < $scope.optionsCurrency.length; i++) {
+				if ($scope.optionsCurrency[i].value === optionKey) {
+					return $scope.optionsCurrency[i].text;
 				}
 			}
 			return null;
@@ -253,14 +261,6 @@ angular.module('page', ["ideUI", "ideView", "entityApi"])
 			for (let i = 0; i < $scope.optionsBankAccountStatus.length; i++) {
 				if ($scope.optionsBankAccountStatus[i].value === optionKey) {
 					return $scope.optionsBankAccountStatus[i].text;
-				}
-			}
-			return null;
-		};
-		$scope.optionsCurrencyValue = function (optionKey) {
-			for (let i = 0; i < $scope.optionsCurrency.length; i++) {
-				if ($scope.optionsCurrency[i].value === optionKey) {
-					return $scope.optionsCurrency[i].text;
 				}
 			}
 			return null;

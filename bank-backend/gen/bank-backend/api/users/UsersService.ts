@@ -119,23 +119,11 @@ class UsersService {
     }
 
     private validateEntity(entity: any): void {
-        if (entity.FName === null || entity.FName === undefined) {
-            throw new ValidationError(`The 'FName' property is required, provide a valid value`);
+        if (entity.Username === null || entity.Username === undefined) {
+            throw new ValidationError(`The 'Username' property is required, provide a valid value`);
         }
-        if (entity.FName?.length > 255) {
-            throw new ValidationError(`The 'FName' exceeds the maximum length of [255] characters`);
-        }
-        if (entity.LName === null || entity.LName === undefined) {
-            throw new ValidationError(`The 'LName' property is required, provide a valid value`);
-        }
-        if (entity.LName?.length > 255) {
-            throw new ValidationError(`The 'LName' exceeds the maximum length of [255] characters`);
-        }
-        if (entity.Email === null || entity.Email === undefined) {
-            throw new ValidationError(`The 'Email' property is required, provide a valid value`);
-        }
-        if (entity.Email?.length > 700) {
-            throw new ValidationError(`The 'Email' exceeds the maximum length of [700] characters`);
+        if (entity.Username?.length > 900) {
+            throw new ValidationError(`The 'Username' exceeds the maximum length of [900] characters`);
         }
         if (entity.Password === null || entity.Password === undefined) {
             throw new ValidationError(`The 'Password' property is required, provide a valid value`);
@@ -143,14 +131,17 @@ class UsersService {
         if (entity.Password?.length > 255) {
             throw new ValidationError(`The 'Password' exceeds the maximum length of [255] characters`);
         }
+        if (entity.FName?.length > 255) {
+            throw new ValidationError(`The 'FName' exceeds the maximum length of [255] characters`);
+        }
+        if (entity.Email === null || entity.Email === undefined) {
+            throw new ValidationError(`The 'Email' property is required, provide a valid value`);
+        }
+        if (entity.Email?.length > 700) {
+            throw new ValidationError(`The 'Email' exceeds the maximum length of [700] characters`);
+        }
         if (entity.Phone?.length > 20) {
             throw new ValidationError(`The 'Phone' exceeds the maximum length of [20] characters`);
-        }
-        if (entity.Username === null || entity.Username === undefined) {
-            throw new ValidationError(`The 'Username' property is required, provide a valid value`);
-        }
-        if (entity.Username?.length > 900) {
-            throw new ValidationError(`The 'Username' exceeds the maximum length of [900] characters`);
         }
         for (const next of validationModules) {
             next.validate(entity);

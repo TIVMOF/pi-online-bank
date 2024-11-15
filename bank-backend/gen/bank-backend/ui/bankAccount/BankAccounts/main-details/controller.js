@@ -41,9 +41,9 @@ angular.module('page', ["ideUI", "ideView", "entityApi"])
 			$scope.$apply(function () {
 				$scope.entity = {};
 				$scope.optionsUsers = [];
+				$scope.optionsCurrency = [];
 				$scope.optionsBankAccountType = [];
 				$scope.optionsBankAccountStatus = [];
-				$scope.optionsCurrency = [];
 				$scope.action = 'select';
 			});
 		});
@@ -55,9 +55,9 @@ angular.module('page', ["ideUI", "ideView", "entityApi"])
 				}
 				$scope.entity = msg.data.entity;
 				$scope.optionsUsers = msg.data.optionsUsers;
+				$scope.optionsCurrency = msg.data.optionsCurrency;
 				$scope.optionsBankAccountType = msg.data.optionsBankAccountType;
 				$scope.optionsBankAccountStatus = msg.data.optionsBankAccountStatus;
-				$scope.optionsCurrency = msg.data.optionsCurrency;
 				$scope.action = 'select';
 			});
 		});
@@ -66,9 +66,9 @@ angular.module('page', ["ideUI", "ideView", "entityApi"])
 			$scope.$apply(function () {
 				$scope.entity = {};
 				$scope.optionsUsers = msg.data.optionsUsers;
+				$scope.optionsCurrency = msg.data.optionsCurrency;
 				$scope.optionsBankAccountType = msg.data.optionsBankAccountType;
 				$scope.optionsBankAccountStatus = msg.data.optionsBankAccountStatus;
-				$scope.optionsCurrency = msg.data.optionsCurrency;
 				$scope.action = 'create';
 			});
 		});
@@ -80,17 +80,17 @@ angular.module('page', ["ideUI", "ideView", "entityApi"])
 				}
 				$scope.entity = msg.data.entity;
 				$scope.optionsUsers = msg.data.optionsUsers;
+				$scope.optionsCurrency = msg.data.optionsCurrency;
 				$scope.optionsBankAccountType = msg.data.optionsBankAccountType;
 				$scope.optionsBankAccountStatus = msg.data.optionsBankAccountStatus;
-				$scope.optionsCurrency = msg.data.optionsCurrency;
 				$scope.action = 'update';
 			});
 		});
 
 		$scope.serviceUsers = "/services/ts/bank-backend/gen/bank-backend/api/users/UsersService.ts";
+		$scope.serviceCurrency = "/services/ts/codbex-currencies/gen/codbex-currencies/api/Currencies/CurrencyService.ts";
 		$scope.serviceBankAccountType = "/services/ts/bank-backend/gen/bank-backend/api/Settings/BankAccountTypeService.ts";
 		$scope.serviceBankAccountStatus = "/services/ts/bank-backend/gen/bank-backend/api/Settings/BankAccountStatusService.ts";
-		$scope.serviceCurrency = "/services/ts/codbex-currencies/gen/codbex-currencies/api/Currencies/CurrencyService.ts";
 
 		//-----------------Events-------------------//
 

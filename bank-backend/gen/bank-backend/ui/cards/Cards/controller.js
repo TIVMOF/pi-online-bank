@@ -120,6 +120,7 @@ angular.module('page', ["ideUI", "ideView", "entityApi"])
 				entity: entity,
 				selectedMainEntityId: entity.Id,
 				optionsCardType: $scope.optionsCardType,
+				optionsBankAccounts: $scope.optionsBankAccounts,
 			});
 		};
 
@@ -130,6 +131,7 @@ angular.module('page', ["ideUI", "ideView", "entityApi"])
 			messageHub.postMessage("createEntity", {
 				entity: {},
 				optionsCardType: $scope.optionsCardType,
+				optionsBankAccounts: $scope.optionsBankAccounts,
 			});
 		};
 
@@ -138,6 +140,7 @@ angular.module('page', ["ideUI", "ideView", "entityApi"])
 			messageHub.postMessage("updateEntity", {
 				entity: $scope.selectedEntity,
 				optionsCardType: $scope.optionsCardType,
+				optionsBankAccounts: $scope.optionsBankAccounts,
 			});
 		};
 
@@ -175,11 +178,13 @@ angular.module('page', ["ideUI", "ideView", "entityApi"])
 			messageHub.showDialogWindow("Cards-filter", {
 				entity: $scope.filterEntity,
 				optionsCardType: $scope.optionsCardType,
+				optionsBankAccounts: $scope.optionsBankAccounts,
 			});
 		};
 
 		//----------------Dropdowns-----------------//
 		$scope.optionsCardType = [];
+		$scope.optionsBankAccounts = [];
 
 
 		$http.get("/services/ts/bank-backend/gen/bank-backend/api/Settings/CardTypeService.ts").then(function (response) {
@@ -191,10 +196,27 @@ angular.module('page', ["ideUI", "ideView", "entityApi"])
 			});
 		});
 
+		$http.get("/services/ts/bank-backend/gen/bank-backend/api/bankAccount/BankAccountsService.ts").then(function (response) {
+			$scope.optionsBankAccounts = response.data.map(e => {
+				return {
+					value: e.Id,
+					text: e.IBAN
+				}
+			});
+		});
+
 		$scope.optionsCardTypeValue = function (optionKey) {
 			for (let i = 0; i < $scope.optionsCardType.length; i++) {
 				if ($scope.optionsCardType[i].value === optionKey) {
 					return $scope.optionsCardType[i].text;
+				}
+			}
+			return null;
+		};
+		$scope.optionsBankAccountsValue = function (optionKey) {
+			for (let i = 0; i < $scope.optionsBankAccounts.length; i++) {
+				if ($scope.optionsBankAccounts[i].value === optionKey) {
+					return $scope.optionsBankAccounts[i].text;
 				}
 			}
 			return null;

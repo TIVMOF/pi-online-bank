@@ -262,12 +262,11 @@ paths:
                     notEquals:
                       Id: 33
                     contains:
-                      FName: "abcd"
-                      LName: "abcd"
-                      Email: "abcd"
-                      Password: "abcd"
-                      Phone: "abcd"
                       Username: "abcd"
+                      Password: "abcd"
+                      FName: "abcd"
+                      Email: "abcd"
+                      Phone: "abcd"
                     greaterThan:
                       Id: 0
                     lessThanOrEqual:
@@ -289,12 +288,11 @@ paths:
                 value:
                   $filter:
                     contains:
-                      FName: "abcd"
-                      LName: "abcd"
-                      Email: "abcd"
-                      Password: "abcd"
-                      Phone: "abcd"
                       Username: "abcd"
+                      Password: "abcd"
+                      FName: "abcd"
+                      Email: "abcd"
+                      Phone: "abcd"
               countWithGreaterThan:
                 summary: Count with Greater Than
                 value:
@@ -358,12 +356,11 @@ paths:
                     notEquals:
                       Id: 33
                     contains:
-                      FName: "abcd"
-                      LName: "abcd"
-                      Email: "abcd"
-                      Password: "abcd"
-                      Phone: "abcd"
                       Username: "abcd"
+                      Password: "abcd"
+                      FName: "abcd"
+                      Email: "abcd"
+                      Phone: "abcd"
                     greaterThan:
                       Id: 0
                     lessThanOrEqual:
@@ -385,12 +382,11 @@ paths:
                 value:
                   $filter:
                     contains:
-                      FName: "abcd"
-                      LName: "abcd"
-                      Email: "abcd"
-                      Password: "abcd"
-                      Phone: "abcd"
                       Username: "abcd"
+                      Password: "abcd"
+                      FName: "abcd"
+                      Email: "abcd"
+                      Phone: "abcd"
               searchWithGreaterThan:
                 summary: Search with Greater Than
                 value:
@@ -682,6 +678,7 @@ paths:
                     notEquals:
                       Id: 33
                     contains:
+                      Name: "abcd"
                       IBAN: "abcd"
                     greaterThan:
                       Id: 0
@@ -704,6 +701,7 @@ paths:
                 value:
                   $filter:
                     contains:
+                      Name: "abcd"
                       IBAN: "abcd"
               countWithGreaterThan:
                 summary: Count with Greater Than
@@ -768,6 +766,7 @@ paths:
                     notEquals:
                       Id: 33
                     contains:
+                      Name: "abcd"
                       IBAN: "abcd"
                     greaterThan:
                       Id: 0
@@ -790,6 +789,7 @@ paths:
                 value:
                   $filter:
                     contains:
+                      Name: "abcd"
                       IBAN: "abcd"
               searchWithGreaterThan:
                 summary: Search with Greater Than
@@ -2826,20 +2826,22 @@ components:
     Users:
       type: object
       required:
-        - FName
-        - LName
-        - Email
-        - Password
         - Username
+        - Password
+        - Email
       properties:
         Id:
           type: integer
           format: int32
-        FName:
+        Username:
+          type: string
+          minLength: 0
+          maxLength: 900
+        Password:
           type: string
           minLength: 0
           maxLength: 255
-        LName:
+        FName:
           type: string
           minLength: 0
           maxLength: 255
@@ -2847,18 +2849,10 @@ components:
           type: string
           minLength: 0
           maxLength: 700
-        Password:
-          type: string
-          minLength: 0
-          maxLength: 255
         Phone:
           type: string
           minLength: 0
           maxLength: 20
-        Username:
-          type: string
-          minLength: 0
-          maxLength: 900
         Country:
           type: integer
           format: int32
@@ -2879,7 +2873,18 @@ components:
                       items:
                         type: integer
                         format: int32
-                FName:
+                Username:
+                  oneOf:
+                    - type: string
+                      minLength: 0
+                      maxLength: 900
+                    - type: array
+                      items:
+                        type: string
+                        format: double
+                        minLength: 0
+                        maxLength: 900
+                Password:
                   oneOf:
                     - type: string
                       minLength: 0
@@ -2890,7 +2895,7 @@ components:
                         format: double
                         minLength: 0
                         maxLength: 255
-                LName:
+                FName:
                   oneOf:
                     - type: string
                       minLength: 0
@@ -2912,17 +2917,6 @@ components:
                         format: double
                         minLength: 0
                         maxLength: 700
-                Password:
-                  oneOf:
-                    - type: string
-                      minLength: 0
-                      maxLength: 255
-                    - type: array
-                      items:
-                        type: string
-                        format: double
-                        minLength: 0
-                        maxLength: 255
                 Phone:
                   oneOf:
                     - type: string
@@ -2934,17 +2928,6 @@ components:
                         format: double
                         minLength: 0
                         maxLength: 20
-                Username:
-                  oneOf:
-                    - type: string
-                      minLength: 0
-                      maxLength: 900
-                    - type: array
-                      items:
-                        type: string
-                        format: double
-                        minLength: 0
-                        maxLength: 900
                 Country:
                   oneOf:
                     - type: integer
@@ -2964,7 +2947,18 @@ components:
                       items:
                         type: integer
                         format: int32
-                FName:
+                Username:
+                  oneOf:
+                    - type: string
+                      minLength: 0
+                      maxLength: 900
+                    - type: array
+                      items:
+                        type: string
+                        format: double
+                        minLength: 0
+                        maxLength: 900
+                Password:
                   oneOf:
                     - type: string
                       minLength: 0
@@ -2975,7 +2969,7 @@ components:
                         format: double
                         minLength: 0
                         maxLength: 255
-                LName:
+                FName:
                   oneOf:
                     - type: string
                       minLength: 0
@@ -2997,17 +2991,6 @@ components:
                         format: double
                         minLength: 0
                         maxLength: 700
-                Password:
-                  oneOf:
-                    - type: string
-                      minLength: 0
-                      maxLength: 255
-                    - type: array
-                      items:
-                        type: string
-                        format: double
-                        minLength: 0
-                        maxLength: 255
                 Phone:
                   oneOf:
                     - type: string
@@ -3019,17 +3002,6 @@ components:
                         format: double
                         minLength: 0
                         maxLength: 20
-                Username:
-                  oneOf:
-                    - type: string
-                      minLength: 0
-                      maxLength: 900
-                    - type: array
-                      items:
-                        type: string
-                        format: double
-                        minLength: 0
-                        maxLength: 900
                 Country:
                   oneOf:
                     - type: integer
@@ -3042,11 +3014,15 @@ components:
               type: object
               properties:
                 Id:
-                FName:
+                Username:
+                  type: string
+                  minLength: 0
+                  maxLength: 900
+                Password:
                   type: string
                   minLength: 0
                   maxLength: 255
-                LName:
+                FName:
                   type: string
                   minLength: 0
                   maxLength: 255
@@ -3054,18 +3030,10 @@ components:
                   type: string
                   minLength: 0
                   maxLength: 700
-                Password:
-                  type: string
-                  minLength: 0
-                  maxLength: 255
                 Phone:
                   type: string
                   minLength: 0
                   maxLength: 20
-                Username:
-                  type: string
-                  minLength: 0
-                  maxLength: 900
                 Country:
             greaterThan:
               type: object
@@ -3073,11 +3041,15 @@ components:
                 Id:
                   type: integer
                   format: int32
-                FName:
+                Username:
+                  type: string
+                  minLength: 0
+                  maxLength: 900
+                Password:
                   type: string
                   minLength: 0
                   maxLength: 255
-                LName:
+                FName:
                   type: string
                   minLength: 0
                   maxLength: 255
@@ -3085,18 +3057,10 @@ components:
                   type: string
                   minLength: 0
                   maxLength: 700
-                Password:
-                  type: string
-                  minLength: 0
-                  maxLength: 255
                 Phone:
                   type: string
                   minLength: 0
                   maxLength: 20
-                Username:
-                  type: string
-                  minLength: 0
-                  maxLength: 900
                 Country:
                   type: integer
                   format: int32
@@ -3106,11 +3070,15 @@ components:
                 Id:
                   type: integer
                   format: int32
-                FName:
+                Username:
+                  type: string
+                  minLength: 0
+                  maxLength: 900
+                Password:
                   type: string
                   minLength: 0
                   maxLength: 255
-                LName:
+                FName:
                   type: string
                   minLength: 0
                   maxLength: 255
@@ -3118,18 +3086,10 @@ components:
                   type: string
                   minLength: 0
                   maxLength: 700
-                Password:
-                  type: string
-                  minLength: 0
-                  maxLength: 255
                 Phone:
                   type: string
                   minLength: 0
                   maxLength: 20
-                Username:
-                  type: string
-                  minLength: 0
-                  maxLength: 900
                 Country:
                   type: integer
                   format: int32
@@ -3139,11 +3099,15 @@ components:
                 Id:
                   type: integer
                   format: int32
-                FName:
+                Username:
+                  type: string
+                  minLength: 0
+                  maxLength: 900
+                Password:
                   type: string
                   minLength: 0
                   maxLength: 255
-                LName:
+                FName:
                   type: string
                   minLength: 0
                   maxLength: 255
@@ -3151,18 +3115,10 @@ components:
                   type: string
                   minLength: 0
                   maxLength: 700
-                Password:
-                  type: string
-                  minLength: 0
-                  maxLength: 255
                 Phone:
                   type: string
                   minLength: 0
                   maxLength: 20
-                Username:
-                  type: string
-                  minLength: 0
-                  maxLength: 900
                 Country:
                   type: integer
                   format: int32
@@ -3172,11 +3128,15 @@ components:
                 Id:
                   type: integer
                   format: int32
-                FName:
+                Username:
+                  type: string
+                  minLength: 0
+                  maxLength: 900
+                Password:
                   type: string
                   minLength: 0
                   maxLength: 255
-                LName:
+                FName:
                   type: string
                   minLength: 0
                   maxLength: 255
@@ -3184,29 +3144,21 @@ components:
                   type: string
                   minLength: 0
                   maxLength: 700
-                Password:
-                  type: string
-                  minLength: 0
-                  maxLength: 255
                 Phone:
                   type: string
                   minLength: 0
                   maxLength: 20
-                Username:
-                  type: string
-                  minLength: 0
-                  maxLength: 900
                 Country:
                   type: integer
                   format: int32
         $select:
           type: array
-          example: ["Id", "FName", "LName", "Email", "Password", "Phone", "Username", "Country"]
+          example: ["Id", "Username", "Password", "FName", "Email", "Phone", "Country"]
           items:
             type: string
         $sort:
           - type: string
-            example: "Id,FName,LName,Email,Password,Phone,Username,Country"
+            example: "Id,Username,Password,FName,Email,Phone,Country"
         $order:
           type: string
           enum: ["asc", "desc"]
@@ -3220,20 +3172,27 @@ components:
     BankAccounts:
       type: object
       required:
-        - Amount
         - IBAN
+        - Amount
       properties:
         Id:
           type: integer
           format: int32
-        Amount:
-          type: number
-          format: double
+        Name:
+          type: string
+          minLength: 0
+          maxLength: 500
         IBAN:
           type: string
           minLength: 0
           maxLength: 20
         Users:
+          type: integer
+          format: int32
+        Amount:
+          type: number
+          format: double
+        Currency:
           type: integer
           format: int32
         BankAccountType:
@@ -3243,9 +3202,6 @@ components:
           type: integer
           format: int32
         CreationDate:
-        Currency:
-          type: integer
-          format: int32
     BankAccountsFilterOptions:
       type: object
       properties:
@@ -3263,14 +3219,17 @@ components:
                       items:
                         type: integer
                         format: int32
-                Amount:
+                Name:
                   oneOf:
-                    - type: number
-                      format: double
+                    - type: string
+                      minLength: 0
+                      maxLength: 500
                     - type: array
                       items:
-                        type: number
+                        type: string
                         format: double
+                        minLength: 0
+                        maxLength: 500
                 IBAN:
                   oneOf:
                     - type: string
@@ -3283,6 +3242,22 @@ components:
                         minLength: 0
                         maxLength: 20
                 Users:
+                  oneOf:
+                    - type: integer
+                      format: int32
+                    - type: array
+                      items:
+                        type: integer
+                        format: int32
+                Amount:
+                  oneOf:
+                    - type: number
+                      format: double
+                    - type: array
+                      items:
+                        type: number
+                        format: double
+                Currency:
                   oneOf:
                     - type: integer
                       format: int32
@@ -3308,14 +3283,6 @@ components:
                         format: int32
                 CreationDate:
                   oneOf:
-                Currency:
-                  oneOf:
-                    - type: integer
-                      format: int32
-                    - type: array
-                      items:
-                        type: integer
-                        format: int32
             notEquals:
               type: object
               properties:
@@ -3327,14 +3294,17 @@ components:
                       items:
                         type: integer
                         format: int32
-                Amount:
+                Name:
                   oneOf:
-                    - type: number
-                      format: double
+                    - type: string
+                      minLength: 0
+                      maxLength: 500
                     - type: array
                       items:
-                        type: number
+                        type: string
                         format: double
+                        minLength: 0
+                        maxLength: 500
                 IBAN:
                   oneOf:
                     - type: string
@@ -3354,6 +3324,22 @@ components:
                       items:
                         type: integer
                         format: int32
+                Amount:
+                  oneOf:
+                    - type: number
+                      format: double
+                    - type: array
+                      items:
+                        type: number
+                        format: double
+                Currency:
+                  oneOf:
+                    - type: integer
+                      format: int32
+                    - type: array
+                      items:
+                        type: integer
+                        format: int32
                 BankAccountType:
                   oneOf:
                     - type: integer
@@ -3372,42 +3358,45 @@ components:
                         format: int32
                 CreationDate:
                   oneOf:
-                Currency:
-                  oneOf:
-                    - type: integer
-                      format: int32
-                    - type: array
-                      items:
-                        type: integer
-                        format: int32
             contains:
               type: object
               properties:
                 Id:
-                Amount:
+                Name:
+                  type: string
+                  minLength: 0
+                  maxLength: 500
                 IBAN:
                   type: string
                   minLength: 0
                   maxLength: 20
                 Users:
+                Amount:
+                Currency:
                 BankAccountType:
                 BankAccountStatus:
                 CreationDate:
-                Currency:
             greaterThan:
               type: object
               properties:
                 Id:
                   type: integer
                   format: int32
-                Amount:
-                  type: number
-                  format: double
+                Name:
+                  type: string
+                  minLength: 0
+                  maxLength: 500
                 IBAN:
                   type: string
                   minLength: 0
                   maxLength: 20
                 Users:
+                  type: integer
+                  format: int32
+                Amount:
+                  type: number
+                  format: double
+                Currency:
                   type: integer
                   format: int32
                 BankAccountType:
@@ -3417,23 +3406,27 @@ components:
                   type: integer
                   format: int32
                 CreationDate:
-                Currency:
-                  type: integer
-                  format: int32
             greaterThanOrEqual:
               type: object
               properties:
                 Id:
                   type: integer
                   format: int32
-                Amount:
-                  type: number
-                  format: double
+                Name:
+                  type: string
+                  minLength: 0
+                  maxLength: 500
                 IBAN:
                   type: string
                   minLength: 0
                   maxLength: 20
                 Users:
+                  type: integer
+                  format: int32
+                Amount:
+                  type: number
+                  format: double
+                Currency:
                   type: integer
                   format: int32
                 BankAccountType:
@@ -3443,23 +3436,27 @@ components:
                   type: integer
                   format: int32
                 CreationDate:
-                Currency:
-                  type: integer
-                  format: int32
             lessThan:
               type: object
               properties:
                 Id:
                   type: integer
                   format: int32
-                Amount:
-                  type: number
-                  format: double
+                Name:
+                  type: string
+                  minLength: 0
+                  maxLength: 500
                 IBAN:
                   type: string
                   minLength: 0
                   maxLength: 20
                 Users:
+                  type: integer
+                  format: int32
+                Amount:
+                  type: number
+                  format: double
+                Currency:
                   type: integer
                   format: int32
                 BankAccountType:
@@ -3469,23 +3466,27 @@ components:
                   type: integer
                   format: int32
                 CreationDate:
-                Currency:
-                  type: integer
-                  format: int32
             lessThanOrEqual:
               type: object
               properties:
                 Id:
                   type: integer
                   format: int32
-                Amount:
-                  type: number
-                  format: double
+                Name:
+                  type: string
+                  minLength: 0
+                  maxLength: 500
                 IBAN:
                   type: string
                   minLength: 0
                   maxLength: 20
                 Users:
+                  type: integer
+                  format: int32
+                Amount:
+                  type: number
+                  format: double
+                Currency:
                   type: integer
                   format: int32
                 BankAccountType:
@@ -3495,17 +3496,14 @@ components:
                   type: integer
                   format: int32
                 CreationDate:
-                Currency:
-                  type: integer
-                  format: int32
         $select:
           type: array
-          example: ["Id", "Amount", "IBAN", "Users", "BankAccountType", "BankAccountStatus", "CreationDate", "Currency"]
+          example: ["Id", "Name", "IBAN", "Users", "Amount", "Currency", "BankAccountType", "BankAccountStatus", "CreationDate"]
           items:
             type: string
         $sort:
           - type: string
-            example: "Id,Amount,IBAN,Users,BankAccountType,BankAccountStatus,CreationDate,Currency"
+            example: "Id,Name,IBAN,Users,Amount,Currency,BankAccountType,BankAccountStatus,CreationDate"
         $order:
           type: string
           enum: ["asc", "desc"]
