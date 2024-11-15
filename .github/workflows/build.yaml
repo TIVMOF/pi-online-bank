@@ -25,7 +25,7 @@ jobs:
   
       - name: TypeScript Build
         run: |
-          cd bike-park
+          cd pi-bank-backend
           tsc --pretty > tsc-output.log 2>&1 || true
 
           grep -v 'TS2688' tsc-output.log > filtered-tsc-output.log
