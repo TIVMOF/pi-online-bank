@@ -84,6 +84,3 @@ jobs:
             LICENSE
           body: |
             ## Release - ${{ inputs.release-version }}
-            ${{
-              '## Release Notes\n\n' + inputs.release-content  # Combine the release content
-            }}
