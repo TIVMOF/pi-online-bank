@@ -41,6 +41,14 @@ jobs:
               exit 1
           fi
 
+      - name: Install Dependencies
+        run: |
+          cd ./pi-bank-backend
+          echo "@pi-bank-backend:registry=https://npm.pkg.github.com
+          //npm.pkg.github.com/:_authToken=${{ secrets.PASSWORD }}" > .npmrc
+          npm install
+          rm -rf .npmrc
+
       - name: "Configure Git"
         run: |
           git fetch
