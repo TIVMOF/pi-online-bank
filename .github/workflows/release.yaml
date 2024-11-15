@@ -20,6 +20,27 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Install NodeJS
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+  
+      - name: Install TypeScript compiler
+        run: npm i -g typescript
+  
+      - name: TypeScript Build
+        run: |
+          cd bike-park
+          tsc --pretty > tsc-output.log 2>&1 || true
+
+          grep -v 'TS2688' tsc-output.log > filtered-tsc-output.log
+
+          cat filtered-tsc-output.log
+
+          if grep -q 'error TS' filtered-tsc-output.log; then
+              exit 1
+          fi
+
       - name: "Configure Git"
         run: |
           git fetch
