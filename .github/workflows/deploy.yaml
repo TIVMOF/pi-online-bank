@@ -1,9 +1,7 @@
 name: Deploy - PI Bank Backend
 
 on:
-  release:
-    types:
-      - published
+  workflow_dispatch:
 
 jobs:
   deploy:
