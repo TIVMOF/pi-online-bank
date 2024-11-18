@@ -10,7 +10,17 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Deploy to Host Server
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Install Docker Compose
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y docker-compose
+
+      - name: Deploy Backend and Keycloak
         uses: appleboy/ssh-action@v0.1.12
         with:
           host: ${{ secrets.HOST_SERVER }}
@@ -18,10 +28,14 @@ jobs:
           key: ${{ secrets.HOST_SSH_KEY }}
           port: ${{ secrets.HOST_PORT }}
           script: |
+            # Pull the latest backend image
             docker pull ghcr.io/tivmof/pi-bank-backend:${{ github.event.release.tag_name }}
-            docker stop pi-bank-backend || true
-            docker rm pi-bank-backend || true
-            docker run --name pi-bank-backend \
-              -v ${{ secrets.DEPLOY_DIRECTORY }}:/target \
-              --rm -p 8080:8080 -p 8081:8081 \
-              ghcr.io/tivmof/pi-bank-backend:${{ github.event.release.tag_name }}
+            
+            # Stop and remove any existing containers
+            docker-compose -f /path/to/docker-compose.yml down || true
+            
+            # Update docker-compose.yml with the new tag
+            sed -i "s|ghcr.io/tivmof/pi-bank-backend:.*|ghcr.io/tivmof/pi-bank-backend:${{ github.event.release.tag_name }}|" /path/to/docker-compose.yml
+            
+            # Start the backend and Keycloak
+            docker-compose -f /path/to/docker-compose.yml up -d
