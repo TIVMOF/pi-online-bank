@@ -64,8 +64,8 @@ jobs:
       - name: Build and Push Docker Image
         run: |
           echo ${{ secrets.DOCKER_PASSWORD }} | docker login ghcr.io -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
-          docker buildx build --tag pi-bank-backend -o type=image --platform=linux/arm64,linux/amd64 .
-          docker buildx build --push --tag ghcr.io/tivmof/pi-bank-backend:${{ inputs.release-version }} -o type=image --platform=linux/arm64,linux/amd64 .
+          docker buildx build --tag pi-bank-backend -o type=image --platform=linux/arm64,linux/amd64 ./deployment
+          docker buildx build --push --tag ghcr.io/tivmof/pi-bank-backend:${{ inputs.release-version }} -o type=image --platform=linux/arm64,linux/amd64 ./deployment
 
       - name: Create and Push Release Branch
         run: |
