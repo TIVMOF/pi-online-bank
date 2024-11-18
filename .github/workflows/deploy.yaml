@@ -32,7 +32,7 @@ jobs:
             
             docker-compose -f /docker-compose.yml down || true
 
-            export CLIENT_SECRET=${{ secrets.KEYCLOAK_CLIENT_SECRET }}
+            export KEYCLOAK_CLIENT_SECRET=${{ secrets.KEYCLOAK_CLIENT_SECRET }}
             
             sed -i "s|ghcr.io/tivmof/pi-bank-backend:.*|ghcr.io/tivmof/pi-bank-backend:${{ github.event.release.tag_name }}|" /docker-compose.yml
             
