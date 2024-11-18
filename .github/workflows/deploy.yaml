@@ -31,8 +31,9 @@ jobs:
             docker pull ghcr.io/tivmof/pi-bank-backend:${{ github.event.release.tag_name }}
             
             docker-compose -f /docker-compose.yml down || true
+
+            export CLIENT_SECRET=${{ secrets.KEYCLOAK_CLIENT_SECRET }}
             
             sed -i "s|ghcr.io/tivmof/pi-bank-backend:.*|ghcr.io/tivmof/pi-bank-backend:${{ github.event.release.tag_name }}|" /docker-compose.yml
             
-            # Start the backend and Keycloak
             docker-compose -f /docker-compose.yml up -d
