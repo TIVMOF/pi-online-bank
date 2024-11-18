@@ -9,9 +9,11 @@ services:
       KEYCLOAK_URL: http://keycloak:8080
       KEYCLOAK_REALM: pi-bank
       KEYCLOAK_CLIENT_ID: pi-bank-backend
-      KEYCLOAK_CLIENT_SECRET: ${KEYCLOAK_CLIENT_SECRET}
+      KEYCLOAK_CLIENT_SECRET: $${{ KEYCLOAK_CLIENT_SECRET }}
     depends_on:
       - keycloak
+    networks:
+      - pi-network
 
   keycloak:
     image: quay.io/keycloak/keycloak:22.0.1
@@ -24,3 +26,9 @@ services:
       KEYCLOAK_ADMIN: admin
       KEYCLOAK_ADMIN_PASSWORD: admin
       KC_IMPORT: /opt/keycloak/data/import/realm-config.json
+    networks:
+      - pi-network
+
+networks:
+  pi-network:
+    driver: bridge
