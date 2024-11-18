@@ -1,0 +1,23 @@
+version: '3.9'
+
+services:
+  backend:
+    image: ghcr.io/tivmof/pi-bank-backend:latest
+    ports:
+      - "80:80"
+    environment:
+      KEYCLOAK_URL: http://keycloak:8080
+      KEYCLOAK_REALM: pi-bank
+      KEYCLOAK_CLIENT_ID: pi-bank-backend
+      KEYCLOAK_CLIENT_SECRET: my-client-secret
+    depends_on:
+      - keycloak
+
+  keycloak:
+    image: quay.io/keycloak/keycloak:22.0.1
+    environment:
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+    ports:
+      - "8081:8080"
+    command: start-dev
