@@ -30,7 +30,7 @@ jobs:
           script: |
             docker pull ghcr.io/tivmof/pi-bank-backend:${{ github.event.release.tag_name }}
             
-            docker-compose -f /path/to/docker-compose.yml down || true
+            docker-compose -f /docker-compose.yml down || true
             
             sed -i "s|ghcr.io/tivmof/pi-bank-backend:.*|ghcr.io/tivmof/pi-bank-backend:${{ github.event.release.tag_name }}|" /docker-compose.yml
             
