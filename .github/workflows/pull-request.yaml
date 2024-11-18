@@ -51,4 +51,4 @@ jobs:
 
       - name: Build Docker Image
         run: |
-          docker buildx build --tag pi-bank-backend -o type=image --platform=linux/arm64,linux/amd64 ./deployment
+          docker buildx build --tag pi-bank-backend -o type=image --platform=linux/arm64,linux/amd64 .
