@@ -1,0 +1,55 @@
+{
+  "realm": "pi-bank",
+  "enabled": true,
+  "users": [
+    {
+      "username": "admin",
+      "enabled": true,
+      "emailVerified": true,
+      "firstName": "Admin",
+      "lastName": "User",
+      "email": "admin@pi-bank.com",
+      "credentials": [
+        {
+          "type": "password",
+          "value": "admin",
+          "temporary": false
+        }
+      ]
+    }
+  ],
+  "clients": [
+    {
+      "clientId": "pi-bank-backend",
+      "enabled": true,
+      "clientAuthenticatorType": "client-secret",
+      "secret": "${{ KEYCLOAK_CLIENT_SECRET }}", 
+      "redirectUris": ["http://localhost/*"],
+      "webOrigins": ["*"],
+      "directAccessGrantsEnabled": true,
+      "publicClient": false
+    }
+  ],
+  "roles": {
+    "realm": [
+      {
+        "name": "user",
+        "description": "Default role for regular users"
+      },
+      {
+        "name": "admin",
+        "description": "Administrator role"
+      }
+    ]
+  },
+  "groups": [
+    {
+      "name": "users",
+      "path": "/users"
+    },
+    {
+      "name": "admins",
+      "path": "/admins"
+    }
+  }
+}
