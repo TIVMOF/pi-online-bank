@@ -1,0 +1,27 @@
+name: Deploy - PI Bank Backend
+
+on:
+  release:
+    types:
+      - published
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Deploy to Host Server
+        uses: appleboy/ssh-action@v0.1.12
+        with:
+          host: ${{ secrets.HOST_SERVER }}
+          username: ${{ secrets.HOST_USER }}
+          key: ${{ secrets.HOST_SSH_KEY }}
+          port: ${{ secrets.HOST_PORT }}
+          script: |
+            docker pull ghcr.io/tivmof/pi-bank-backend:${{ github.event.release.tag_name }}
+            docker stop pi-bank-backend || true
+            docker rm pi-bank-backend || true
+            docker run --name pi-bank-backend \
+              -v ${{ secrets.DEPLOY_DIRECTORY }}:/target \
+              --rm -p 8080:8080 -p 8081:8081 \
+              ghcr.io/tivmof/pi-bank-backend:${{ github.event.release.tag_name }}
