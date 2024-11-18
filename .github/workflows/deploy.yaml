@@ -13,10 +13,11 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Install Docker Compose
+      - name: Install Latest Docker Compose
         run: |
-          sudo apt-get update
-          sudo apt-get install -y docker-compose
+          sudo curl -L "https://github.com/docker/compose/releases/download/$(curl -s https://api.github.com/repos/docker/compose/releases/latest | jq -r .tag_name)/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+          sudo chmod +x /usr/local/bin/docker-compose
+          docker-compose --version
 
       - name: Deploy Backend and Keycloak
         uses: appleboy/ssh-action@v0.1.12
@@ -26,12 +27,8 @@ jobs:
           key: ${{ secrets.HOST_SSH_KEY }}
           port: ${{ secrets.HOST_PORT }}
           script: |
+            cd deployment
             docker pull ghcr.io/tivmof/pi-bank-backend:${{ github.event.release.tag_name }}
-            
-            docker-compose -f /docker-compose.yml down || true
-
+            docker-compose down || true
             export KEYCLOAK_CLIENT_SECRET=${{ secrets.KEYCLOAK_CLIENT_SECRET }}
-            
-            sed -i "s|ghcr.io/tivmof/pi-bank-backend:.*|ghcr.io/tivmof/pi-bank-backend:${{ github.event.release.tag_name }}|" /docker-compose.yml
-            
-            docker-compose -f /docker-compose.yml up -d
+            docker-compose up -d
