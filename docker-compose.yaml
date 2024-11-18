@@ -21,3 +21,8 @@ services:
     ports:
       - "8081:8080"
     command: start-dev
+    volumes:
+      - ./keycloak-config:/opt/keycloak/data/import
+    environment:
+      - KC_IMPORT=/opt/keycloak/data/import/realm-export.json
+
