@@ -28,14 +28,11 @@ jobs:
           key: ${{ secrets.HOST_SSH_KEY }}
           port: ${{ secrets.HOST_PORT }}
           script: |
-            # Pull the latest backend image
             docker pull ghcr.io/tivmof/pi-bank-backend:${{ github.event.release.tag_name }}
             
-            # Stop and remove any existing containers
             docker-compose -f /path/to/docker-compose.yml down || true
             
-            # Update docker-compose.yml with the new tag
-            sed -i "s|ghcr.io/tivmof/pi-bank-backend:.*|ghcr.io/tivmof/pi-bank-backend:${{ github.event.release.tag_name }}|" /path/to/docker-compose.yml
+            sed -i "s|ghcr.io/tivmof/pi-bank-backend:.*|ghcr.io/tivmof/pi-bank-backend:${{ github.event.release.tag_name }}|" /docker-compose.yml
             
             # Start the backend and Keycloak
-            docker-compose -f /path/to/docker-compose.yml up -d
+            docker-compose -f /docker-compose.yml up -d
