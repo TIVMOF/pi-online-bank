@@ -1,34 +1,46 @@
+# version: '3.9'
+
+# services:
+
+#   backend:
+#     image: ghcr.io/tivmof/pi-bank-backend:latest
+#     container_name: backend
+#     ports:
+#       - "80:80"
+#     environment:
+#       spring.profiles.active: keycloak
+#       DIRIGIBLE_KEYCLOAK_AUTH_SERVER_URL: https://auth.eu1.codbex.com/auth/realms/demo
+#       DIRIGIBLE_KEYCLOAK_CLIENT_ID: pi-online-bank
+#       DIRIGIBLE_MULTI_TENANT_MODE: "false"
+#       DIRIGIBLE_TRIAL_ENABLED: "true"
+
+
 version: '3.9'
 
 services:
-  backend:
-    image: ghcr.io/tivmof/pi-bank-backend:latest
-    ports:
-      - "80:80"
-    environment:
-      KEYCLOAK_URL: http://keycloak:8080
-      KEYCLOAK_REALM: pi-bank
-      KEYCLOAK_CLIENT_ID: pi-bank-backend
-      KEYCLOAK_CLIENT_SECRET: $${{ KEYCLOAK_CLIENT_SECRET }}
-    depends_on:
-      - keycloak
-    networks:
-      - pi-network
-
   keycloak:
-    image: quay.io/keycloak/keycloak:22.0.1
-    ports:
-      - "8081:8080"
+    image: quay.io/keycloak/keycloak:latest
+    container_name: keycloak
     command: start-dev
-    volumes:
-      - ./realm-config.json:/opt/keycloak/data/import/realm-config.json
     environment:
       KEYCLOAK_ADMIN: admin
       KEYCLOAK_ADMIN_PASSWORD: admin
-      KC_IMPORT: /opt/keycloak/data/import/realm-config.json
-    networks:
-      - pi-network
+      PROXY_ADDRESS_FORWARDING: "true"
+    ports:
+      - "90:8080"
 
-networks:
-  pi-network:
-    driver: bridge
+  backend:
+    image: ghcr.io/tivmof/pi-bank-backend:latest
+    container_name: pi-bank-backend
+    ports:
+      - "80:80"
+    environment:
+      spring.profiles.active: keycloak
+      DIRIGIBLE_KEYCLOAK_ENABLED: true
+      DIRIGIBLE_KEYCLOAK_AUTH_SERVER_URL: http://localhost:90/realms/pi-bank
+      DIRIGIBLE_KEYCLOAK_CLIENT_ID: pi-bank-backend
+      DIRIGIBLE_KEYCLOAK_CLIENT_SECRET: L4N8g8NjdGxnudhpMVK7Ii6fX5nciFk4
+      DIRIGIBLE_MULTI_TENANT_MODE: "false"
+      DIRIGIBLE_TRIAL_ENABLED: "true"
+    depends_on:
+      - keycloak
