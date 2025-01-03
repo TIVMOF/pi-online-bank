@@ -6,5 +6,6 @@ COPY pi-bank-backend/node_modules/@codbex target/dirigible/repository/root/regis
 ENV DIRIGIBLE_HOME_URL=/services/web/pi-bank-backend/gen/pi-bank-backend/index.html
 
 ENV DIRIGIBLE_MULTI_TENANT_MODE=false
+ENV DIRIGIBLE_KEYCLOAK_ENABLED=true
 
 EXPOSE 80

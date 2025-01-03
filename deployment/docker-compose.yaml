@@ -1,0 +1,35 @@
+version: '3.9'
+
+services:
+  keycloak:
+    image: quay.io/keycloak/keycloak:latest
+    container_name: keycloak
+    command: start-dev
+    environment:
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+      PROXY_ADDRESS_FORWARDING: "true"
+    ports:
+      - "8080:8080"
+    networks:
+      - shared_network
+
+  backend:
+    image: ghcr.io/tivmof/pi-bank-backend:latest
+    container_name: pi-bank-backend
+    ports:
+      - "80:80"
+    environment:
+      spring.profiles.active: keycloak
+      DIRIGIBLE_KEYCLOAK_ENABLED: true
+      DIRIGIBLE_KEYCLOAK_AUTH_SERVER_URL: http://keycloak:8080/realms/pi-bank
+      DIRIGIBLE_KEYCLOAK_CLIENT_ID: pi-bank-backend
+      DIRIGIBLE_MULTI_TENANT_MODE: "false"
+      DIRIGIBLE_TRIAL_ENABLED: "true"
+    depends_on:
+      - keycloak
+    networks:
+      - shared_network
+networks:
+  shared_network:
+    driver: bridge
