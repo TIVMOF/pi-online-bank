@@ -1,6 +1,21 @@
 version: '3.9'
 
 services:
+  nginx:
+    image: nginx:latest
+    container_name: nginx
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx-certs:/home/tivmof/nginx-certs:ro
+    ports:
+      - "443:443"
+      - "80:80"
+    depends_on:
+      - backend
+      - keycloak
+    networks:
+      - shared_network
+
   keycloak:
     image: quay.io/keycloak/keycloak:latest
     container_name: keycloak
@@ -9,16 +24,12 @@ services:
       KEYCLOAK_ADMIN: admin
       KEYCLOAK_ADMIN_PASSWORD: admin
       PROXY_ADDRESS_FORWARDING: "true"
-    ports:
-      - "8080:8080"
     networks:
       - shared_network
 
   backend:
     image: ghcr.io/tivmof/pi-bank-backend:latest
     container_name: pi-bank-backend
-    ports:
-      - "80:80"
     environment:
       spring.profiles.active: keycloak
       DIRIGIBLE_KEYCLOAK_ENABLED: true
@@ -30,6 +41,7 @@ services:
       - keycloak
     networks:
       - shared_network
+
 networks:
   shared_network:
     driver: bridge
