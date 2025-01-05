@@ -5,8 +5,8 @@ services:
     image: nginx:latest
     container_name: nginx
     volumes:
-      - ./nginx.conf:/home/tivmof/nginx/nginx.conf:ro
-      - ./nginx-certs:/home/tivmof/nginx/nginx-certs:ro
+      - /home/tivmof/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - /home/tivmof/nginx/nginx-certs:/etc/nginx/certs:ro
     ports:
       - "443:443"
       - "80:80"
