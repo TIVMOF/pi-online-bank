@@ -24,9 +24,6 @@ services:
       KEYCLOAK_ADMIN: admin
       KEYCLOAK_ADMIN_PASSWORD: admin
       PROXY_ADDRESS_FORWARDING: "true"
-      KC_HOSTNAME: 45.61.57.229
-      KC_HOSTNAME_STRICT_HTTPS: "true"
-      KC_HOSTNAME_ADMIN: https://45.61.57.229/keycloak
     networks:
       - shared_network
 
