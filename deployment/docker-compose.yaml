@@ -14,7 +14,7 @@ services:
       - backend
       - keycloak
     networks:
-      - shared_network
+      - deployment_shared_network
 
   keycloak:
     image: quay.io/keycloak/keycloak:latest
@@ -25,7 +25,7 @@ services:
       KEYCLOAK_ADMIN_PASSWORD: admin
       PROXY_ADDRESS_FORWARDING: "true"
     networks:
-      - shared_network
+      - deployment_shared_network
 
   backend:
     image: ghcr.io/tivmof/pi-bank-backend:latest
@@ -40,7 +40,7 @@ services:
     depends_on:
       - keycloak
     networks:
-      - shared_network
+      - deployment_shared_network
 
 networks:
   shared_network:
