@@ -24,8 +24,6 @@ services:
       KEYCLOAK_ADMIN: admin
       KEYCLOAK_ADMIN_PASSWORD: admin
       PROXY_ADDRESS_FORWARDING: "true"
-    ports:
-      - "8080:8080"
     networks:
       - shared_network
 
@@ -39,8 +37,6 @@ services:
       DIRIGIBLE_KEYCLOAK_CLIENT_ID: pi-bank-backend
       DIRIGIBLE_MULTI_TENANT_MODE: "false"
       DIRIGIBLE_TRIAL_ENABLED: "true"
-    ports:
-      - "90:80"
     depends_on:
       - keycloak
     networks:
