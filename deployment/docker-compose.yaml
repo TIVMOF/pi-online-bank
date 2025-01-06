@@ -1,21 +1,6 @@
 version: '3.9'
 
 services:
-  nginx:
-    image: nginx:latest
-    container_name: nginx
-    volumes:
-      - /home/tivmof/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
-      - /home/tivmof/nginx/nginx-certs:/etc/nginx/certs:ro
-    ports:
-      - "443:443"
-      - "80:80"
-    depends_on:
-      - backend
-      - keycloak
-    networks:
-      - shared_network
-
   keycloak:
     image: quay.io/keycloak/keycloak:latest
     container_name: keycloak
@@ -38,6 +23,21 @@ services:
       DIRIGIBLE_MULTI_TENANT_MODE: "false"
       DIRIGIBLE_TRIAL_ENABLED: "true"
     depends_on:
+      - keycloak
+    networks:
+      - shared_network
+
+  nginx:
+    image: nginx:latest
+    container_name: nginx
+    volumes:
+      - /home/tivmof/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - /home/tivmof/nginx/nginx-certs:/etc/nginx/certs:ro
+    ports:
+      - "443:443"
+      - "80:80"
+    depends_on:
+      - backend
       - keycloak
     networks:
       - shared_network
