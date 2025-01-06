@@ -36,7 +36,7 @@ class MyTransaction extends StatelessWidget {
             borderRadius: BorderRadius.circular(5),
             boxShadow: [
               BoxShadow(
-                color: Color.fromARGB(193, 158, 158, 158).withOpacity(0.5),
+                color: Color.fromARGB(193, 158, 158, 158).withValues(),
                 spreadRadius: 5,
                 blurRadius: 10,
                 offset: Offset(4, 8),
