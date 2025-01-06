@@ -10,7 +10,7 @@ services:
       KEYCLOAK_ADMIN_PASSWORD: admin
       PROXY_ADDRESS_FORWARDING: "true"
     ports:
-      - "90:8080"
+      - "8080:8080"
     networks:
       - shared_network
 
