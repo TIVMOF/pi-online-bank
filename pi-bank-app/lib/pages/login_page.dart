@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'home_page.dart'; // Adjust if needed
-// import '../utill/session_manager.dart'; // Import your session management class
+import '../utill/app_bar.dart';
+import 'home_page.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -27,39 +27,45 @@ class _LoginPageState extends State<LoginPage> {
       return;
     }
 
-    // Example backend authentication
-    final response = await http.post(
-      Uri.parse(
-          'http://113.30.151.151:8080/services/ts/dirigible-bank-server-api/user.ts/login'), // Adjust endpoint
-      headers: {'Content-Type': 'application/json', 'Authorization': basicAuth},
-      body: json.encode({
-        'Username': username,
-        'Password': password,
-      }),
-    );
-
-    if (response.statusCode == 200) {
-      // Parse the session data from the response
-      // var sessionData = jsonDecode(response.body);
-
-      // Store the session data
-      // await SessionManager.setSessionId(
-      //     sessionData['sessionId']); // Store session ID
-      // await SessionManager.setUserId(sessionData['userId']); // Store user ID
-
-      // Navigate to the Home Page
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-          builder: (context) =>
-              HomePage(), // Corrected extra positional argument
-        ),
+    try {
+      final response = await http.post(
+        Uri.parse(
+            'http://113.30.151.151:8080/services/ts/dirigible-bank-server-api/user.ts/login'),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': basicAuth
+        },
+        body: json.encode({
+          'Username': username,
+          'Password': password,
+        }),
       );
-    } else {
-      print(response.statusCode);
-      // Login failed
+
+      if (response.statusCode == 200) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => HomePage(),
+          ),
+        );
+      } else if (response.statusCode == 404) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("No user found with that username.")),
+        );
+      } else if (response.statusCode == 401) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Incorrect password. Please try again.")),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Login failed. Please try again.")),
+        );
+      }
+    } on http.ClientException catch (_) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Login failed. Please try again.")),
+        SnackBar(
+            content:
+                Text("No connection to the server. Please try again later.")),
       );
     }
   }
@@ -67,25 +73,62 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Login")),
-      body: Padding(
-        padding: const EdgeInsets.all(16), // Ensure padding is provided
+      backgroundColor: Colors.grey[300],
+      body: SafeArea(
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            TextField(
-              controller: _usernameController,
-              decoration: InputDecoration(labelText: "Username"),
-            ),
-            TextField(
-              controller: _passwordController,
-              obscureText: true,
-              decoration: InputDecoration(labelText: "Password"),
-            ),
-            SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: _login,
-              child: Text("Login"),
+            MyAppBar(first_name: 'Proper Invest', second_name: 'Bank'),
+            Expanded(
+              child: Center(
+                child: Container(
+                  width: 300,
+                  padding: EdgeInsets.all(16.0),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(16),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black26,
+                        blurRadius: 8,
+                        offset: Offset(2, 2),
+                      ),
+                    ],
+                  ),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      TextField(
+                        controller: _usernameController,
+                        decoration: InputDecoration(
+                          labelText: "Username",
+                          border: OutlineInputBorder(),
+                        ),
+                      ),
+                      SizedBox(height: 16),
+                      TextField(
+                        controller: _passwordController,
+                        obscureText: true,
+                        decoration: InputDecoration(
+                          labelText: "Password",
+                          border: OutlineInputBorder(),
+                        ),
+                      ),
+                      SizedBox(height: 24),
+                      ElevatedButton(
+                        onPressed: _login,
+                        style: ElevatedButton.styleFrom(
+                          minimumSize: Size(double.infinity, 50),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                        ),
+                        child: Text("Login", style: TextStyle(fontSize: 16)),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
             ),
           ],
         ),
