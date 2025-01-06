@@ -28,14 +28,12 @@ class _HomePageState extends State<HomePage> {
       body: SafeArea(
         child: Column(
           children: [
-            // app bar
             MyAppBar(first_name: 'Proper Invest', second_name: 'Bank'),
 
             SizedBox(
               height: 25,
             ),
 
-            // cards
             Container(
                 height: 180,
                 child: PageView(
