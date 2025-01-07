@@ -9,8 +9,6 @@ services:
       KEYCLOAK_ADMIN: admin
       KEYCLOAK_ADMIN_PASSWORD: admin
       PROXY_ADDRESS_FORWARDING: "true"
-    ports:
-      - "8080:8080"
     networks:
       - shared_network
 
@@ -33,7 +31,7 @@ services:
     image: nginx:latest
     container_name: nginx
     volumes:
-      - /home/tivmof/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - /home/tivmof/pi-online-bank/deployment/nginx.conf:/etc/nginx/nginx.conf:ro
       - /home/tivmof/nginx/nginx-certs:/etc/nginx/certs:ro
     ports:
       - "443:443"
