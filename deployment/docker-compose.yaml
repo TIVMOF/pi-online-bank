@@ -42,6 +42,15 @@ services:
     networks:
       - shared_network
 
+  certbot:
+    image: certbot/certbot
+    container_name: certbot
+    volumes:
+      - /home/tivmof/nginx/nginx-certs:/etc/letsencrypt
+      - /home/tivmof/nginx/nginx-challenges:/var/www/certbot
+    networks:
+      - shared_network
+
 networks:
   shared_network:
     driver: bridge
