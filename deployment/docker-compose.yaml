@@ -10,7 +10,7 @@ services:
     networks:
       - shared_network
 
-  pi-bank:
+  backend:
     image: ghcr.io/tivmof/pi-bank-backend:latest
     container_name: pi-bank-backend
     environment:
@@ -37,7 +37,7 @@ services:
       - "443:443"
       - "80:80"
     depends_on:
-      - pi-bank
+      - backend
       - keycloak
     networks:
       - shared_network
@@ -54,3 +54,6 @@ services:
 networks:
   shared_network:
     driver: bridge
+0 commit comments
+Comments
+0 (0)
