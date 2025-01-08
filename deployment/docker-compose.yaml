@@ -7,6 +7,7 @@ services:
       KC_BOOTSTRAP_ADMIN_USERNAME: admin
       KC_BOOTSTRAP_ADMIN_PASSWORD: admin
       PROXY_ADDRESS_FORWARDING: "true"
+      KC_HOSTNAME: keycloak.proper-invest.tech
       KC_HOSTNAME_URL: https://keycloak.proper-invest.tech
       KC_PROXY: edge
     networks:
