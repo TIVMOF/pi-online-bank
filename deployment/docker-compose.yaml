@@ -37,7 +37,7 @@ services:
       - "443:443"
       - "80:80"
     depends_on:
-      - backend
+      - pi-bank
       - keycloak
     networks:
       - shared_network
