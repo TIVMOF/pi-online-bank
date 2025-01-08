@@ -32,7 +32,9 @@ services:
       - /home/tivmof/pi-online-bank/deployment/nginx.conf:/etc/nginx/nginx.conf:ro
       - /home/tivmof/nginx/nginx-challenges:/var/www/certbot:ro
       - /home/tivmof/nginx/nginx-certs/live/proper-invest.tech:/etc/nginx/certs/live/proper-invest.tech:ro
-      - /home/tivmof/nginx/nginx-certs/archive/proper-invest.tech:/etc/nginx/certs/archive//proper-invest.tech:ro
+      - /home/tivmof/nginx/nginx-certs/live/keycloak.proper-invest.tech:/etc/nginx/certs/live/keycloak.proper-invest.tech:ro
+      - /home/tivmof/nginx/nginx-certs/archive/proper-invest.tech:/etc/nginx/certs/archive/proper-invest.tech:ro
+      - /home/tivmof/nginx/nginx-certs/archive/keyclaok.proper-invest.tech:/etc/nginx/certs/archive/keycloak.proper-invest.tech:ro
     ports:
       - "443:443"
       - "80:80"
