@@ -2,7 +2,7 @@ services:
   keycloak:
     image: quay.io/keycloak/keycloak:latest
     container_name: keycloak
-    command: start-dev --hostname-url=https://keycloak.proper-invest.tech --proxy=passthrough
+    command: start-dev --hostname=https://keycloak.proper-invest.tech --proxy=passthrough
     environment:
       KC_BOOTSTRAP_ADMIN_USERNAME: admin
       KC_BOOTSTRAP_ADMIN_PASSWORD: admin
