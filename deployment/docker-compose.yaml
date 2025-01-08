@@ -4,8 +4,8 @@ services:
     container_name: keycloak
     command: start-dev
     environment:
-      KEYCLOAK_ADMIN: admin
-      KEYCLOAK_ADMIN_PASSWORD: admin
+      KC_BOOTSTRAP_ADMIN_USERNAME: admin
+      KC_BOOTSTRAP_ADMIN_PASSWORD: admin
       PROXY_ADDRESS_FORWARDING: "true"
     networks:
       - shared_network
