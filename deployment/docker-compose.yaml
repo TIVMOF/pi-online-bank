@@ -10,7 +10,7 @@ services:
     networks:
       - shared_network
 
-  backend:
+  pi-bank:
     image: ghcr.io/tivmof/pi-bank-backend:latest
     container_name: pi-bank-backend
     environment:
