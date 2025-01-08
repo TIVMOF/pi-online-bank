@@ -33,7 +33,7 @@ services:
       - /home/tivmof/nginx/nginx-certs:/etc/nginx/certs:ro
       - /home/tivmof/nginx/nginx-challenges:/var/www/certbot:ro
       - /home/tivmof/nginx/nginx-certs/live/proper-invest.tech:/etc/nginx/certs/live:ro
-      - /etc/letsencrypt/archive/proper-invest.tech:/etc/nginx/certs/archive:ro
+      - /home/tivmof/nginx/nginx-certs/archive/proper-invest.tech:/etc/nginx/certs/archive:ro
     ports:
       - "443:443"
       - "80:80"
