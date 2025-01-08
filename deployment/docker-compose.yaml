@@ -10,11 +10,6 @@ services:
       KC_HOSTNAME: keycloak.proper-invest.tech
       KC_HOSTNAME_URL: https://keycloak.proper-invest.tech
       KC_PROXY: edge
-      JAVA_OPTS: >
-        -Xms512m         # Initial heap size
-        -Xmx1024m        # Maximum heap size
-        -XX:MaxMetaspaceSize=256m
-        -Djava.awt.headless=true
     networks:
       - shared_network
 
