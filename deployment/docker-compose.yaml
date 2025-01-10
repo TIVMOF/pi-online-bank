@@ -1,15 +1,15 @@
 services:
-   postgres:
-      image: postgres:latest
-      container_name: keycloak-db
-      environment:
-         POSTGRES_DB: keycloak
-         POSTGRES_USER: keycloak
-         POSTGRES_PASSWORD: your-db-password
-      volumes:
-         - postgres_data:/var/lib/postgresql/data
-      networks:
-         - shared_network
+  postgres:
+    image: postgres:latest
+    container_name: keycloak-db
+    environment:
+      POSTGRES_DB: keycloak
+      POSTGRES_USER: keycloak
+      POSTGRES_PASSWORD: your-db-password
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - shared_network
 
   keycloak:
     image: quay.io/keycloak/keycloak:latest
@@ -17,7 +17,7 @@ services:
     command: start --hostname=https://keycloak.proper-invest.tech
     environment:
       KC_DB: postgres
-      KC_DB_URL: jdbc:postgresql://db_host:5432/keycloak
+      KC_DB_URL: jdbc:postgresql://keycloak-db:5432/keycloak
       KC_DB_USERNAME: keycloak
       KC_DB_PASSWORD: your-db-password
       KC_HOSTNAME: keycloak.proper-invest.tech
