@@ -32,8 +32,6 @@ services:
       KC_HOSTNAME_URL: https://keycloak.proper-invest.tech
       KC_PROXY: edge
       PROXY_ADDRESS_FORWARDING: true
-
-
     volumes:
       - keycloak_data:/opt/keycloak/data
     networks:
