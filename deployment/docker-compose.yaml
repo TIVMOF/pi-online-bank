@@ -1,15 +1,15 @@
 services:
    postgres:
-    image: postgres:latest
-    container_name: keycloak-db
-    environment:
-      POSTGRES_DB: keycloak
-      POSTGRES_USER: keycloak
-      POSTGRES_PASSWORD: your-db-password
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-    networks:
-      - shared_network
+      image: postgres:latest
+      container_name: keycloak-db
+      environment:
+         POSTGRES_DB: keycloak
+         POSTGRES_USER: keycloak
+         POSTGRES_PASSWORD: your-db-password
+      volumes:
+         - postgres_data:/var/lib/postgresql/data
+      networks:
+         - shared_network
   
   keycloak:
     image: quay.io/keycloak/keycloak:latest
