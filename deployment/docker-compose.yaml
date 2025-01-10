@@ -25,7 +25,6 @@ services:
       KC_HOSTNAME: keycloak.proper-invest.tech
       KC_HOSTNAME_ADMIN: https://keycloak.proper-invest.tech
       KC_HOSTNAME_ADMIN_URL: https://keycloak.proper-invest.tech
-      KC_HOSTNAME_STRICT_HTTPS: true
       KC_PROXY: passthrough
       PROXY_ADDRESS_FORWARDING: true
     volumes:
