@@ -23,6 +23,8 @@ services:
       KC_HOSTNAME: keycloak.proper-invest.tech
       KC_HOSTNAME_URL: https://keycloak.proper-invest.tech
       KC_PROXY: edge
+      KC_BOOTSTRAP_ADMIN_USERNAME: admin
+      KC_BOOTSTRAP_ADMIN_PASSWORD: admin
     volumes:
       - keycloak_data:/opt/keycloak/data
     networks:
