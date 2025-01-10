@@ -1,12 +1,25 @@
 services:
+  postgres:
+    image: postgres:latest
+    container_name: keycloak-db
+    environment:
+      POSTGRES_DB: keycloak
+      POSTGRES_USER: keycloak
+      POSTGRES_PASSWORD: your-db-password
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - shared_network
+
   keycloak:
     image: quay.io/keycloak/keycloak:latest
     container_name: keycloak
-    command: start-dev --hostname=https://keycloak.proper-invest.tech
+    command: start --hostname=https://keycloak.proper-invest.tech
     environment:
-      KC_BOOTSTRAP_ADMIN_USERNAME: admin
-      KC_BOOTSTRAP_ADMIN_PASSWORD: admin
-      PROXY_ADDRESS_FORWARDING: "true"
+      KC_DB: postgres
+      KC_DB_URL: jdbc:postgresql://keycloak-db:5432/keycloak
+      KC_DB_USERNAME: keycloak
+      KC_DB_PASSWORD: your-db-password
       KC_HOSTNAME: keycloak.proper-invest.tech
       KC_HOSTNAME_URL: https://keycloak.proper-invest.tech
       KC_PROXY: edge
@@ -14,6 +27,8 @@ services:
       - keycloak_data:/opt/keycloak/data
     networks:
       - shared_network
+    depends_on:
+      - postgres
 
   pi-bank:
     image: ghcr.io/tivmof/pi-bank-backend:latest
@@ -64,6 +79,8 @@ volumes:
   keycloak_data:
     driver: local
   pi_bank_data:
+    driver: local
+  postgres_data:
     driver: local
 
 networks:
