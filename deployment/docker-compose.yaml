@@ -10,7 +10,7 @@ services:
          - postgres_data:/var/lib/postgresql/data
       networks:
          - shared_network
-  
+
   keycloak:
     image: quay.io/keycloak/keycloak:latest
     container_name: keycloak
