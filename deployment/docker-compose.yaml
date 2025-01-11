@@ -20,7 +20,7 @@ services:
   keycloak:
     image: quay.io/keycloak/keycloak:latest
     container_name: keycloak
-    command: start --optimized --hostname=keycloak.proper-invest.tech
+    command: start --hostname=keycloak.proper-invest.tech
     environment:
       KC_DB: postgres
       KC_DB_URL: jdbc:postgresql://keycloak-db:5432/keycloak
