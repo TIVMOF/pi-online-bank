@@ -1,6 +1,7 @@
 services:
   postgres:
     image: postgres:latest
+    command: postgres -c "max_connections=200"
     container_name: keycloak-db
     environment:
       POSTGRES_DB: keycloak
@@ -14,24 +15,29 @@ services:
 keycloak:
   image: quay.io/keycloak/keycloak:latest
   container_name: keycloak
-  command: build --db=postgres --db-url=jdbc:postgresql://keycloak-db:5432/keycloak --db-username=keycloak --db-password=db-password --hostname=keycloak.proper-invest.tech --proxy=edge
+  command: start --hostname=keycloak.proper-invest.tech
   environment:
     KC_DB: postgres
     KC_DB_URL: jdbc:postgresql://keycloak-db:5432/keycloak
+    KC_DB_URL_HOST: keycloak-db
+    KC_DB_URL_DATABASE: keycloak
     KC_DB_USERNAME: keycloak
     KC_DB_PASSWORD: db-password
-    KC_BOOTSTRAP_ADMIN_USERNAME: admin
-    KC_BOOTSTRAP_ADMIN_PASSWORD: admin
-    KC_HOSTNAME: keycloak.proper-invest.tech
+    KC_DB_SCHEME: public
+    KEYCLOAK_ADMIN: admin
+    KEYCLOAK_ADMIN_PASSWORD: admin
+    KC_HOSTNAME: https://keycloak.proper-invest.tech
     KC_HOSTNAME_URL: https://keycloak.proper-invest.tech
+    KC_HOSTNAME_ADMIN_URL: https://keycloak.proper-invest.tech
     KC_PROXY: edge
     PROXY_ADDRESS_FORWARDING: true
   volumes:
     - keycloak_data:/opt/keycloak/data
+  depends_on:
+    postgres:
+      conditions: service_healthy
   networks:
     - shared_network
-  depends_on:
-    - postgres
 
   pi-bank:
     image: ghcr.io/tivmof/pi-bank-backend:latest
