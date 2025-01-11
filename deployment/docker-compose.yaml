@@ -14,7 +14,7 @@ services:
   keycloak:
     image: quay.io/keycloak/keycloak:latest
     container_name: keycloak
-    command: start --optimized --hostname=https://keycloak.proper-invest.tech --bootstrap-admin-username admin --bootstrap-admin-password admin
+    command: start --optimized --hostname=https://keycloak.proper-invest.tech
     environment:
       jgroups.dns.query: keycloak
       KC_BOOTSTRAP_ADMIN_USERNAME: admin
