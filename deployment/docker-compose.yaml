@@ -47,7 +47,6 @@ services:
     container_name: pi-bank-backend
     environment:
       spring.profiles.active: keycloak
-      DIRIGIBLE_KEYCLOAK_ENABLED: true
       DIRIGIBLE_KEYCLOAK_AUTH_SERVER_URL: https://keycloak.proper-invest.tech/realms/pi-bank
       DIRIGIBLE_KEYCLOAK_CLIENT_ID: pi-bank-backend
       DIRIGIBLE_MULTI_TENANT_MODE: "false"
