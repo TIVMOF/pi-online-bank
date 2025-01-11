@@ -32,6 +32,7 @@ services:
       KEYCLOAK_ADMIN: admin
       KEYCLOAK_ADMIN_PASSWORD: admin
       KC_HOSTNAME: https://keycloak.proper-invest.tech
+      KC_PROXY: edge
       PROXY_ADDRESS_FORWARDING: true
     volumes:
       - keycloak_data:/opt/keycloak/data
