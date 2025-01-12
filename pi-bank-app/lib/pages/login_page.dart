@@ -1,8 +1,10 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'dart:convert';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import '../utill/app_bar.dart';
-import 'home_page.dart';
+
+final storage = FlutterSecureStorage();
 
 class LoginPage extends StatefulWidget {
   @override
@@ -10,63 +12,58 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  final TextEditingController _usernameController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
+  final _usernameController = TextEditingController();
+  final _passwordController = TextEditingController();
 
-  final String basicAuth = 'Basic ' + base64Encode(utf8.encode('admin:admin'));
+  bool _isPasswordVisible = false;
+  String? _errorMessage;
 
-  Future<void> _login() async {
+  Future<void> login() async {
     final username = _usernameController.text.trim();
     final password = _passwordController.text.trim();
 
     if (username.isEmpty || password.isEmpty) {
-      // Show an error message
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Please enter both username and password")),
-      );
+      setState(() {
+        _errorMessage = "Please enter both username and password.";
+      });
       return;
     }
 
     try {
       final response = await http.post(
         Uri.parse(
-            'http://113.30.151.151:8080/services/ts/dirigible-bank-server-api/user.ts/login'),
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': basicAuth
+            'https://keycloak.proper-invest.tech/realms/pi-bank/protocol/openid-connect/token'),
+        headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+        body: {
+          'grant_type': 'password',
+          'client_id': 'pi-bank-mobile',
+          'username': username,
+          'password': password,
         },
-        body: json.encode({
-          'Username': username,
-          'Password': password,
-        }),
       );
 
       if (response.statusCode == 200) {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-            builder: (context) => HomePage(),
-          ),
-        );
-      } else if (response.statusCode == 404) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("No user found with that username.")),
-        );
-      } else if (response.statusCode == 401) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("Incorrect password. Please try again.")),
-        );
+        final data = jsonDecode(response.body);
+        final accessToken = data['access_token'];
+        final refreshToken = data['refresh_token'];
+
+        await storage.write(key: 'keycloak_access_token', value: accessToken);
+        await storage.write(key: 'keycloak_refresh_token', value: refreshToken);
+
+        print("Login successful!");
+        Navigator.pushReplacementNamed(context, '/home');
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("Login failed. Please try again.")),
-        );
+        setState(() {
+          _errorMessage = jsonDecode(response.body)['error_description'] ??
+              "Invalid username or password.";
+        });
       }
-    } on http.ClientException catch (_) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-            content:
-                Text("No connection to the server. Please try again later.")),
-      );
+    } catch (e) {
+      setState(() {
+        _errorMessage =
+            "An error occurred. Please check your connection and try again.";
+      });
+      print("Error: $e");
     }
   }
 
@@ -98,6 +95,7 @@ class _LoginPageState extends State<LoginPage> {
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
+                      // Username Field
                       TextField(
                         controller: _usernameController,
                         decoration: InputDecoration(
@@ -106,17 +104,40 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                       ),
                       SizedBox(height: 16),
+                      // Password Field
                       TextField(
                         controller: _passwordController,
-                        obscureText: true,
+                        obscureText: !_isPasswordVisible,
                         decoration: InputDecoration(
                           labelText: "Password",
                           border: OutlineInputBorder(),
+                          suffixIcon: IconButton(
+                            icon: Icon(
+                              _isPasswordVisible
+                                  ? Icons.visibility
+                                  : Icons.visibility_off,
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                _isPasswordVisible = !_isPasswordVisible;
+                              });
+                            },
+                          ),
                         ),
                       ),
-                      SizedBox(height: 24),
+                      SizedBox(height: 16),
+                      // Error Message
+                      if (_errorMessage != null)
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 16.0),
+                          child: Text(
+                            _errorMessage!,
+                            style: TextStyle(color: Colors.red),
+                          ),
+                        ),
+                      // Login Button
                       ElevatedButton(
-                        onPressed: _login,
+                        onPressed: login,
                         style: ElevatedButton.styleFrom(
                           minimumSize: Size(double.infinity, 50),
                           shape: RoundedRectangleBorder(
