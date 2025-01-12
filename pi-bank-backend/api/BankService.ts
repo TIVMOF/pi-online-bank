@@ -1,11 +1,9 @@
 import { BankAccountRepository as BankAccountDao } from "../gen/pi-bank-backend/dao/bankAccount/BankAccountRepository";
-import { CardsRepository as CardsDao } from "../gen/pi-bank-backend/dao/cards/CardsRepository";
-import { TransactionsRepository as TransactionsDao } from "../gen/pi-bank-backend/dao/transactions/TransactionsRepository";
-import { UsersRepository as UsersDao } from "../gen/pi-bank-backend/dao/users/UsersRepository";
+import { CardRepository as CardDao } from "../gen/pi-bank-backend/dao/card/CardRepository";
+import { TransactionRepository as TransactionDao } from "../gen/pi-bank-backend/dao/transaction/TransactionRepository";
+import { UserRepository as UserDao } from "../gen/pi-bank-backend/dao/user/UserRepository";
 
 import { Controller, Get, Put, Post, response } from "sdk/http";
-
-import axios from "axios";
 
 const keycloakTokenEndpoint = "https://keycloak.proper-invest.tech/realms/pi-bank/protocol/openid-connect/token";
 const keycloakClientId = "pi-bank-mobile";
@@ -13,15 +11,15 @@ const keycloakClientId = "pi-bank-mobile";
 @Controller
 class BankService {
     private readonly bankAccountDao;
-    private readonly cardsDao;
-    private readonly transactionsDao;
-    private readonly usersDao;
+    private readonly cardDao;
+    private readonly transactionDao;
+    private readonly userDao;
 
     constructor() {
         this.bankAccountDao = new BankAccountDao();
-        this.cardsDao = new CardsDao();
-        this.transactionsDao = new TransactionsDao();
-        this.usersDao = new UsersDao();
+        this.cardDao = new CardDao();
+        this.transactionDao = new TransactionDao();
+        this.userDao = new UserDao();
     }
 
     @Post("/createUser")
@@ -33,7 +31,7 @@ class BankService {
         let username = ctx.pathParameters.username;
         let password = ctx.pathParameters.password;
 
-        const allUsers = await this.usersDao.findAll({
+        const allUsers = await this.userDao.findAll({
             $filter: {
                 equals: { Username: username, Password: password },
             },

@@ -9,17 +9,17 @@ externalDocs:
 servers:
   - url: /services/ts
 tags:
-  - name: users
+  - name: user
   - name: bankAccount
-  - name: cards
+  - name: card
   - name: Settings
   - name: Settings
   - name: Settings
-  - name: transactions
+  - name: transaction
 paths:
-  /pi-bank-backend/gen/pi-bank-backend/api/users/UsersService.ts:
+  /pi-bank-backend/gen/pi-bank-backend/api/user/UserService.ts:
     get:
-      summary: List Users
+      summary: List User
       parameters:
         - in: query
           name: $limit
@@ -38,7 +38,7 @@ paths:
             type: integer
             allowEmptyValue: true
       tags:
-        - users
+        - user
       responses:
         200:
           description: Successful Request
@@ -47,7 +47,7 @@ paths:
               schema:
                 type: array
                 items:
-                    $ref: '#/components/schemas/Users'
+                    $ref: '#/components/schemas/User'
         400:
           description: Bad Request Error
           content:
@@ -67,14 +67,14 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
     post:
-      summary: Create Users
+      summary: Create User
       tags:
-        - users
+        - user
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Users'
+              $ref: '#/components/schemas/User'
         required: true
       responses:
         201:
@@ -82,7 +82,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Users'
+                $ref: '#/components/schemas/User'
         400:
           description: Bad Request Error
           content:
@@ -101,9 +101,9 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-  /pi-bank-backend/gen/pi-bank-backend/api/users/UsersService.ts/{id}:
+  /pi-bank-backend/gen/pi-bank-backend/api/user/UserService.ts/{id}:
     get:
-      summary: Get Users by Id
+      summary: Get User by Id
       parameters:
         - in: path
           name: id
@@ -112,7 +112,7 @@ paths:
           schema:
             type: string
       tags:
-        - users
+        - user
       responses:
         200:
           description: Successful Request
@@ -121,7 +121,7 @@ paths:
               schema:
                 type: array
                 items:
-                    $ref: '#/components/schemas/Users'
+                    $ref: '#/components/schemas/User'
         404:
           description: Entity Not Found
           content:
@@ -141,7 +141,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
     put:
-      summary: Update Users by Id
+      summary: Update User by Id
       parameters:
         - in: path
           name: id
@@ -150,12 +150,12 @@ paths:
           schema:
             type: string
       tags:
-        - users
+        - user
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Users'
+              $ref: '#/components/schemas/User'
         required: true
       responses:
         200:
@@ -163,7 +163,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Users'
+                $ref: '#/components/schemas/User'
         400:
           description: Bad Request Error
           content:
@@ -189,7 +189,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
     delete:
-      summary: Delete Users by Id
+      summary: Delete User by Id
       parameters:
         - in: path
           name: id
@@ -198,7 +198,7 @@ paths:
           schema:
             type: string
       tags:
-        - users
+        - user
       responses:
         204:
           description: Successful Request
@@ -220,11 +220,11 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-  /pi-bank-backend/gen/pi-bank-backend/api/users/UsersService.ts/count:
+  /pi-bank-backend/gen/pi-bank-backend/api/user/UserService.ts/count:
     get:
-      summary: Count the number of Users
+      summary: Count the number of User
       tags:
-        - users
+        - user
       responses:
         200:
           description: Successful Request
@@ -246,14 +246,14 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
     post:
-      summary: Count the number of Users by UsersFilterOptions
+      summary: Count the number of User by UserFilterOptions
       tags:
-        - users
+        - user
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/UsersFilterOptions'
+              $ref: '#/components/schemas/UserFilterOptions'
             examples:
               countWithMultipleCriteria:
                 summary: Count with multiple criteria
@@ -264,7 +264,7 @@ paths:
                     contains:
                       Username: "abcd"
                       Password: "abcd"
-                      FName: "abcd"
+                      Name: "abcd"
                       Email: "abcd"
                       Phone: "abcd"
                     greaterThan:
@@ -290,7 +290,7 @@ paths:
                     contains:
                       Username: "abcd"
                       Password: "abcd"
-                      FName: "abcd"
+                      Name: "abcd"
                       Email: "abcd"
                       Phone: "abcd"
               countWithGreaterThan:
@@ -338,16 +338,16 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-  /pi-bank-backend/gen/pi-bank-backend/api/users/UsersService.ts/search:
+  /pi-bank-backend/gen/pi-bank-backend/api/user/UserService.ts/search:
     post:
-      summary: Search Users by UsersFilterOptions
+      summary: Search User by UserFilterOptions
       tags:
-        - users
+        - user
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/UsersFilterOptions'
+              $ref: '#/components/schemas/UserFilterOptions'
             examples:
               searchWithMultipleCriteria:
                 summary: Search with multiple criteria
@@ -358,7 +358,7 @@ paths:
                     contains:
                       Username: "abcd"
                       Password: "abcd"
-                      FName: "abcd"
+                      Name: "abcd"
                       Email: "abcd"
                       Phone: "abcd"
                     greaterThan:
@@ -384,7 +384,7 @@ paths:
                     contains:
                       Username: "abcd"
                       Password: "abcd"
-                      FName: "abcd"
+                      Name: "abcd"
                       Email: "abcd"
                       Phone: "abcd"
               searchWithGreaterThan:
@@ -420,7 +420,7 @@ paths:
               schema:
                 type: array
                 items:
-                    $ref: '#/components/schemas/Users'
+                    $ref: '#/components/schemas/User'
         403:
           description: Forbidden Error
           content:
@@ -433,9 +433,9 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-  /pi-bank-backend/gen/pi-bank-backend/api/bankAccount/BankAccountsService.ts:
+  /pi-bank-backend/gen/pi-bank-backend/api/bankAccount/BankAccountService.ts:
     get:
-      summary: List BankAccounts
+      summary: List BankAccount
       parameters:
         - in: query
           name: $limit
@@ -463,7 +463,7 @@ paths:
               schema:
                 type: array
                 items:
-                    $ref: '#/components/schemas/BankAccounts'
+                    $ref: '#/components/schemas/BankAccount'
         400:
           description: Bad Request Error
           content:
@@ -483,14 +483,14 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
     post:
-      summary: Create BankAccounts
+      summary: Create BankAccount
       tags:
         - bankAccount
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/BankAccounts'
+              $ref: '#/components/schemas/BankAccount'
         required: true
       responses:
         201:
@@ -498,7 +498,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/BankAccounts'
+                $ref: '#/components/schemas/BankAccount'
         400:
           description: Bad Request Error
           content:
@@ -517,9 +517,9 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-  /pi-bank-backend/gen/pi-bank-backend/api/bankAccount/BankAccountsService.ts/{id}:
+  /pi-bank-backend/gen/pi-bank-backend/api/bankAccount/BankAccountService.ts/{id}:
     get:
-      summary: Get BankAccounts by Id
+      summary: Get BankAccount by Id
       parameters:
         - in: path
           name: id
@@ -537,7 +537,7 @@ paths:
               schema:
                 type: array
                 items:
-                    $ref: '#/components/schemas/BankAccounts'
+                    $ref: '#/components/schemas/BankAccount'
         404:
           description: Entity Not Found
           content:
@@ -557,7 +557,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
     put:
-      summary: Update BankAccounts by Id
+      summary: Update BankAccount by Id
       parameters:
         - in: path
           name: id
@@ -571,7 +571,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/BankAccounts'
+              $ref: '#/components/schemas/BankAccount'
         required: true
       responses:
         200:
@@ -579,7 +579,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/BankAccounts'
+                $ref: '#/components/schemas/BankAccount'
         400:
           description: Bad Request Error
           content:
@@ -605,7 +605,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
     delete:
-      summary: Delete BankAccounts by Id
+      summary: Delete BankAccount by Id
       parameters:
         - in: path
           name: id
@@ -636,9 +636,9 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-  /pi-bank-backend/gen/pi-bank-backend/api/bankAccount/BankAccountsService.ts/count:
+  /pi-bank-backend/gen/pi-bank-backend/api/bankAccount/BankAccountService.ts/count:
     get:
-      summary: Count the number of BankAccounts
+      summary: Count the number of BankAccount
       tags:
         - bankAccount
       responses:
@@ -662,14 +662,14 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
     post:
-      summary: Count the number of BankAccounts by BankAccountsFilterOptions
+      summary: Count the number of BankAccount by BankAccountFilterOptions
       tags:
         - bankAccount
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/BankAccountsFilterOptions'
+              $ref: '#/components/schemas/BankAccountFilterOptions'
             examples:
               countWithMultipleCriteria:
                 summary: Count with multiple criteria
@@ -748,16 +748,16 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-  /pi-bank-backend/gen/pi-bank-backend/api/bankAccount/BankAccountsService.ts/search:
+  /pi-bank-backend/gen/pi-bank-backend/api/bankAccount/BankAccountService.ts/search:
     post:
-      summary: Search BankAccounts by BankAccountsFilterOptions
+      summary: Search BankAccount by BankAccountFilterOptions
       tags:
         - bankAccount
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/BankAccountsFilterOptions'
+              $ref: '#/components/schemas/BankAccountFilterOptions'
             examples:
               searchWithMultipleCriteria:
                 summary: Search with multiple criteria
@@ -824,7 +824,7 @@ paths:
               schema:
                 type: array
                 items:
-                    $ref: '#/components/schemas/BankAccounts'
+                    $ref: '#/components/schemas/BankAccount'
         403:
           description: Forbidden Error
           content:
@@ -837,9 +837,9 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-  /pi-bank-backend/gen/pi-bank-backend/api/cards/CardsService.ts:
+  /pi-bank-backend/gen/pi-bank-backend/api/card/CardService.ts:
     get:
-      summary: List Cards
+      summary: List Card
       parameters:
         - in: query
           name: $limit
@@ -858,7 +858,7 @@ paths:
             type: integer
             allowEmptyValue: true
       tags:
-        - cards
+        - card
       responses:
         200:
           description: Successful Request
@@ -867,7 +867,7 @@ paths:
               schema:
                 type: array
                 items:
-                    $ref: '#/components/schemas/Cards'
+                    $ref: '#/components/schemas/Card'
         400:
           description: Bad Request Error
           content:
@@ -887,14 +887,14 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
     post:
-      summary: Create Cards
+      summary: Create Card
       tags:
-        - cards
+        - card
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Cards'
+              $ref: '#/components/schemas/Card'
         required: true
       responses:
         201:
@@ -902,7 +902,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Cards'
+                $ref: '#/components/schemas/Card'
         400:
           description: Bad Request Error
           content:
@@ -921,9 +921,9 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-  /pi-bank-backend/gen/pi-bank-backend/api/cards/CardsService.ts/{id}:
+  /pi-bank-backend/gen/pi-bank-backend/api/card/CardService.ts/{id}:
     get:
-      summary: Get Cards by Id
+      summary: Get Card by Id
       parameters:
         - in: path
           name: id
@@ -932,7 +932,7 @@ paths:
           schema:
             type: string
       tags:
-        - cards
+        - card
       responses:
         200:
           description: Successful Request
@@ -941,7 +941,7 @@ paths:
               schema:
                 type: array
                 items:
-                    $ref: '#/components/schemas/Cards'
+                    $ref: '#/components/schemas/Card'
         404:
           description: Entity Not Found
           content:
@@ -961,7 +961,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
     put:
-      summary: Update Cards by Id
+      summary: Update Card by Id
       parameters:
         - in: path
           name: id
@@ -970,12 +970,12 @@ paths:
           schema:
             type: string
       tags:
-        - cards
+        - card
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Cards'
+              $ref: '#/components/schemas/Card'
         required: true
       responses:
         200:
@@ -983,7 +983,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Cards'
+                $ref: '#/components/schemas/Card'
         400:
           description: Bad Request Error
           content:
@@ -1009,7 +1009,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
     delete:
-      summary: Delete Cards by Id
+      summary: Delete Card by Id
       parameters:
         - in: path
           name: id
@@ -1018,7 +1018,7 @@ paths:
           schema:
             type: string
       tags:
-        - cards
+        - card
       responses:
         204:
           description: Successful Request
@@ -1040,11 +1040,11 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-  /pi-bank-backend/gen/pi-bank-backend/api/cards/CardsService.ts/count:
+  /pi-bank-backend/gen/pi-bank-backend/api/card/CardService.ts/count:
     get:
-      summary: Count the number of Cards
+      summary: Count the number of Card
       tags:
-        - cards
+        - card
       responses:
         200:
           description: Successful Request
@@ -1066,14 +1066,14 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
     post:
-      summary: Count the number of Cards by CardsFilterOptions
+      summary: Count the number of Card by CardFilterOptions
       tags:
-        - cards
+        - card
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CardsFilterOptions'
+              $ref: '#/components/schemas/CardFilterOptions'
             examples:
               countWithMultipleCriteria:
                 summary: Count with multiple criteria
@@ -1150,16 +1150,16 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-  /pi-bank-backend/gen/pi-bank-backend/api/cards/CardsService.ts/search:
+  /pi-bank-backend/gen/pi-bank-backend/api/card/CardService.ts/search:
     post:
-      summary: Search Cards by CardsFilterOptions
+      summary: Search Card by CardFilterOptions
       tags:
-        - cards
+        - card
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CardsFilterOptions'
+              $ref: '#/components/schemas/CardFilterOptions'
             examples:
               searchWithMultipleCriteria:
                 summary: Search with multiple criteria
@@ -1224,7 +1224,7 @@ paths:
               schema:
                 type: array
                 items:
-                    $ref: '#/components/schemas/Cards'
+                    $ref: '#/components/schemas/Card'
         403:
           description: Forbidden Error
           content:
@@ -2437,9 +2437,9 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-  /pi-bank-backend/gen/pi-bank-backend/api/transactions/TransactionsService.ts:
+  /pi-bank-backend/gen/pi-bank-backend/api/transaction/TransactionService.ts:
     get:
-      summary: List Transactions
+      summary: List Transaction
       parameters:
         - in: query
           name: $limit
@@ -2458,7 +2458,7 @@ paths:
             type: integer
             allowEmptyValue: true
       tags:
-        - transactions
+        - transaction
       responses:
         200:
           description: Successful Request
@@ -2467,7 +2467,7 @@ paths:
               schema:
                 type: array
                 items:
-                    $ref: '#/components/schemas/Transactions'
+                    $ref: '#/components/schemas/Transaction'
         400:
           description: Bad Request Error
           content:
@@ -2487,14 +2487,14 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
     post:
-      summary: Create Transactions
+      summary: Create Transaction
       tags:
-        - transactions
+        - transaction
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Transactions'
+              $ref: '#/components/schemas/Transaction'
         required: true
       responses:
         201:
@@ -2502,7 +2502,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Transactions'
+                $ref: '#/components/schemas/Transaction'
         400:
           description: Bad Request Error
           content:
@@ -2521,9 +2521,9 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-  /pi-bank-backend/gen/pi-bank-backend/api/transactions/TransactionsService.ts/{id}:
+  /pi-bank-backend/gen/pi-bank-backend/api/transaction/TransactionService.ts/{id}:
     get:
-      summary: Get Transactions by Id
+      summary: Get Transaction by Id
       parameters:
         - in: path
           name: id
@@ -2532,7 +2532,7 @@ paths:
           schema:
             type: string
       tags:
-        - transactions
+        - transaction
       responses:
         200:
           description: Successful Request
@@ -2541,7 +2541,7 @@ paths:
               schema:
                 type: array
                 items:
-                    $ref: '#/components/schemas/Transactions'
+                    $ref: '#/components/schemas/Transaction'
         404:
           description: Entity Not Found
           content:
@@ -2561,7 +2561,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
     put:
-      summary: Update Transactions by Id
+      summary: Update Transaction by Id
       parameters:
         - in: path
           name: id
@@ -2570,12 +2570,12 @@ paths:
           schema:
             type: string
       tags:
-        - transactions
+        - transaction
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Transactions'
+              $ref: '#/components/schemas/Transaction'
         required: true
       responses:
         200:
@@ -2583,7 +2583,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Transactions'
+                $ref: '#/components/schemas/Transaction'
         400:
           description: Bad Request Error
           content:
@@ -2609,7 +2609,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
     delete:
-      summary: Delete Transactions by Id
+      summary: Delete Transaction by Id
       parameters:
         - in: path
           name: id
@@ -2618,7 +2618,7 @@ paths:
           schema:
             type: string
       tags:
-        - transactions
+        - transaction
       responses:
         204:
           description: Successful Request
@@ -2640,11 +2640,11 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-  /pi-bank-backend/gen/pi-bank-backend/api/transactions/TransactionsService.ts/count:
+  /pi-bank-backend/gen/pi-bank-backend/api/transaction/TransactionService.ts/count:
     get:
-      summary: Count the number of Transactions
+      summary: Count the number of Transaction
       tags:
-        - transactions
+        - transaction
       responses:
         200:
           description: Successful Request
@@ -2666,14 +2666,14 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
     post:
-      summary: Count the number of Transactions by TransactionsFilterOptions
+      summary: Count the number of Transaction by TransactionFilterOptions
       tags:
-        - transactions
+        - transaction
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/TransactionsFilterOptions'
+              $ref: '#/components/schemas/TransactionFilterOptions'
             examples:
               countWithMultipleCriteria:
                 summary: Count with multiple criteria
@@ -2742,16 +2742,16 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-  /pi-bank-backend/gen/pi-bank-backend/api/transactions/TransactionsService.ts/search:
+  /pi-bank-backend/gen/pi-bank-backend/api/transaction/TransactionService.ts/search:
     post:
-      summary: Search Transactions by TransactionsFilterOptions
+      summary: Search Transaction by TransactionFilterOptions
       tags:
-        - transactions
+        - transaction
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/TransactionsFilterOptions'
+              $ref: '#/components/schemas/TransactionFilterOptions'
             examples:
               searchWithMultipleCriteria:
                 summary: Search with multiple criteria
@@ -2808,7 +2808,7 @@ paths:
               schema:
                 type: array
                 items:
-                    $ref: '#/components/schemas/Transactions'
+                    $ref: '#/components/schemas/Transaction'
         403:
           description: Forbidden Error
           content:
@@ -2823,7 +2823,7 @@ paths:
                 $ref: '#/components/schemas/Error'
 components:
   schemas:
-    Users:
+    User:
       type: object
       required:
         - Username
@@ -2841,7 +2841,7 @@ components:
           type: string
           minLength: 0
           maxLength: 255
-        FName:
+        Name:
           type: string
           minLength: 0
           maxLength: 255
@@ -2856,7 +2856,7 @@ components:
         Country:
           type: integer
           format: int32
-    UsersFilterOptions:
+    UserFilterOptions:
       type: object
       properties:
         $filter:
@@ -2895,7 +2895,7 @@ components:
                         format: double
                         minLength: 0
                         maxLength: 255
-                FName:
+                Name:
                   oneOf:
                     - type: string
                       minLength: 0
@@ -2969,7 +2969,7 @@ components:
                         format: double
                         minLength: 0
                         maxLength: 255
-                FName:
+                Name:
                   oneOf:
                     - type: string
                       minLength: 0
@@ -3022,7 +3022,7 @@ components:
                   type: string
                   minLength: 0
                   maxLength: 255
-                FName:
+                Name:
                   type: string
                   minLength: 0
                   maxLength: 255
@@ -3049,7 +3049,7 @@ components:
                   type: string
                   minLength: 0
                   maxLength: 255
-                FName:
+                Name:
                   type: string
                   minLength: 0
                   maxLength: 255
@@ -3078,7 +3078,7 @@ components:
                   type: string
                   minLength: 0
                   maxLength: 255
-                FName:
+                Name:
                   type: string
                   minLength: 0
                   maxLength: 255
@@ -3107,7 +3107,7 @@ components:
                   type: string
                   minLength: 0
                   maxLength: 255
-                FName:
+                Name:
                   type: string
                   minLength: 0
                   maxLength: 255
@@ -3136,7 +3136,7 @@ components:
                   type: string
                   minLength: 0
                   maxLength: 255
-                FName:
+                Name:
                   type: string
                   minLength: 0
                   maxLength: 255
@@ -3153,12 +3153,12 @@ components:
                   format: int32
         $select:
           type: array
-          example: ["Id", "Username", "Password", "FName", "Email", "Phone", "Country"]
+          example: ["Id", "Username", "Password", "Name", "Email", "Phone", "Country"]
           items:
             type: string
         $sort:
           - type: string
-            example: "Id,Username,Password,FName,Email,Phone,Country"
+            example: "Id,Username,Password,Name,Email,Phone,Country"
         $order:
           type: string
           enum: ["asc", "desc"]
@@ -3169,7 +3169,7 @@ components:
         $limit:
           type: integer
           example: 10
-    BankAccounts:
+    BankAccount:
       type: object
       required:
         - IBAN
@@ -3186,7 +3186,7 @@ components:
           type: string
           minLength: 0
           maxLength: 20
-        Users:
+        User:
           type: integer
           format: int32
         Amount:
@@ -3195,14 +3195,14 @@ components:
         Currency:
           type: integer
           format: int32
-        BankAccountType:
+        Type:
           type: integer
           format: int32
-        BankAccountStatus:
+        Status:
           type: integer
           format: int32
         CreationDate:
-    BankAccountsFilterOptions:
+    BankAccountFilterOptions:
       type: object
       properties:
         $filter:
@@ -3241,7 +3241,7 @@ components:
                         format: double
                         minLength: 0
                         maxLength: 20
-                Users:
+                User:
                   oneOf:
                     - type: integer
                       format: int32
@@ -3265,7 +3265,7 @@ components:
                       items:
                         type: integer
                         format: int32
-                BankAccountType:
+                Type:
                   oneOf:
                     - type: integer
                       format: int32
@@ -3273,7 +3273,7 @@ components:
                       items:
                         type: integer
                         format: int32
-                BankAccountStatus:
+                Status:
                   oneOf:
                     - type: integer
                       format: int32
@@ -3316,7 +3316,7 @@ components:
                         format: double
                         minLength: 0
                         maxLength: 20
-                Users:
+                User:
                   oneOf:
                     - type: integer
                       format: int32
@@ -3340,7 +3340,7 @@ components:
                       items:
                         type: integer
                         format: int32
-                BankAccountType:
+                Type:
                   oneOf:
                     - type: integer
                       format: int32
@@ -3348,7 +3348,7 @@ components:
                       items:
                         type: integer
                         format: int32
-                BankAccountStatus:
+                Status:
                   oneOf:
                     - type: integer
                       format: int32
@@ -3370,11 +3370,11 @@ components:
                   type: string
                   minLength: 0
                   maxLength: 20
-                Users:
+                User:
                 Amount:
                 Currency:
-                BankAccountType:
-                BankAccountStatus:
+                Type:
+                Status:
                 CreationDate:
             greaterThan:
               type: object
@@ -3390,7 +3390,7 @@ components:
                   type: string
                   minLength: 0
                   maxLength: 20
-                Users:
+                User:
                   type: integer
                   format: int32
                 Amount:
@@ -3399,10 +3399,10 @@ components:
                 Currency:
                   type: integer
                   format: int32
-                BankAccountType:
+                Type:
                   type: integer
                   format: int32
-                BankAccountStatus:
+                Status:
                   type: integer
                   format: int32
                 CreationDate:
@@ -3420,7 +3420,7 @@ components:
                   type: string
                   minLength: 0
                   maxLength: 20
-                Users:
+                User:
                   type: integer
                   format: int32
                 Amount:
@@ -3429,10 +3429,10 @@ components:
                 Currency:
                   type: integer
                   format: int32
-                BankAccountType:
+                Type:
                   type: integer
                   format: int32
-                BankAccountStatus:
+                Status:
                   type: integer
                   format: int32
                 CreationDate:
@@ -3450,7 +3450,7 @@ components:
                   type: string
                   minLength: 0
                   maxLength: 20
-                Users:
+                User:
                   type: integer
                   format: int32
                 Amount:
@@ -3459,10 +3459,10 @@ components:
                 Currency:
                   type: integer
                   format: int32
-                BankAccountType:
+                Type:
                   type: integer
                   format: int32
-                BankAccountStatus:
+                Status:
                   type: integer
                   format: int32
                 CreationDate:
@@ -3480,7 +3480,7 @@ components:
                   type: string
                   minLength: 0
                   maxLength: 20
-                Users:
+                User:
                   type: integer
                   format: int32
                 Amount:
@@ -3489,21 +3489,21 @@ components:
                 Currency:
                   type: integer
                   format: int32
-                BankAccountType:
+                Type:
                   type: integer
                   format: int32
-                BankAccountStatus:
+                Status:
                   type: integer
                   format: int32
                 CreationDate:
         $select:
           type: array
-          example: ["Id", "Name", "IBAN", "Users", "Amount", "Currency", "BankAccountType", "BankAccountStatus", "CreationDate"]
+          example: ["Id", "Name", "IBAN", "User", "Amount", "Currency", "Type", "Status", "CreationDate"]
           items:
             type: string
         $sort:
           - type: string
-            example: "Id,Name,IBAN,Users,Amount,Currency,BankAccountType,BankAccountStatus,CreationDate"
+            example: "Id,Name,IBAN,User,Amount,Currency,Type,Status,CreationDate"
         $order:
           type: string
           enum: ["asc", "desc"]
@@ -3514,7 +3514,7 @@ components:
         $limit:
           type: integer
           example: 10
-    Cards:
+    Card:
       type: object
       required:
         - CardNumber
@@ -3532,10 +3532,10 @@ components:
         CardType:
           type: integer
           format: int32
-        BankAccounts:
+        BankAccount:
           type: integer
           format: int32
-    CardsFilterOptions:
+    CardFilterOptions:
       type: object
       properties:
         $filter:
@@ -3573,7 +3573,7 @@ components:
                       items:
                         type: integer
                         format: int32
-                BankAccounts:
+                BankAccount:
                   oneOf:
                     - type: integer
                       format: int32
@@ -3613,7 +3613,7 @@ components:
                       items:
                         type: integer
                         format: int32
-                BankAccounts:
+                BankAccount:
                   oneOf:
                     - type: integer
                       format: int32
@@ -3631,7 +3631,7 @@ components:
                   maxLength: 255
                 ExpirationDate:
                 CardType:
-                BankAccounts:
+                BankAccount:
             greaterThan:
               type: object
               properties:
@@ -3646,7 +3646,7 @@ components:
                 CardType:
                   type: integer
                   format: int32
-                BankAccounts:
+                BankAccount:
                   type: integer
                   format: int32
             greaterThanOrEqual:
@@ -3663,7 +3663,7 @@ components:
                 CardType:
                   type: integer
                   format: int32
-                BankAccounts:
+                BankAccount:
                   type: integer
                   format: int32
             lessThan:
@@ -3680,7 +3680,7 @@ components:
                 CardType:
                   type: integer
                   format: int32
-                BankAccounts:
+                BankAccount:
                   type: integer
                   format: int32
             lessThanOrEqual:
@@ -3697,17 +3697,17 @@ components:
                 CardType:
                   type: integer
                   format: int32
-                BankAccounts:
+                BankAccount:
                   type: integer
                   format: int32
         $select:
           type: array
-          example: ["Id", "CardNumber", "ExpirationDate", "CardType", "BankAccounts"]
+          example: ["Id", "CardNumber", "ExpirationDate", "CardType", "BankAccount"]
           items:
             type: string
         $sort:
           - type: string
-            example: "Id,CardNumber,ExpirationDate,CardType,BankAccounts"
+            example: "Id,CardNumber,ExpirationDate,CardType,BankAccount"
         $order:
           type: string
           enum: ["asc", "desc"]
@@ -4100,7 +4100,7 @@ components:
         $limit:
           type: integer
           example: 10
-    Transactions:
+    Transaction:
       type: object
       required:
         - Amount
@@ -4118,7 +4118,7 @@ components:
           type: number
           format: double
         Date:
-    TransactionsFilterOptions:
+    TransactionFilterOptions:
       type: object
       properties:
         $filter:
