@@ -30,7 +30,7 @@ class _LoginPageState extends State<LoginPage> {
     }
 
     try {
-      final response = await http.post(
+      var response = await http.post(
         Uri.parse(
             'https://keycloak.proper-invest.tech/realms/pi-bank/protocol/openid-connect/token'),
         headers: {'Content-Type': 'application/x-www-form-urlencoded'},
@@ -43,14 +43,59 @@ class _LoginPageState extends State<LoginPage> {
       );
 
       if (response.statusCode == 200) {
-        final data = jsonDecode(response.body);
+        var data = jsonDecode(response.body);
         final accessToken = data['access_token'];
         final refreshToken = data['refresh_token'];
 
         await storage.write(key: 'keycloak_access_token', value: accessToken);
         await storage.write(key: 'keycloak_refresh_token', value: refreshToken);
 
-        print("Login successful!");
+        print("Login successful! \nToken: $accessToken");
+
+        response = await http.post(
+          Uri.parse(
+              'https://keycloak.proper-invest.tech/realms/pi-bank/protocol/openid-connect/token'),
+          headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+          body: {
+            'grant_type': 'urn:ietf:params:oauth:grant-type:token-exchange',
+            'client_id': 'pi-bank-mobile',
+            'subject_token': accessToken,
+            'audience': 'pi-bank-backend',
+          },
+        );
+
+        print("Response Body: ${response.body}");
+
+        response = await http.get(
+          Uri.parse(
+              'https://proper-invest.tech/services/ts/pi-bank-backend/api/BankService.ts/userId/$username/$password'),
+          headers: {'Authorization': 'Bearer $accessToken'},
+        );
+
+        print("Response Body: ${response.body}");
+
+        if (response.statusCode == 200) {
+          try {
+            data = jsonDecode(response.body);
+            final userId = data['userId'];
+            print("Id fetching successful! Id: $userId");
+
+            await storage.write(key: 'userId', value: userId);
+          } catch (e) {
+            print("Error decoding JSON: $e");
+            setState(() {
+              _errorMessage = "Failed to parse user ID response.";
+            });
+            return;
+          }
+        } else {
+          print("Error fetching user ID: ${response.body}");
+          setState(() {
+            _errorMessage = "Failed to fetch user ID. Please try again.";
+          });
+          return;
+        }
+
         Navigator.pushReplacementNamed(context, '/home');
       } else {
         setState(() {
