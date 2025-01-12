@@ -6,7 +6,6 @@ import { UserRepository as UserDao } from "../gen/pi-bank-backend/dao/user/UserR
 import { Controller, Get, Put, Post, response } from "sdk/http";
 
 const keycloakTokenEndpoint = "https://keycloak.proper-invest.tech/realms/pi-bank/protocol/openid-connect/token";
-const keycloakClientId = "pi-bank-mobile";
 
 @Controller
 class BankService {
@@ -44,6 +43,6 @@ class BankService {
             };
         }
 
-        return user[0].Id;
+        return { 'userId': user[0].Id };
     }
 }
