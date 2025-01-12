@@ -31,15 +31,16 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
   smooth_page_indicator:
-  syncfusion_flutter_charts: ^25.1.41+1
+  syncfusion_flutter_charts: ^28.1.38
   readmore: ^3.0.0
   http: ^1.2.1
   shared_preferences: ^2.2.3
+  flutter_secure_storage: ^9.2.4
 dev_dependencies:
   flutter_test:
     sdk: flutter
 
-  flutter_launcher_icons: ^0.13.1
+  flutter_launcher_icons: ^0.14.2
 
 flutter_icons:
   android: "launcher_icon"
