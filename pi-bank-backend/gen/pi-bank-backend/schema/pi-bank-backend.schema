@@ -2,7 +2,7 @@
     "schema": {
         "structures": [
             {
-                "name": "USERS",
+                "name": "USER",
                 "type": "TABLE",
                 "columns": [
                     {
@@ -10,43 +10,43 @@
                         "primaryKey": true,
                         "identity": true,
                         "nullable": true,
-                        "name": "USERS_ID"
+                        "name": "USER_ID"
                     },
                     {
                         "type": "VARCHAR",
                         "length": 900,
-                        "name": "USERS_USERNAME"
+                        "name": "USER_USERNAME"
                     },
                     {
                         "type": "VARCHAR",
                         "length": 255,
-                        "name": "USERS_PASSWORD"
+                        "name": "USER_PASSWORD"
                     },
                     {
                         "type": "VARCHAR",
                         "length": 255,
                         "nullable": true,
-                        "name": "USERS_NAME"
+                        "name": "USER_NAME"
                     },
                     {
                         "type": "VARCHAR",
                         "length": 700,
-                        "name": "USERS_EMAIL"
+                        "name": "USER_EMAIL"
                     },
                     {
                         "type": "VARCHAR",
                         "length": 20,
-                        "name": "USERS_PHONE"
+                        "name": "USER_PHONE"
                     },
                     {
                         "type": "INTEGER",
                         "nullable": true,
-                        "name": "USERS_COUNTRY"
+                        "name": "USER_COUNTRY"
                     }
                 ]
             },
             {
-                "name": "BANKACCOUNTS",
+                "name": "BANKACCOUNT",
                 "type": "TABLE",
                 "columns": [
                     {
@@ -54,51 +54,51 @@
                         "primaryKey": true,
                         "identity": true,
                         "nullable": true,
-                        "name": "BANKACCOUNTS_ID"
+                        "name": "BANKACCOUNT_ID"
                     },
                     {
                         "type": "VARCHAR",
                         "length": 500,
                         "nullable": true,
-                        "name": "BANKACCOUNTS_NAME"
+                        "name": "BANKACCOUNT_NAME"
                     },
                     {
                         "type": "VARCHAR",
                         "length": 20,
-                        "name": "BANKACCOUNTS_PROPERTY3"
+                        "name": "BANKACCOUNT_PROPERTY3"
                     },
                     {
                         "type": "INTEGER",
                         "nullable": true,
-                        "name": "BANKACCOUNTS_USERS"
+                        "name": "BANKACCOUNT_USER"
                     },
                     {
                         "type": "DOUBLE",
-                        "name": "BANKACCOUNTS_AMOUNT"
+                        "name": "BANKACCOUNT_AMOUNT"
                     },
                     {
                         "type": "INTEGER",
                         "nullable": true,
-                        "name": "BANKACCOUNTS_CURRENCY"
+                        "name": "BANKACCOUNT_CURRENCY"
                     },
                     {
                         "type": "INTEGER",
                         "nullable": true,
-                        "name": "BANKACCOUNTS_BANKACCOUNTTYPE"
+                        "name": "BANKACCOUNT_TYPE"
                     },
                     {
                         "type": "INTEGER",
                         "nullable": true,
-                        "name": "BANKACCOUNTS_BANKACCOUNTSTATUS"
+                        "name": "BANKACCOUNT_STATUS"
                     },
                     {
                         "type": "DATE",
-                        "name": "BANKACCOUNTS_CREATIONDATE"
+                        "name": "BANKACCOUNT_CREATIONDATE"
                     }
                 ]
             },
             {
-                "name": "CARDS",
+                "name": "CARD",
                 "type": "TABLE",
                 "columns": [
                     {
@@ -106,26 +106,26 @@
                         "primaryKey": true,
                         "identity": true,
                         "nullable": true,
-                        "name": "CARDS_ID"
+                        "name": "CARD_ID"
                     },
                     {
                         "type": "VARCHAR",
                         "length": 255,
-                        "name": "CARDS_CARDNUMBER"
+                        "name": "CARD_CARDNUMBER"
                     },
                     {
                         "type": "DATE",
                         "nullable": true,
-                        "name": "CARDS_EXPIRATIONDATE"
+                        "name": "CARD_EXPIRATIONDATE"
                     },
                     {
                         "type": "INTEGER",
-                        "name": "CARDS_CARDTYPE"
+                        "name": "CARD_CARDTYPE"
                     },
                     {
                         "type": "INTEGER",
                         "nullable": true,
-                        "name": "CARDS_BANKACCOUNTS"
+                        "name": "CARD_BANKACCOUNT"
                     }
                 ]
             },
@@ -185,7 +185,7 @@
                 ]
             },
             {
-                "name": "TRANSACTIONS",
+                "name": "TRANSACTION",
                 "type": "TABLE",
                 "columns": [
                     {
@@ -193,110 +193,110 @@
                         "primaryKey": true,
                         "identity": true,
                         "nullable": true,
-                        "name": "TRANSACTIONS_ID"
+                        "name": "TRANSACTION_ID"
                     },
                     {
                         "type": "INTEGER",
                         "nullable": true,
-                        "name": "TRANSACTIONS_RECIEVER"
+                        "name": "TRANSACTION_RECIEVER"
                     },
                     {
                         "type": "INTEGER",
                         "nullable": true,
-                        "name": "TRANSACTIONS_SENDER"
+                        "name": "TRANSACTION_SENDER"
                     },
                     {
                         "type": "DOUBLE",
                         "nullable": true,
-                        "name": "TRANSACTIONS_AMOUNT"
+                        "name": "TRANSACTION_AMOUNT"
                     },
                     {
                         "type": "DATE",
                         "nullable": true,
-                        "name": "TRANSACTIONS_DATE"
+                        "name": "TRANSACTION_DATE"
                     }
                 ]
             },
             {
-                "name": "Users_Country",
+                "name": "User_Country",
                 "type": "foreignKey",
-                "table": "USERS",
-                "constraintName": "Users_Country",
-                "columns": "USERS_COUNTRY",
+                "table": "USER",
+                "constraintName": "User_Country",
+                "columns": "USER_COUNTRY",
                 "referencedTable": "COUNTRY",
                 "referencedColumns": "COUNTRY_ID"
             },
             {
-                "name": "BankAccounts_Users",
+                "name": "BankAccount_User",
                 "type": "foreignKey",
-                "table": "BANKACCOUNTS",
-                "constraintName": "BankAccounts_Users",
-                "columns": "BANKACCOUNTS_USERS",
-                "referencedTable": "USERS",
-                "referencedColumns": "USERS_ID"
+                "table": "BANKACCOUNT",
+                "constraintName": "BankAccount_User",
+                "columns": "BANKACCOUNT_USER",
+                "referencedTable": "USER",
+                "referencedColumns": "USER_ID"
             },
             {
-                "name": "BankAccounts_Currency",
+                "name": "BankAccount_Currency",
                 "type": "foreignKey",
-                "table": "BANKACCOUNTS",
-                "constraintName": "BankAccounts_Currency",
-                "columns": "BANKACCOUNTS_CURRENCY",
+                "table": "BANKACCOUNT",
+                "constraintName": "BankAccount_Currency",
+                "columns": "BANKACCOUNT_CURRENCY",
                 "referencedTable": "CURRENCY",
                 "referencedColumns": "CURRENCY_ID"
             },
             {
-                "name": "BankAccounts_BankAccountType",
+                "name": "BankAccount_BankAccountType",
                 "type": "foreignKey",
-                "table": "BANKACCOUNTS",
-                "constraintName": "BankAccounts_BankAccountType",
-                "columns": "BANKACCOUNTS_BANKACCOUNTTYPE",
+                "table": "BANKACCOUNT",
+                "constraintName": "BankAccount_BankAccountType",
+                "columns": "BANKACCOUNT_TYPE",
                 "referencedTable": "BANKACCOUNTTYPE",
                 "referencedColumns": "BANKACCOUNTTYPE_ID"
             },
             {
-                "name": "BankAccounts_BankAccountStatus",
+                "name": "BankAccount_BankAccountStatus",
                 "type": "foreignKey",
-                "table": "BANKACCOUNTS",
-                "constraintName": "BankAccounts_BankAccountStatus",
-                "columns": "BANKACCOUNTS_BANKACCOUNTSTATUS",
+                "table": "BANKACCOUNT",
+                "constraintName": "BankAccount_BankAccountStatus",
+                "columns": "BANKACCOUNT_STATUS",
                 "referencedTable": "BANKACCOUNTSTATUS",
                 "referencedColumns": "BANKACCOUNTSTATUS_ID"
             },
             {
-                "name": "Cards_CardType",
+                "name": "Card_CardType",
                 "type": "foreignKey",
-                "table": "CARDS",
-                "constraintName": "Cards_CardType",
-                "columns": "CARDS_CARDTYPE",
+                "table": "CARD",
+                "constraintName": "Card_CardType",
+                "columns": "CARD_CARDTYPE",
                 "referencedTable": "CARDTYPE",
                 "referencedColumns": "CARDTYPE_ID"
             },
             {
-                "name": "Cards_BankAccounts",
+                "name": "Card_BankAccount",
                 "type": "foreignKey",
-                "table": "CARDS",
-                "constraintName": "Cards_BankAccounts",
-                "columns": "CARDS_BANKACCOUNTS",
-                "referencedTable": "BANKACCOUNTS",
-                "referencedColumns": "BANKACCOUNTS_ID"
+                "table": "CARD",
+                "constraintName": "Card_BankAccount",
+                "columns": "CARD_BANKACCOUNT",
+                "referencedTable": "BANKACCOUNT",
+                "referencedColumns": "BANKACCOUNT_ID"
             },
             {
-                "name": "Transactions_BankAccounts",
+                "name": "Transaction_BankAccount",
                 "type": "foreignKey",
-                "table": "TRANSACTIONS",
-                "constraintName": "Transactions_BankAccounts",
-                "columns": "TRANSACTIONS_RECIEVER",
-                "referencedTable": "BANKACCOUNTS",
-                "referencedColumns": "BANKACCOUNTS_ID"
+                "table": "TRANSACTION",
+                "constraintName": "Transaction_BankAccount",
+                "columns": "TRANSACTION_RECIEVER",
+                "referencedTable": "BANKACCOUNT",
+                "referencedColumns": "BANKACCOUNT_ID"
             },
             {
-                "name": "Transactions_BankAccounts",
+                "name": "Transaction_BankAccount",
                 "type": "foreignKey",
-                "table": "TRANSACTIONS",
-                "constraintName": "Transactions_BankAccounts",
-                "columns": "TRANSACTIONS_SENDER",
-                "referencedTable": "BANKACCOUNTS",
-                "referencedColumns": "BANKACCOUNTS_ID"
+                "table": "TRANSACTION",
+                "constraintName": "Transaction_BankAccount",
+                "columns": "TRANSACTION_SENDER",
+                "referencedTable": "BANKACCOUNT",
+                "referencedColumns": "BANKACCOUNT_ID"
             }
         ]
     },
