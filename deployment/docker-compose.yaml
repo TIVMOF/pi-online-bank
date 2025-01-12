@@ -20,7 +20,7 @@ services:
   keycloak:
     image: quay.io/keycloak/keycloak:latest
     container_name: keycloak
-    command: start
+    command: start-dev
     environment:
       jgroups.dns.query: keycloak
       KC_HEALTH_ENABLED: true
