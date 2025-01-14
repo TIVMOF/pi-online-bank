@@ -43,14 +43,14 @@ class _LoginPageState extends State<LoginPage> {
       );
 
       if (response.statusCode == 200) {
+        print("Login successfull!");
+
         var data = jsonDecode(response.body);
         final accessToken = data['access_token'];
         final refreshToken = data['refresh_token'];
 
-        await storage.write(key: 'keycloak_access_token', value: accessToken);
-        await storage.write(key: 'keycloak_refresh_token', value: refreshToken);
-
-        print("Login successful! \nToken: $accessToken");
+        await storage.write(key: 'mobile_access_token', value: accessToken);
+        await storage.write(key: 'mobile_refresh_token', value: refreshToken);
 
         response = await http.post(
           Uri.parse(
@@ -64,34 +64,50 @@ class _LoginPageState extends State<LoginPage> {
           },
         );
 
-        print("Response Body: ${response.body}");
-
-        response = await http.get(
-          Uri.parse(
-              'https://proper-invest.tech/services/ts/pi-bank-backend/api/BankService.ts/userId/$username/$password'),
-          headers: {'Authorization': 'Bearer $accessToken'},
-        );
-
-        print("Response Body: ${response.body}");
-
         if (response.statusCode == 200) {
-          try {
-            data = jsonDecode(response.body);
-            final userId = data['userId'];
-            print("Id fetching successful! Id: $userId");
+          print("Token exchange successfull!");
 
-            await storage.write(key: 'userId', value: userId);
-          } catch (e) {
-            print("Error decoding JSON: $e");
+          var data = jsonDecode(response.body);
+          final accessToken = data['access_token'];
+          final refreshToken = data['refresh_token'];
+
+          await storage.write(key: 'backend_access_token', value: accessToken);
+          await storage.write(
+              key: 'backend_refresh_token', value: refreshToken);
+
+          response = await http.get(
+            Uri.parse(
+                'https://proper-invest.tech/services/ts/pi-bank-backend/api/BankService.ts/userId/$username/$password'),
+            headers: {'Authorization': 'Bearer $accessToken'},
+          );
+
+          print("Response Body: ${response.body}");
+
+          if (response.statusCode == 200) {
+            try {
+              data = jsonDecode(response.body);
+              final userId = data['userId'];
+              print("Id fetching successful! Id: $userId");
+
+              await storage.write(key: 'userId', value: userId);
+            } catch (e) {
+              print("Error decoding JSON: $e");
+              setState(() {
+                _errorMessage = "Failed to parse user ID response.";
+              });
+              return;
+            }
+          } else {
+            print("Error fetching user ID: ${response.body}");
             setState(() {
-              _errorMessage = "Failed to parse user ID response.";
+              _errorMessage = "Failed to fetch user ID. Please try again.";
             });
             return;
           }
         } else {
           print("Error fetching user ID: ${response.body}");
           setState(() {
-            _errorMessage = "Failed to fetch user ID. Please try again.";
+            _errorMessage = "Failed token exchange. Please try again.";
           });
           return;
         }
