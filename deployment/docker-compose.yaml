@@ -20,7 +20,7 @@ services:
   keycloak:
     image: quay.io/keycloak/keycloak:latest
     container_name: keycloak
-    command: start-dev --features=token-exchange
+    command: start-dev
     environment:
       jgroups.dns.query: keycloak
       KC_HEALTH_ENABLED: true
@@ -38,6 +38,7 @@ services:
       KC_HOSTNAME: https://keycloak.proper-invest.tech
       KC_PROXY: edge
       PROXY_ADDRESS_FORWARDING: true
+      KC_FEATURES: token-exchange
     volumes:
       - keycloak_data:/opt/keycloak/data
     depends_on:
