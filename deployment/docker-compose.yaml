@@ -38,6 +38,7 @@ services:
       KC_HOSTNAME: https://keycloak.proper-invest.tech
       KC_PROXY: edge
       PROXY_ADDRESS_FORWARDING: true
+      KC_FEATURES: preview
     volumes:
       - keycloak_data:/opt/keycloak/data
     depends_on:
@@ -50,11 +51,15 @@ services:
     image: ghcr.io/tivmof/pi-bank-backend:latest
     container_name: pi-bank-backend
     environment:
-      spring.profiles.active: keycloak
+      DIRIGIBLE_MULTI_TENANT_MODE: false
+      SPRING_PROFILES_ACTIVE: keycloak
       DIRIGIBLE_KEYCLOAK_AUTH_SERVER_URL: https://keycloak.proper-invest.tech/realms/pi-bank
       DIRIGIBLE_KEYCLOAK_CLIENT_ID: pi-bank-backend
-      DIRIGIBLE_MULTI_TENANT_MODE: "false"
-      DIRIGIBLE_TRIAL_ENABLED: "true"
+      DIRIGIBLE_KEYCLOAK_CLIENT_SECRET: ${BACKEND_CLIENT_SECRET}
+      DIRIGIBLE_KEYCLOAK_GRANT_TYPE: client_credentials
+      DIRIGIBLE_TRIAL_ENABLED: true
+    ports:
+      - "8080:8080"
     depends_on:
       - keycloak
     volumes:
