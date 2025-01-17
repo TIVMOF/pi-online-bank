@@ -28,9 +28,9 @@ class BankService {
         return "Hello from Pi Bank!";
     }
 
-    @Post("/userId")
+    @Post("/userLogin")
     public async userLogin(body: any) {
-        let username = body.username;
+        let username = body.username
         let password = body.password;
 
         const user = await this.userDao.findAll({
