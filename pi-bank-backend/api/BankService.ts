@@ -22,7 +22,7 @@ class BankService {
     }
 
     @Get("/test")
-    public createUser(_: any) {
+    public createUser() {
         return "Hello from Pi Bank!";
     }
 
@@ -44,6 +44,6 @@ class BankService {
             };
         }
 
-        return { 'userId': user[0].Id };
+        return { "userId": user[0].Id };
     }
 }
