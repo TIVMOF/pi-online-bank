@@ -55,7 +55,6 @@ services:
       spring.profiles.active: keycloak
       DIRIGIBLE_KEYCLOAK_AUTH_SERVER_URL: https://keycloak.proper-invest.tech/realms/pi-bank
       DIRIGIBLE_KEYCLOAK_CLIENT_ID: pi-bank-backend
-      DIRIGIBLE_KEYCLOAK_CLIENT_SECRET: ${BACKEND_CLIENT_SECRET}
       DIRIGIBLE_KEYCLOAK_GRANT_TYPE: client_credentials
     depends_on:
       - keycloak
