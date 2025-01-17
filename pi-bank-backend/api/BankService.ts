@@ -22,7 +22,9 @@ class BankService {
     }
 
     @Get("/test")
-    public createUser() {
+    public test(): string {
+        console.log("Endpoint hit!");
+
         return "Hello from Pi Bank!";
     }
 
