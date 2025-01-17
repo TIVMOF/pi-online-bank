@@ -51,12 +51,12 @@ services:
     image: ghcr.io/tivmof/pi-bank-backend:latest
     container_name: pi-bank-backend
     environment:
-      SPRING_PROFILES_ACTIVE: keycloak
+      DIRIGIBLE_MULTI_TENANT_MODE: "false"
+      spring.profiles.active: keycloak
       DIRIGIBLE_KEYCLOAK_AUTH_SERVER_URL: https://keycloak.proper-invest.tech/realms/pi-bank
       DIRIGIBLE_KEYCLOAK_CLIENT_ID: pi-bank-backend
       DIRIGIBLE_KEYCLOAK_CLIENT_SECRET: ${BACKEND_CLIENT_SECRET}
       DIRIGIBLE_KEYCLOAK_GRANT_TYPE: client_credentials
-      DIRIGIBLE_MULTI_TENANT_MODE: false
     depends_on:
       - keycloak
     volumes:
