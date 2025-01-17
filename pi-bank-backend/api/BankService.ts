@@ -21,8 +21,9 @@ class BankService {
         this.userDao = new UserDao();
     }
 
-    @Post("/createUser")
-    public createUser(_: any, ctx: any) {
+    @Get("/test")
+    public createUser(_: any) {
+        return "Hello from Pi Bank!";
     }
 
     @Post("/userId")
