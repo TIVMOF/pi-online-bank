@@ -25,7 +25,7 @@ class BankService {
     public createUser(_: any, ctx: any) {
     }
 
-    @Get("userId/:username/:password")
+    @Post("/userId/:username/:password")
     public async userLogin(_: any, ctx: any) {
         let username = ctx.pathParameters.username;
         let password = ctx.pathParameters.password;
