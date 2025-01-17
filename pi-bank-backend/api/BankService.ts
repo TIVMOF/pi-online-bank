@@ -21,8 +21,11 @@ class BankService {
         this.userDao = new UserDao();
     }
 
-    @Post("/createUser")
-    public createUser(_: any, ctx: any) {
+    @Get("/test")
+    public test(): string {
+        console.log("Endpoint hit!");
+
+        return "Hello from Pi Bank!";
     }
 
     @Post("/userLogin")
@@ -43,6 +46,6 @@ class BankService {
             };
         }
 
-        return { 'userId': user[0].Id };
+        return { "userId": user[0].Id };
     }
 }
