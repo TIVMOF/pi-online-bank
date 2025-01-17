@@ -51,7 +51,7 @@ services:
     image: ghcr.io/tivmof/pi-bank-backend:latest
     container_name: pi-bank-backend
     environment:
-      DIRIGIBLE_MULTI_TENANT_MODE: "false"
+      DIRIGIBLE_MULTI_TENANT_MODE: false
       SPRING_PROFILES_ACTIVE: keycloak
       DIRIGIBLE_KEYCLOAK_AUTH_SERVER_URL: https://keycloak.proper-invest.tech/realms/pi-bank
       DIRIGIBLE_KEYCLOAK_CLIENT_ID: pi-bank-backend
