@@ -25,10 +25,10 @@ class BankService {
     public createUser(_: any, ctx: any) {
     }
 
-    @Post("/userId/:username/:password")
-    public async userLogin(_: any, ctx: any) {
-        let username = ctx.pathParameters.username;
-        let password = ctx.pathParameters.password;
+    @Post("/userId")
+    public async userLogin(body: any) {
+        let username = body.username;
+        let password = body.password;
 
         const user = await this.userDao.findAll({
             $filter: {
