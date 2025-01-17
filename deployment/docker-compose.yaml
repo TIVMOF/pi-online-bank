@@ -56,7 +56,7 @@ services:
       DIRIGIBLE_KEYCLOAK_AUTH_SERVER_URL: https://keycloak.proper-invest.tech/realms/pi-bank
       DIRIGIBLE_KEYCLOAK_CLIENT_ID: pi-bank-backend
       DIRIGIBLE_KEYCLOAK_CLIENT_SECRET: ${BACKEND_CLIENT_SECRET}
-      DIRIGIBLE_TRIAL_ENABLED: true
+      DIRIGIBLE_KEYCLOAK_GRANT_TYPE: client_credentials
     ports:
       - "8080:8080"
     depends_on:
