@@ -58,8 +58,8 @@ services:
       DIRIGIBLE_KEYCLOAK_CLIENT_SECRET: ${BACKEND_CLIENT_SECRET}
       DIRIGIBLE_KEYCLOAK_GRANT_TYPE: client_credentials
       # DIRIGIBLE_TRIAL_ENABLED: true
-    ports:
-      - "8080:8080"
+    volumes:
+      - pi_bank_data:/target/dirigible/h2
     depends_on:
       - keycloak
     networks:
