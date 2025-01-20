@@ -31,7 +31,6 @@ class _LoginPageState extends State<LoginPage> {
 
     try {
       // Step 1: Login to Keycloak
-      print("Step 1: Logging in to Keycloak...");
       var response = await http.post(
         Uri.parse(
             'https://keycloak.proper-invest.tech/realms/pi-bank/protocol/openid-connect/token'),
@@ -44,24 +43,15 @@ class _LoginPageState extends State<LoginPage> {
         },
       );
 
-      print("Response Status Code: ${response.statusCode}");
-      print("Response Body: ${response.body}");
-
       if (response.statusCode == 200) {
-        print("Login successful!");
-
         var data = jsonDecode(response.body);
         final accessToken = data['access_token'];
         final refreshToken = data['refresh_token'];
-
-        print("Access Token: $accessToken");
-        print("Refresh Token: $refreshToken");
 
         await storage.write(key: 'mobile_access_token', value: accessToken);
         await storage.write(key: 'mobile_refresh_token', value: refreshToken);
 
         // Step 2: Token Exchange
-        print("Step 2: Exchanging token...");
         response = await http.post(
           Uri.parse(
               'https://keycloak.proper-invest.tech/realms/pi-bank/protocol/openid-connect/token'),
@@ -74,18 +64,10 @@ class _LoginPageState extends State<LoginPage> {
           },
         );
 
-        print("Response Status Code: ${response.statusCode}");
-        print("Response Body: ${response.body}");
-
         if (response.statusCode == 200) {
-          print("Token exchange successful!");
-
           data = jsonDecode(response.body);
           final backendAccessToken = data['access_token'];
           final backendRefreshToken = data['refresh_token'];
-
-          print("Backend Access Token: $backendAccessToken");
-          print("Backend Refresh Token: $backendRefreshToken");
 
           await storage.write(
               key: 'backend_access_token', value: backendAccessToken);
@@ -93,7 +75,6 @@ class _LoginPageState extends State<LoginPage> {
               key: 'backend_refresh_token', value: backendRefreshToken);
 
           // Step 3: User Login on Backend
-          print("Step 3: Logging in to backend...");
           response = await http.post(
             Uri.parse(
                 'https://proper-invest.tech/services/ts/pi-bank-backend/api/BankService.ts/userLogin'),
@@ -106,32 +87,25 @@ class _LoginPageState extends State<LoginPage> {
             }),
           );
 
-          print("Response Status Code: ${response.statusCode}");
-          print("Response Body: ${response.body}");
-
           if (response.statusCode == 200) {
             try {
               data = jsonDecode(response.body);
               final userId = data['UserId'];
-              print("User ID fetching successful! ID: $userId");
 
               await storage.write(key: 'userId', value: userId.toString());
             } catch (e) {
-              print("Error decoding JSON: $e");
               setState(() {
                 _errorMessage = "Failed to parse user ID response.";
               });
               return;
             }
           } else {
-            print("Error fetching user ID. Response: ${response.body}");
             setState(() {
               _errorMessage = "Failed to fetch user ID. Please try again.";
             });
             return;
           }
         } else {
-          print("Error during token exchange. Response: ${response.body}");
           setState(() {
             _errorMessage = "Failed token exchange. Please try again.";
           });
@@ -141,14 +115,12 @@ class _LoginPageState extends State<LoginPage> {
         // Navigate to home on success
         Navigator.pushReplacementNamed(context, '/home');
       } else {
-        print("Login failed. Response: ${response.body}");
         setState(() {
           _errorMessage = jsonDecode(response.body)['error_description'] ??
               "Invalid username or password.";
         });
       }
     } catch (e) {
-      print("Error: $e");
       setState(() {
         _errorMessage =
             "An error occurred. Please check your connection and try again.";
