@@ -23,33 +23,44 @@ class BankService {
 
     @Get("/test")
     public test(): string {
-        console.log("Endpoint hit!");
-
         const msg = "Hello from Pi Bank!";
 
-        response.setHeader("Content-Lenght", msg.lenght);
-
+        response.setStatus(response.OK);
         return msg;
     }
 
-    @Post("/userId")
-    public async userLogin(body: any) {
-        let username = body.username;
-        let password = body.password;
+    @Post("/userLogin")
+    public userLogin(body: any) {
+        try {
+            const requiredFields = ["Username", "Password"];
 
-        const user = await this.userDao.findAll({
-            $filter: {
-                equals: { Username: username, Password: password },
-            },
-        });
+            for (const field of requiredFields) {
+                if (!body.hasOwnProperty(field)) {
+                    response.setStatus(response.BAD_REQUEST);
+                    return { message: `Missing property: ${field}` };
+                }
+            }
 
-        if (!user || user.length === 0) {
-            return {
-                statusCode: 404,
-                body: { message: "Invalid username or password" },
-            };
+            let username = body.Username;
+            let password = body.Password;
+
+            const user = this.userDao.findAll({
+                $filter: {
+                    equals: { Username: username, Password: password },
+                },
+            });
+
+            if (!user || user.length === 0) {
+                response.setStatus(response.NOT_FOUND);
+                return { message: "Invalid username or password" };
+            }
+
+            response.setStatus(response.OK);
+            return { "UserId": user[0].Id };
+
+        } catch (e) {
+            response.setStatus(response.BAD_REQUEST);
+            return { error: e.message };
         }
-
-        return { "userId": user[0].Id };
     }
 }
