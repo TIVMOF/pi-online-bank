@@ -30,6 +30,7 @@ class _LoginPageState extends State<LoginPage> {
     }
 
     try {
+      // Step 1: Login to Keycloak
       var response = await http.post(
         Uri.parse(
             'https://keycloak.proper-invest.tech/realms/pi-bank/protocol/openid-connect/token'),
@@ -43,8 +44,6 @@ class _LoginPageState extends State<LoginPage> {
       );
 
       if (response.statusCode == 200) {
-        print("Login successfull!");
-
         var data = jsonDecode(response.body);
         final accessToken = data['access_token'];
         final refreshToken = data['refresh_token'];
@@ -52,6 +51,7 @@ class _LoginPageState extends State<LoginPage> {
         await storage.write(key: 'mobile_access_token', value: accessToken);
         await storage.write(key: 'mobile_refresh_token', value: refreshToken);
 
+        // Step 2: Token Exchange
         response = await http.post(
           Uri.parse(
               'https://keycloak.proper-invest.tech/realms/pi-bank/protocol/openid-connect/token'),
@@ -65,53 +65,54 @@ class _LoginPageState extends State<LoginPage> {
         );
 
         if (response.statusCode == 200) {
-          print("Token exchange successfull!");
+          data = jsonDecode(response.body);
+          final backendAccessToken = data['access_token'];
+          final backendRefreshToken = data['refresh_token'];
 
-          var data = jsonDecode(response.body);
-          final accessToken = data['access_token'];
-          final refreshToken = data['refresh_token'];
-
-          await storage.write(key: 'backend_access_token', value: accessToken);
           await storage.write(
-              key: 'backend_refresh_token', value: refreshToken);
+              key: 'backend_access_token', value: backendAccessToken);
+          await storage.write(
+              key: 'backend_refresh_token', value: backendRefreshToken);
 
-          response = await http.get(
+          // Step 3: User Login on Backend
+          response = await http.post(
             Uri.parse(
-                'https://proper-invest.tech/services/ts/pi-bank-backend/api/BankService.ts/userId/$username/$password'),
-            headers: {'Authorization': 'Bearer $accessToken'},
+                'https://proper-invest.tech/services/ts/pi-bank-backend/api/BankService.ts/userLogin'),
+            headers: {
+              'Authorization': 'Bearer $backendAccessToken',
+            },
+            body: jsonEncode({
+              "Username": username,
+              "Password": password,
+            }),
           );
-
-          print("Response Body: ${response.body}");
 
           if (response.statusCode == 200) {
             try {
               data = jsonDecode(response.body);
-              final userId = data['userId'];
-              print("Id fetching successful! Id: $userId");
+              final userId = data['UserId'];
 
-              await storage.write(key: 'userId', value: userId);
+              await storage.write(key: 'userId', value: userId.toString());
             } catch (e) {
-              print("Error decoding JSON: $e");
               setState(() {
                 _errorMessage = "Failed to parse user ID response.";
               });
               return;
             }
           } else {
-            print("Error fetching user ID: ${response.body}");
             setState(() {
               _errorMessage = "Failed to fetch user ID. Please try again.";
             });
             return;
           }
         } else {
-          print("Error fetching user ID: ${response.body}");
           setState(() {
             _errorMessage = "Failed token exchange. Please try again.";
           });
           return;
         }
 
+        // Navigate to home on success
         Navigator.pushReplacementNamed(context, '/home');
       } else {
         setState(() {
@@ -124,7 +125,6 @@ class _LoginPageState extends State<LoginPage> {
         _errorMessage =
             "An error occurred. Please check your connection and try again.";
       });
-      print("Error: $e");
     }
   }
 
