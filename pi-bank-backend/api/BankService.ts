@@ -63,13 +63,20 @@ class BankService {
             })
 
             const finalizaedUserCards = userCards.map(card => {
+                const expirationDate = new Date(card.ExpirationDate);
+
+                const month = (expirationDate.getMonth() + 1).toString().padStart(2, '0');
+                const year = expirationDate.getFullYear().toString().slice(-2);
+
+                const formattedDate = `${month}/${year}`;
+
                 return {
                     "CardNumber": card.CardNumber,
-                    "ExpirationDate": card.ExpirationDate,
+                    "ExpirationDate": formattedDate,
                     "CardType": this.cardTypeDao.findById(card.CardType).Name,
                     "Balance": this.bankAccountDao.findById(card.BankAccount).Amount
                 }
-            })
+            });
 
             response.setStatus(response.OK);
             return { "UserCards": finalizaedUserCards };
