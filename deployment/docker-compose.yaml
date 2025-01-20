@@ -40,7 +40,7 @@ services:
       PROXY_ADDRESS_FORWARDING: true
       KC_FEATURES: preview
     depends_on:
-      postgres:
+      keycloak-db:
         condition: service_healthy
     networks:
       - shared_network
