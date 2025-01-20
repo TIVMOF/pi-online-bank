@@ -62,8 +62,6 @@ services:
       - "8080:8080"
     depends_on:
       - keycloak
-    volumes:
-      - pi_bank_data:/target 
     networks:
       - shared_network
 
