@@ -39,8 +39,6 @@ services:
       KC_PROXY: edge
       PROXY_ADDRESS_FORWARDING: true
       KC_FEATURES: preview
-    volumes:
-      - keycloak_data:/opt/keycloak/data
     depends_on:
       postgres:
         condition: service_healthy
@@ -93,8 +91,6 @@ services:
       - shared_network
 
 volumes:
-  keycloak_data:
-    driver: local
   pi_bank_data:
     driver: local
   postgres_data:
