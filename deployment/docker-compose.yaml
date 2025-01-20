@@ -57,7 +57,7 @@ services:
       DIRIGIBLE_KEYCLOAK_CLIENT_ID: pi-bank-backend
       DIRIGIBLE_KEYCLOAK_CLIENT_SECRET: ${BACKEND_CLIENT_SECRET}
       DIRIGIBLE_KEYCLOAK_GRANT_TYPE: client_credentials
-      # DIRIGIBLE_TRIAL_ENABLED: true
+      DIRIGIBLE_TRIAL_ENABLED: true
     volumes:
       - pi_bank_data:/target/dirigible/h2
     depends_on:
