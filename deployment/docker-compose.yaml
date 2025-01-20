@@ -17,7 +17,7 @@ services:
       timeout: 5s
       retries: 5
 
-    pi-bank-db:
+  pi-bank-db:
     image: postgres:latest
     container_name: pi-bank-db
     environment:
