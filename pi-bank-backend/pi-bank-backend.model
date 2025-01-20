@@ -329,6 +329,19 @@
                         "widgetType": "TEXTBOX"
                     },
                     {
+                        "dataLength": "20",
+                        "dataName": "CARD_CV",
+                        "dataNullable": "true",
+                        "dataType": "VARCHAR",
+                        "description": "",
+                        "name": "CV",
+                        "tooltip": "",
+                        "widgetIsMajor": "true",
+                        "widgetLength": "20",
+                        "widgetSize": "",
+                        "widgetType": "TEXTBOX"
+                    },
+                    {
                         "dataName": "CARD_EXPIRATIONDATE",
                         "dataNullable": "true",
                         "dataType": "DATE",

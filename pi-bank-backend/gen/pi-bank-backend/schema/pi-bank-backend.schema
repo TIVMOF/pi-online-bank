@@ -114,6 +114,12 @@
                         "name": "CARD_CARDNUMBER"
                     },
                     {
+                        "type": "VARCHAR",
+                        "length": 20,
+                        "nullable": true,
+                        "name": "CARD_CV"
+                    },
+                    {
                         "type": "DATE",
                         "nullable": true,
                         "name": "CARD_EXPIRATIONDATE"
