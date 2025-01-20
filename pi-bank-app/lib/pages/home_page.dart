@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'statistics_page.dart';
 import 'transaction_page.dart';
-import 'send_page.dart';
+import 'transfer_page.dart';
 import '../utill/app_bar.dart';
 import '../utill/bottom_app_bar.dart';
 import '../utill/my_card.dart';
