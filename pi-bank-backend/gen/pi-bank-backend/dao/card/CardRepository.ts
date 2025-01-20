@@ -7,6 +7,7 @@ import { EntityUtils } from "../utils/EntityUtils";
 export interface CardEntity {
     readonly Id: number;
     CardNumber: string;
+    CV?: string;
     ExpirationDate?: Date;
     CardType: number;
     BankAccount?: number;
@@ -14,6 +15,7 @@ export interface CardEntity {
 
 export interface CardCreateEntity {
     readonly CardNumber: string;
+    readonly CV?: string;
     readonly ExpirationDate?: Date;
     readonly CardType: number;
     readonly BankAccount?: number;
@@ -28,6 +30,7 @@ export interface CardEntityOptions {
         equals?: {
             Id?: number | number[];
             CardNumber?: string | string[];
+            CV?: string | string[];
             ExpirationDate?: Date | Date[];
             CardType?: number | number[];
             BankAccount?: number | number[];
@@ -35,6 +38,7 @@ export interface CardEntityOptions {
         notEquals?: {
             Id?: number | number[];
             CardNumber?: string | string[];
+            CV?: string | string[];
             ExpirationDate?: Date | Date[];
             CardType?: number | number[];
             BankAccount?: number | number[];
@@ -42,6 +46,7 @@ export interface CardEntityOptions {
         contains?: {
             Id?: number;
             CardNumber?: string;
+            CV?: string;
             ExpirationDate?: Date;
             CardType?: number;
             BankAccount?: number;
@@ -49,6 +54,7 @@ export interface CardEntityOptions {
         greaterThan?: {
             Id?: number;
             CardNumber?: string;
+            CV?: string;
             ExpirationDate?: Date;
             CardType?: number;
             BankAccount?: number;
@@ -56,6 +62,7 @@ export interface CardEntityOptions {
         greaterThanOrEqual?: {
             Id?: number;
             CardNumber?: string;
+            CV?: string;
             ExpirationDate?: Date;
             CardType?: number;
             BankAccount?: number;
@@ -63,6 +70,7 @@ export interface CardEntityOptions {
         lessThan?: {
             Id?: number;
             CardNumber?: string;
+            CV?: string;
             ExpirationDate?: Date;
             CardType?: number;
             BankAccount?: number;
@@ -70,6 +78,7 @@ export interface CardEntityOptions {
         lessThanOrEqual?: {
             Id?: number;
             CardNumber?: string;
+            CV?: string;
             ExpirationDate?: Date;
             CardType?: number;
             BankAccount?: number;
@@ -114,6 +123,11 @@ export class CardRepository {
                 column: "CARD_CARDNUMBER",
                 type: "VARCHAR",
                 required: true
+            },
+            {
+                name: "CV",
+                column: "CARD_CV",
+                type: "VARCHAR",
             },
             {
                 name: "ExpirationDate",
