@@ -1,18 +1,35 @@
 services:
-  postgres:
+  keycloak-db:
     image: postgres:latest
     command: postgres -c "max_connections=200"
     container_name: keycloak-db
     environment:
       POSTGRES_DB: keycloak
       POSTGRES_USER: keycloak
-      POSTGRES_PASSWORD: password
+      POSTGRES_PASSWORD: keycloak
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - keycloak_db_data:/var/lib/postgresql/data
     networks:
       - shared_network
     healthcheck:
       test: ["CMD", "pg_isready", "-U", "keycloak"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  pi-bank-db:
+    image: postgres:latest
+    container_name: pi-bank-db
+    environment:
+      POSTGRES_DB: dirigible
+      POSTGRES_USER: dirigible
+      POSTGRES_PASSWORD: dirigible
+    volumes:
+      - pi_bank_db_data:/var/lib/postgresql/data
+    networks:
+      - shared_network
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "dirigible"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -31,17 +48,16 @@ services:
       KC_DB_URL_HOST: keycloak-db
       KC_DB_URL_DATABASE: keycloak
       KC_DB_USERNAME: keycloak
-      KC_DB_PASSWORD: password
+      KC_DB_PASSWORD: keycloak
       KC_DB_SCHEME: public
       KEYCLOAK_ADMIN: admin
       KEYCLOAK_ADMIN_PASSWORD: admin
       KC_HOSTNAME: https://keycloak.proper-invest.tech
       KC_PROXY: edge
       PROXY_ADDRESS_FORWARDING: true
-    volumes:
-      - keycloak_data:/opt/keycloak/data
+      KC_FEATURES: preview
     depends_on:
-      postgres:
+      keycloak-db:
         condition: service_healthy
     networks:
       - shared_network
@@ -50,15 +66,20 @@ services:
     image: ghcr.io/tivmof/pi-bank-backend:latest
     container_name: pi-bank-backend
     environment:
-      spring.profiles.active: keycloak
+      DIRIGIBLE_MULTI_TENANT_MODE: false
+      SPRING_PROFILES_ACTIVE: keycloak
       DIRIGIBLE_KEYCLOAK_AUTH_SERVER_URL: https://keycloak.proper-invest.tech/realms/pi-bank
       DIRIGIBLE_KEYCLOAK_CLIENT_ID: pi-bank-backend
-      DIRIGIBLE_MULTI_TENANT_MODE: "false"
-      DIRIGIBLE_TRIAL_ENABLED: "true"
+      DIRIGIBLE_KEYCLOAK_CLIENT_SECRET: ${BACKEND_CLIENT_SECRET}
+      DIRIGIBLE_TRIAL_ENABLED: true
+      DIRIGIBLE_DATABASE_CUSTOM_DATASOURCES: PostgreSQL
+      PostgreSQL_DRIVER: org.postgresql.Driver
+      PostgreSQL_URL: jdbc:postgresql://pi-bank-db:5432/dirigible
+      PostgreSQL_USERNAME: dirigible
+      PostgreSQL_PASSWORD: dirigible
+      DIRIGIBLE_DATABASE_DATASOURCE_NAME_DEFAULT: PostgreSQL
     depends_on:
       - keycloak
-    volumes:
-      - pi_bank_data:/target 
     networks:
       - shared_network
 
@@ -91,11 +112,9 @@ services:
       - shared_network
 
 volumes:
-  keycloak_data:
+  keycloak_db_data:
     driver: local
-  pi_bank_data:
-    driver: local
-  postgres_data:
+  pi_bank_db_data:
     driver: local
 
 networks:
