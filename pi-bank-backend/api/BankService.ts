@@ -25,7 +25,11 @@ class BankService {
     public test(): string {
         console.log("Endpoint hit!");
 
-        return "Hello from Pi Bank!";
+        const msg = "Hello from Pi Bank!";
+
+        response.setHeader("Content-Lenght", msg.lenght);
+
+        return msg;
     }
 
     @Post("/userId")
