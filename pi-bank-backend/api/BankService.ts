@@ -171,7 +171,7 @@ class BankService {
                 const sender = this.userDao.findById(senderBankAccount.User);
 
                 return {
-                    "Reciever": reciever.Username,
+                    "Receiver": reciever.Username,
                     "Sender": sender.Username,
                     "Amount": transaction.Amount,
                     "Date": formattedDate
@@ -187,8 +187,8 @@ class BankService {
         }
     }
 
-    @Get("/transactionItems/:userId")
-    public getTransactionItems(_: any, ctx: any) {
+    @Get("/userInteractions/:userId")
+    public getUserInteractions(_: any, ctx: any) {
         const userId = ctx.pathParameters.userId;
 
         const user = this.userDao.findById(userId);
@@ -227,14 +227,38 @@ class BankService {
                 return { message: "User doesn't have Transactions!" };
             }
 
+            const allBankAccounts = this.bankAccountDao.findAll();
+            let userInteractions: any = [];
+
+            allBankAccounts.forEach(bankAccount => {
+                userTransactions.forEach(transaction => {
+                    if (transaction.Sender === bankAccount.Id || transaction.Reciever === bankAccount.Id) {
+                        const username = this.userDao.findById(bankAccount.User).Username;
+
+                        userInteractions.push({
+                            "Name:": username,
+                            "IBAN": bankAccount.IBAN,
+                            "BankAccountId": bankAccount.Id,
+                            "Amount": bankAccount.Amount
+                        })
+                    }
+                })
+            })
+
+            userInteractions = Array.from(
+                new Set(userInteractions.map(interaction => JSON.stringify(interaction)))
+            ).map(jsonString => JSON.parse(jsonString));
+
             response.setStatus(response.OK);
-            return { "UserTransactions": userTransactions };
+            return userInteractions;
 
         } catch (e: any) {
             response.setStatus(response.BAD_REQUEST);
             return { error: e.message };
         }
     }
+
+
 
     @Get("/cards/:userId")
     public getCards(_: any, ctx: any) {
