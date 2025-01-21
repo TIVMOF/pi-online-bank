@@ -105,7 +105,7 @@ class BankService {
     public getBankAccountsFromBankAccountId(_: any, ctx: any) {
         const bankAccountId = ctx.pathParameters.bankAccountId;
 
-        const bankAccount = this.userDao.findById(bankAccountId);
+        const bankAccount = this.bankAccountDao.findById(bankAccountId);
 
         if (!bankAccount) {
             response.setStatus(response.NOT_FOUND);
