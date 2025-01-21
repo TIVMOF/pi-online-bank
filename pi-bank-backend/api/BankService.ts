@@ -328,10 +328,26 @@ class BankService {
         }
     }
 
-    @Post("/createTransaction")
+    @Post("/transaction")
     public createTransaction(body: any) {
         try {
+            const requiredFields = ["Reciever", "Sender", "Amount"];
 
+            for (const field of requiredFields) {
+                if (!body.hasOwnProperty(field)) {
+                    response.setStatus(response.BAD_REQUEST);
+                    return { message: `Missing property: ${field}` };
+                }
+            }
+
+            const newTransaction = this.transactionDao.create(body);
+
+            if (!newTransaction) {
+                throw new Error("Failed transaction!");
+            }
+
+            response.setStatus(response.CREATED);
+            return newTransaction;
 
         } catch (e: any) {
             response.setStatus(response.BAD_REQUEST);

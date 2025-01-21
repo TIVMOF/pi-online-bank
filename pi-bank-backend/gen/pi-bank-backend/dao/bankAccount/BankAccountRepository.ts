@@ -24,7 +24,6 @@ export interface BankAccountCreateEntity {
     readonly Currency?: number;
     readonly Type?: number;
     readonly Status?: number;
-    readonly CreationDate: Date;
 }
 
 export interface BankAccountUpdateEntity extends BankAccountCreateEntity {
@@ -212,6 +211,8 @@ export class BankAccountRepository {
 
     public create(entity: BankAccountCreateEntity): number {
         EntityUtils.setLocalDate(entity, "CreationDate");
+        // @ts-ignore
+        (entity as BankAccountEntity).CreationDate = new Date();;
         const id = this.dao.insert(entity);
         this.triggerEvent({
             operation: "create",
