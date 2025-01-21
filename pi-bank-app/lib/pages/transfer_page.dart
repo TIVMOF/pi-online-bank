@@ -30,7 +30,7 @@ class _SendPageState extends State<SendPage> {
   bool useDropdown = false;
   String? _errorMessage;
 
-  Future<void> transfer() async {
+  Future<void> getData() async {
     try {
       final userId = await storage.read(key: 'userId');
       final accessToken = await storage.read(key: 'backendAccessToken');
@@ -39,12 +39,13 @@ class _SendPageState extends State<SendPage> {
         setState(() {
           _errorMessage = "Authentication error: Missing credentials.";
         });
-        print(_errorMessage);
+        print("Error: $_errorMessage");
         return;
       }
 
       print("Fetching bank accounts for user ID: $userId");
 
+      // Fetch bank accounts
       var response = await http.get(
         Uri.parse(
             'https://proper-invest.tech/services/ts/pi-bank-backend/api/BankService.ts/bankAccounts/$userId'),
@@ -53,37 +54,95 @@ class _SendPageState extends State<SendPage> {
         },
       );
 
+      print("Bank Accounts API Response: ${response.body}");
       if (response.statusCode == 200) {
-        try {
-          var data = jsonDecode(response.body);
-          if (data["UserBankAccounts"] != null) {
-            setState(() {
-              bankAccounts = List<Map<String, String>>.from(
-                data["UserBankAccounts"].map((account) => {
-                      "Id": account["Id"].toString(),
-                      "IBAN": account["IBAN"].toString(),
-                      "Amount": account["Amount"].toString(),
-                      "Currency": account["Currency"].toString(),
-                      "Type": account["Type"].toString()
-                    }),
-              );
-              selectedAccountId =
-                  bankAccounts.isNotEmpty ? bankAccounts[0]["Id"] : null;
-            });
-            print("Fetched bank accounts: $bankAccounts");
-          } else {
-            throw Exception("No accounts found in response.");
-          }
-        } catch (e) {
+        var data = jsonDecode(response.body);
+        if (data["UserBankAccounts"] != null) {
           setState(() {
-            _errorMessage = "Failed to parse user bank accounts!";
+            bankAccounts = List<Map<String, String>>.from(
+              data["UserBankAccounts"].map((account) => {
+                    "Id": account["Id"].toString(),
+                    "IBAN": account["IBAN"].toString(),
+                    "Amount": account["Amount"].toString(),
+                    "Currency": account["Currency"].toString(),
+                    "Type": account["Type"].toString()
+                  }),
+            );
+            selectedAccountId =
+                bankAccounts.isNotEmpty ? bankAccounts[0]["Id"] : null;
           });
-          print("Error parsing response: $e");
+          print("Fetched bank accounts: $bankAccounts");
+        } else {
+          throw Exception("No accounts found in response.");
         }
       } else {
         setState(() {
           _errorMessage =
               "Failed to fetch bank accounts: ${response.reasonPhrase}";
+        });
+        print("HTTP Error: ${response.statusCode} - ${response.reasonPhrase}");
+        return;
+      }
+
+      // Fetch transactions
+      print("Fetching transactions for user ID: $userId");
+      response = await http.get(
+        Uri.parse(
+            'https://proper-invest.tech/services/ts/pi-bank-backend/api/BankService.ts/transactionItems/$userId'),
+        headers: {
+          'Authorization': 'Bearer $accessToken',
+        },
+      );
+
+      print("Transactions API Response: ${response.body}");
+      if (response.statusCode == 200) {
+        var data = jsonDecode(response.body);
+        final userTransactions = data["UserTransactions"];
+        print("User Transactions: $userTransactions");
+
+        String? senderName = null;
+        String? receiverName = null;
+
+        // Fetch usernames for Sender and Receiver
+        for (var transaction in userTransactions) {
+          final senderId = transaction["Sender"];
+          final receiverId = transaction["Reciever"];
+
+          print("transid $senderId userId: $userId");
+
+          if (senderId.toString() != userId) {
+            senderName = await fetchUsername(senderId, accessToken);
+          }
+
+          print("test6");
+
+          if (receiverId.toString() != userId) {
+            print("reciever: $receiverId, user: $userId");
+            receiverName = await fetchUsername(receiverId, accessToken);
+          }
+
+          print("test3");
+
+          recentTransfers.add({
+            "name": senderName ?? receiverName ?? "Unknown",
+          });
+
+          print("test4");
+        }
+
+        recentTransfers = recentTransfers
+            .fold<Map<String, Map<String, String>>>(
+                {},
+                (Map<String, Map<String, String>> map, item) =>
+                    map..putIfAbsent(item["name"] ?? "Unknown", () => item))
+            .values
+            .toList();
+
+        print("Mapped transactions: $recentTransfers");
+      } else {
+        setState(() {
+          _errorMessage =
+              "Failed to fetch transactions: ${response.reasonPhrase}";
         });
         print("HTTP Error: ${response.statusCode} - ${response.reasonPhrase}");
       }
@@ -92,18 +151,48 @@ class _SendPageState extends State<SendPage> {
         _errorMessage =
             "An error occurred. Please check your connection and try again.";
       });
-      print("Exception during transfer: $e");
+      print("Exception during data fetch: $e");
+    }
+  }
+
+  Future<String?> fetchUsername(int bankAccountId, String accessToken) async {
+    print("Fetching username for BankAccountId: $bankAccountId");
+    try {
+      final response = await http.get(
+        Uri.parse(
+            'https://proper-invest.tech/services/ts/pi-bank-backend/api/BankService.ts/userFromBankAccount/$bankAccountId'),
+        headers: {
+          'Authorization': 'Bearer $accessToken',
+        },
+      );
+
+      print("Username API Response: ${response.body}");
+      if (response.statusCode == 200) {
+        print("test1");
+        var data = jsonDecode(response.body);
+        print("test2");
+        return data["Username"];
+      } else {
+        print(
+            "Failed to fetch username for bankAccountId $bankAccountId: ${response.reasonPhrase}");
+        return null;
+      }
+    } catch (e) {
+      print("Exception during username fetch for $bankAccountId: $e");
+      return null;
     }
   }
 
   @override
   void initState() {
     super.initState();
-    transfer();
+    print("Initializing SendPage...");
+    getData();
   }
 
   @override
   Widget build(BuildContext context) {
+    print("Building SendPage UI...");
     return Scaffold(
       backgroundColor: Colors.grey[300],
       bottomNavigationBar: AppBarBottom(context: this.context),
@@ -132,6 +221,7 @@ class _SendPageState extends State<SendPage> {
                           onChanged: (value) {
                             setState(() {
                               selectedAccountId = value;
+                              print("Selected Account ID: $selectedAccountId");
                             });
                           },
                           decoration: InputDecoration(
@@ -159,6 +249,7 @@ class _SendPageState extends State<SendPage> {
                                   useDropdown = value;
                                   selectedIBAN = null;
                                   selectedName = null;
+                                  print("Dropdown usage toggled: $useDropdown");
                                 });
                               },
                             ),
@@ -179,6 +270,8 @@ class _SendPageState extends State<SendPage> {
                                 selectedIBAN = recentTransfers.firstWhere(
                                     (element) =>
                                         element['name'] == value)['iban'];
+                                print("Selected Name: $selectedName");
+                                print("Corresponding IBAN: $selectedIBAN");
                               });
                             },
                             decoration: InputDecoration(
@@ -196,6 +289,7 @@ class _SendPageState extends State<SendPage> {
                             onChanged: (value) {
                               setState(() {
                                 selectedIBAN = value;
+                                print("Manually entered IBAN: $selectedIBAN");
                               });
                             },
                           ),
@@ -206,6 +300,9 @@ class _SendPageState extends State<SendPage> {
                             border: OutlineInputBorder(),
                             hintText: "Пример: 150.00",
                           ),
+                          onChanged: (value) {
+                            print("Entered Amount: $value");
+                          },
                         ),
                         SizedBox(height: 30),
                         Center(
@@ -216,8 +313,7 @@ class _SendPageState extends State<SendPage> {
                               color: Colors.blue.shade700,
                               onPressed: () {
                                 print(
-                                    "Selected Account ID: $selectedAccountId");
-                                print("Transfer initiated...");
+                                    "Transfer initiated. Selected Account ID: $selectedAccountId");
                                 // Add your transfer logic here
                               },
                               shape: RoundedRectangleBorder(
