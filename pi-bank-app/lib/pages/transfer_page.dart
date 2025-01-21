@@ -185,6 +185,149 @@ class _SendPageState extends State<SendPage> {
       });
       return;
     }
+
+    try {
+      final userId = await storage.read(key: 'userId');
+      final accessToken = await storage.read(key: 'backendAccessToken');
+
+      if (userId == null || accessToken == null) {
+        setState(() {
+          _errorMessage = "Authentication error: Missing credentials.";
+        });
+        return;
+      }
+
+      print("userId: $userId");
+
+      final senderAccount = bankAccounts
+          .firstWhere((account) => account['Id'] == selectedAccountId);
+      final senderBalance = double.parse(senderAccount['Amount']!);
+      final transferAmount = enteredAmount;
+
+      print("senderAccount: $senderAccount");
+      print("senderBalance: $senderBalance");
+      print("transferAmount: $transferAmount");
+
+      if (transferAmount <= 0 || transferAmount > senderBalance) {
+        setState(() {
+          _errorMessage = "Insufficient funds or invalid amount.";
+        });
+        return;
+      }
+
+      String? receiverAccountId;
+
+      if (!useDropdown) {
+        final response = await http.post(
+          Uri.parse(
+              'https://proper-invest.tech/services/ts/pi-bank-backend/api/BankService.ts/bankAccountFromIBAN'),
+          headers: {
+            'Authorization': 'Bearer $accessToken',
+            'Content-Type': 'application/json',
+          },
+          body: jsonEncode({"IBAN": bankAccount}),
+        );
+
+        print("BankAccountFromIBAN responso: $response");
+
+        if (response.statusCode == 200) {
+          final data = jsonDecode(response.body);
+          receiverAccountId = data['Id'].toString();
+
+          print("Data: $data");
+          print("receiverAccountId: $receiverAccountId");
+        } else {
+          setState(() {
+            _errorMessage = "Invalid IBAN or receiver account not found.";
+          });
+          return;
+        }
+      } else {
+        receiverAccountId = bankAccount;
+      }
+
+      print("Receiver account id: $receiverAccountId");
+
+      final transactionResponse = await http.post(
+        Uri.parse(
+            'https://proper-invest.tech/services/ts/pi-bank-backend/api/BankService.ts/transaction'),
+        headers: {
+          'Authorization': 'Bearer $accessToken',
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode({
+          "Sender": selectedAccountId,
+          "Reciever": receiverAccountId,
+          "Amount": transferAmount,
+        }),
+      );
+
+      print("Create transaction response: ${transactionResponse.body}");
+
+      if (transactionResponse.statusCode != 201) {
+        setState(() {
+          _errorMessage =
+              "Transaction failed: ${transactionResponse.reasonPhrase}";
+        });
+        return;
+      }
+
+      print("test!");
+
+      final newSenderBalance = senderBalance - transferAmount;
+      print("Sender balance: $newSenderBalance");
+      await http.put(
+        Uri.parse(
+            'https://proper-invest.tech/services/ts/pi-bank-backend/api/BankService.ts/updateBankAccountAmount/$selectedAccountId'),
+        headers: {
+          'Authorization': 'Bearer $accessToken',
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode({"Amount": newSenderBalance}),
+      );
+
+      print("Retrieving receiver bankAccount data...");
+
+      final receiverResponse = await http.get(
+        Uri.parse(
+            'https://proper-invest.tech/services/ts/pi-bank-backend/api/BankService.ts/bankAccount/$receiverAccountId'),
+        headers: {'Authorization': 'Bearer $accessToken'},
+      );
+
+      print("ReceiverResponse: ${receiverResponse.body}");
+
+      if (receiverResponse.statusCode == 200) {
+        final receiverData = jsonDecode(receiverResponse.body);
+        print("receiverData: ${receiverData}");
+
+        final receiverBalance = receiverData['Amount'];
+        print("receiverBalance: $receiverBalance");
+
+        final newReceiverBalance = receiverBalance + transferAmount;
+        print("newReceiverBalance: $newReceiverBalance");
+
+        await http.put(
+          Uri.parse(
+              'https://proper-invest.tech/services/ts/pi-bank-backend/api/BankService.ts/updateBankAccountAmount/$receiverAccountId'),
+          headers: {
+            'Authorization': 'Bearer $accessToken',
+            'Content-Type': 'application/json',
+          },
+          body: jsonEncode({"Amount": newReceiverBalance}),
+        );
+      }
+
+      setState(() {
+        _errorMessage = null;
+      });
+
+      print("Transaction successful.");
+    } catch (e) {
+      setState(() {
+        _errorMessage = "An error occurred during the transfer.";
+      });
+      print("Exception during transfer: $e");
+    }
   }
 
   @override
