@@ -101,6 +101,21 @@ class BankService {
         }
     }
 
+    @Get("/bankAccounts/:bankAccountId")
+    public getBankAccountsFromBankAccountId(_: any, ctx: any) {
+        const bankAccountId = ctx.pathParameters.bankAccountId;
+
+        const bankAccount = this.userDao.findById(bankAccountId);
+
+        if (!bankAccount) {
+            response.setStatus(response.NOT_FOUND);
+            return { message: "Bank Account with that ID doesn't exist!" };
+        }
+
+        response.setStatus(response.OK);
+        return bankAccount;
+    }
+
     @Get("/transactions/:userId")
     public getTransactions(_: any, ctx: any) {
         const userId = ctx.pathParameters.userId;
@@ -392,6 +407,33 @@ class BankService {
 
             response.setStatus(response.OK);
             return { "UserId": user[0].Id };
+
+        } catch (e: any) {
+            response.setStatus(response.BAD_REQUEST);
+            return { error: e.message };
+        }
+    }
+
+    @Post("/bankAccountFromIBAN")
+    public getBankAccountFromIBAN(body: any) {
+        try {
+            if (!body.hasOwnProperty("IBAN")) {
+                response.setStatus(response.BAD_REQUEST);
+                return { message: `Missing property: IBAN` };
+            }
+
+            const userIBAN = body["IBAN"];
+            const allBankAccounts = this.bankAccountDao.findAll();
+
+            for (const bankAccount of allBankAccounts) {
+                if (bankAccount.IBAN === userIBAN) {
+                    response.setStatus(response.OK);
+                    return bankAccount;
+                }
+            }
+
+            response.setStatus(response.NOT_FOUND);
+            return { message: "Bank account with that IBAN doesn't exist!" };
 
         } catch (e: any) {
             response.setStatus(response.BAD_REQUEST);
