@@ -3,10 +3,10 @@ import { CardRepository as CardDao } from "../gen/pi-bank-backend/dao/card/CardR
 import { TransactionRepository as TransactionDao } from "../gen/pi-bank-backend/dao/transaction/TransactionRepository";
 import { UserRepository as UserDao } from "../gen/pi-bank-backend/dao/user/UserRepository";
 import { CardTypeRepository as CardTypeDao } from "../gen/pi-bank-backend/dao/Settings/CardTypeRepository"
+import { CurrencyRepository as CurrencyDao } from "../../codbex-currencies/gen/codbex-currencies/dao/Currencies/CurrencyRepository";
+import { BankAccountTypeRepository as BankAccountTypeDao } from "../gen/pi-bank-backend/dao/Settings/BankAccountTypeRepository";
 
 import { Controller, Get, Put, Post, response } from "sdk/http";
-
-const keycloakTokenEndpoint = "https://keycloak.proper-invest.tech/realms/pi-bank/protocol/openid-connect/token";
 
 @Controller
 class BankService {
@@ -15,6 +15,8 @@ class BankService {
     private readonly transactionDao;
     private readonly userDao;
     private readonly cardTypeDao;
+    private readonly currencyDao;
+    private readonly bankAccountTypeDao;
 
     constructor() {
         this.bankAccountDao = new BankAccountDao();
@@ -22,6 +24,8 @@ class BankService {
         this.transactionDao = new TransactionDao();
         this.userDao = new UserDao();
         this.cardTypeDao = new CardTypeDao();
+        this.currencyDao = new CurrencyDao();
+        this.bankAccountTypeDao = new BankAccountTypeDao();
     }
 
     @Get("/test")
@@ -56,7 +60,13 @@ class BankService {
             }
 
             const userIbans = userBankAccounts.map(bankAccount => {
-                return bankAccount.IBAN;
+                return {
+                    "Id": bankAccount.Id,
+                    "IBAN": bankAccount.IBAN,
+                    "Amount": bankAccount.Amount,
+                    "Currency": bankAccount.Currency,
+                    "Type": bankAccount.Type
+                };
             })
 
             response.setStatus(response.OK);
@@ -246,6 +256,34 @@ class BankService {
             response.setStatus(response.BAD_REQUEST);
             return { error: e.message };
         }
+    }
+
+    @Get("/currencyCode/:currencyId")
+    public getCurrency(_: any, ctx: any) {
+        const currencyId = ctx.pathParameters.currencyId;
+
+        const currency = this.currencyDao.findById(currencyId);
+
+        if (!currency) {
+            response.setStatus(response.NOT_FOUND);
+            return { message: "Currency with that ID doesn't exist!" };
+        }
+
+        return { "CurrencyCode": currency.Code };
+    }
+
+    @Get("/bankAccountType/:typeId")
+    public getbankAccountType(_: any, ctx: any) {
+        const typeId = ctx.pathParameters.typeId;
+
+        const bankAccountType = this.bankAccountTypeDao.findById(typeId);
+
+        if (!bankAccountType) {
+            response.setStatus(response.NOT_FOUND);
+            return { message: "Bank Account Type with that ID doesn't exist!" };
+        }
+
+        return { "BankAccountType": bankAccountType.Name };
     }
 
     @Put("/updateBankAccountAmount/:bankAccountId")
