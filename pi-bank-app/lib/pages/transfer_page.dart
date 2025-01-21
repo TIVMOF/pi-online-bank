@@ -1,6 +1,12 @@
+import 'dart:convert';
+
 import "package:flutter/material.dart";
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:online_bank/utill/app_bar.dart';
 import 'package:online_bank/utill/bottom_app_bar.dart';
+import 'package:http/http.dart' as http;
+
+final storage = FlutterSecureStorage();
 
 class SendPage extends StatefulWidget {
   final BuildContext context;
@@ -15,30 +21,91 @@ class SendPage extends StatefulWidget {
 
 class _SendPageState extends State<SendPage> {
   final _formKey = GlobalKey<FormState>();
-  final List<Map<String, String>> recentTransfers = [
-    {"name": "Иван Иванов", "iban": "BG80BNBG96611020345678"},
-    {"name": "Петър Петров", "iban": "BG80BNBG96611020312345"},
-    {"name": "Мария Георгиева", "iban": "BG80BNBG96611020367890"}
-  ];
-  String? selectedAccount;
+
+  List<Map<String, String>> recentTransfers = [];
+  List<Map<String, String>> bankAccounts = [];
+  String? selectedAccountId;
   String? selectedIBAN;
   String? selectedName;
   bool useDropdown = false;
+  String? _errorMessage;
 
-  void updateFieldsBasedOnSelection(String? name) {
-    setState(() {
-      if (name != null) {
-        selectedName = name;
-        selectedIBAN = recentTransfers
-            .firstWhere((transfer) => transfer['name'] == name)['iban'];
+  Future<void> transfer() async {
+    try {
+      final userId = await storage.read(key: 'userId');
+      final accessToken = await storage.read(key: 'backendAccessToken');
+
+      if (userId == null || accessToken == null) {
+        setState(() {
+          _errorMessage = "Authentication error: Missing credentials.";
+        });
+        print(_errorMessage);
+        return;
       }
-    });
+
+      print("Fetching bank accounts for user ID: $userId");
+
+      var response = await http.get(
+        Uri.parse(
+            'https://proper-invest.tech/services/ts/pi-bank-backend/api/BankService.ts/bankAccounts/$userId'),
+        headers: {
+          'Authorization': 'Bearer $accessToken',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        try {
+          var data = jsonDecode(response.body);
+          if (data["UserBankAccounts"] != null) {
+            setState(() {
+              bankAccounts = List<Map<String, String>>.from(
+                data["UserBankAccounts"].map((account) => {
+                      "Id": account["Id"].toString(),
+                      "IBAN": account["IBAN"].toString(),
+                      "Amount": account["Amount"].toString(),
+                      "Currency": account["Currency"].toString(),
+                      "Type": account["Type"].toString()
+                    }),
+              );
+              selectedAccountId =
+                  bankAccounts.isNotEmpty ? bankAccounts[0]["Id"] : null;
+            });
+            print("Fetched bank accounts: $bankAccounts");
+          } else {
+            throw Exception("No accounts found in response.");
+          }
+        } catch (e) {
+          setState(() {
+            _errorMessage = "Failed to parse user bank accounts!";
+          });
+          print("Error parsing response: $e");
+        }
+      } else {
+        setState(() {
+          _errorMessage =
+              "Failed to fetch bank accounts: ${response.reasonPhrase}";
+        });
+        print("HTTP Error: ${response.statusCode} - ${response.reasonPhrase}");
+      }
+    } catch (e) {
+      setState(() {
+        _errorMessage =
+            "An error occurred. Please check your connection and try again.";
+      });
+      print("Exception during transfer: $e");
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    transfer();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[100],
+      backgroundColor: Colors.grey[300],
       bottomNavigationBar: AppBarBottom(context: this.context),
       body: SafeArea(
         child: SingleChildScrollView(
@@ -55,17 +122,16 @@ class _SendPageState extends State<SendPage> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         DropdownButtonFormField<String>(
-                          value: selectedAccount,
-                          items:
-                              ["Лична сметка", "Бизнес сметка"].map((account) {
+                          value: selectedAccountId,
+                          items: bankAccounts.map((account) {
                             return DropdownMenuItem(
-                              value: account,
-                              child: Text(account),
+                              value: account["Id"],
+                              child: Text(account["IBAN"] ?? "Unknown IBAN"),
                             );
                           }).toList(),
                           onChanged: (value) {
                             setState(() {
-                              selectedAccount = value;
+                              selectedAccountId = value;
                             });
                           },
                           decoration: InputDecoration(
@@ -73,6 +139,14 @@ class _SendPageState extends State<SendPage> {
                             hintText: "Избери сметка",
                           ),
                         ),
+                        if (_errorMessage != null)
+                          Padding(
+                            padding: const EdgeInsets.only(top: 10),
+                            child: Text(
+                              _errorMessage!,
+                              style: TextStyle(color: Colors.red),
+                            ),
+                          ),
                         SizedBox(height: 20),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -92,7 +166,7 @@ class _SendPageState extends State<SendPage> {
                         ),
                         if (useDropdown)
                           DropdownButtonFormField<String>(
-                            value: null,
+                            value: selectedName,
                             items: recentTransfers.map((transfer) {
                               return DropdownMenuItem(
                                 value: transfer['name'],
@@ -100,7 +174,12 @@ class _SendPageState extends State<SendPage> {
                               );
                             }).toList(),
                             onChanged: (value) {
-                              updateFieldsBasedOnSelection(value);
+                              setState(() {
+                                selectedName = value;
+                                selectedIBAN = recentTransfers.firstWhere(
+                                    (element) =>
+                                        element['name'] == value)['iban'];
+                              });
                             },
                             decoration: InputDecoration(
                               border: OutlineInputBorder(),
@@ -135,7 +214,12 @@ class _SendPageState extends State<SendPage> {
                             width: 150,
                             child: MaterialButton(
                               color: Colors.blue.shade700,
-                              onPressed: () {},
+                              onPressed: () {
+                                print(
+                                    "Selected Account ID: $selectedAccountId");
+                                print("Transfer initiated...");
+                                // Add your transfer logic here
+                              },
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(8.0),
                               ),
