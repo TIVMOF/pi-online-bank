@@ -161,7 +161,7 @@
 	                                state="{{ forms.details['CreationDate'].$valid ? '' : 'error' }}"
 									ng-required="false"
 	                                ng-model="entity.CreationDate"
-	                                ng-readonly="action === 'select'"
+	                                ng-readonly="true"
 	                                type="date">
 	                            </fd-input>
 	                            <fd-form-message dg-type="error">Incorrect Input</fd-form-message>

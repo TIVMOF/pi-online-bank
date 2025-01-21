@@ -32,6 +32,162 @@ class BankService {
         return msg;
     }
 
+    @Get("/bankAccounts/:userId")
+    public getBankAccounts(_: any, ctx: any) {
+        const userId = ctx.pathParameters.userId;
+
+        const user = this.userDao.findById(userId);
+
+        if (!user) {
+            response.setStatus(response.NOT_FOUND);
+            return { message: "User with that ID doesn't exist!" };
+        }
+
+        try {
+            const userBankAccounts = this.bankAccountDao.findAll({
+                $filter: {
+                    equals: { User: userId }
+                },
+            });
+
+            if (!userBankAccounts || userBankAccounts.length === 0) {
+                response.setStatus(response.NOT_FOUND);
+                return { message: "User doesn't have Bank Accounts!" };
+            }
+
+            const userIbans = userBankAccounts.map(bankAccount => {
+                return bankAccount.IBAN;
+            })
+
+            response.setStatus(response.OK);
+            return { "UserBankAccounts": userIbans };
+
+        } catch (e: any) {
+            response.setStatus(response.BAD_REQUEST);
+            return { error: e.message };
+        }
+    }
+
+    @Get("/transactions/:userId")
+    public getTransactions(_: any, ctx: any) {
+        const userId = ctx.pathParameters.userId;
+
+        const user = this.userDao.findById(userId);
+
+        if (!user) {
+            response.setStatus(response.NOT_FOUND);
+            return { message: "User with that ID doesn't exist!" };
+        }
+
+        try {
+            const userBankAccounts = this.bankAccountDao.findAll({
+                $filter: {
+                    equals: { User: userId }
+                },
+            });
+
+            if (!userBankAccounts || userBankAccounts.length === 0) {
+                response.setStatus(response.NOT_FOUND);
+                return { message: "User doesn't have Bank Accounts!" };
+            }
+
+            const allTransactions = this.transactionDao.findAll();
+
+            let userTransactions: any = [];
+
+            userBankAccounts.forEach(bankAccount => {
+                allTransactions.forEach(transaction => {
+                    if (transaction.Reciever === bankAccount.Id || transaction.Sender === bankAccount.Id) {
+                        userTransactions.push(transaction);
+                    }
+                })
+            })
+
+            if (!userTransactions || userTransactions.length === 0) {
+                response.setStatus(response.NOT_FOUND);
+                return { message: "User doesn't have Transactions!" };
+            }
+
+            const finalizaedUserTransactions = userTransactions.map(transaction => {
+                const dateObject = new Date(transaction.Date);
+                const date = dateObject.getDate();
+                const month = dateObject.getMonth() + 1;
+                const year = dateObject.getFullYear();
+
+                const formattedDate = `${date} ${month} ${year}`;
+
+                const recieverBankAccount = this.bankAccountDao.findById(transaction.Reciever);
+                const senderBankAccount = this.bankAccountDao.findById(transaction.Sender);
+
+                const reciever = this.userDao.findById(recieverBankAccount.User);
+                const sender = this.userDao.findById(senderBankAccount.User);
+
+                return {
+                    "Reciever": reciever.Username,
+                    "Sender": sender.Username,
+                    "Amount": transaction.Amount,
+                    "Date": formattedDate
+                }
+            })
+
+            response.setStatus(response.OK);
+            return { "UserTransactions": finalizaedUserTransactions };
+
+        } catch (e: any) {
+            response.setStatus(response.BAD_REQUEST);
+            return { error: e.message };
+        }
+    }
+
+    @Get("/transactionItems/:userId")
+    public getTransactionItems(_: any, ctx: any) {
+        const userId = ctx.pathParameters.userId;
+
+        const user = this.userDao.findById(userId);
+
+        if (!user) {
+            response.setStatus(response.NOT_FOUND);
+            return { message: "User with that ID doesn't exist!" };
+        }
+
+        try {
+            const userBankAccounts = this.bankAccountDao.findAll({
+                $filter: {
+                    equals: { User: userId }
+                },
+            });
+
+            if (!userBankAccounts || userBankAccounts.length === 0) {
+                response.setStatus(response.NOT_FOUND);
+                return { message: "User doesn't have Bank Accounts!" };
+            }
+
+            const allTransactions = this.transactionDao.findAll();
+
+            let userTransactions: any = [];
+
+            userBankAccounts.forEach(bankAccount => {
+                allTransactions.forEach(transaction => {
+                    if (transaction.Reciever === bankAccount.Id || transaction.Sender === bankAccount.Id) {
+                        userTransactions.push(transaction);
+                    }
+                })
+            })
+
+            if (!userTransactions || userTransactions.length === 0) {
+                response.setStatus(response.NOT_FOUND);
+                return { message: "User doesn't have Transactions!" };
+            }
+
+            response.setStatus(response.OK);
+            return { "UserTransactions": userTransactions };
+
+        } catch (e: any) {
+            response.setStatus(response.BAD_REQUEST);
+            return { error: e.message };
+        }
+    }
+
     @Get("/cards/:userId")
     public getCards(_: any, ctx: any) {
         const userId = ctx.pathParameters.userId;
@@ -49,6 +205,11 @@ class BankService {
                     equals: { User: userId }
                 },
             });
+
+            if (!userBankAccounts || userBankAccounts.length === 0) {
+                response.setStatus(response.NOT_FOUND);
+                return { message: "User doesn't have Bank Accounts!" };
+            }
 
             const allCards = this.cardDao.findAll();
 
@@ -87,6 +248,60 @@ class BankService {
         }
     }
 
+    @Put("/updateBankAccountAmount/:bankAccountId")
+    public updateBankAccountAmount(body: any, ctx: any) {
+        const bankAccountId = ctx.pathParameters.bankAccountId;
+
+        const bankAccount = this.bankAccountDao.findById(bankAccountId);
+
+        if (!bankAccount) {
+            response.setStatus(response.NOT_FOUND);
+            return { message: "Bank Account with that ID doesn't exist!" };
+        }
+
+        try {
+            if (!body.hasOwnProperty("Amount")) {
+                response.setStatus(response.BAD_REQUEST);
+                return { message: "Missing property: Amount" };
+            }
+
+            const newAmount = body.Amount;
+
+            if (!(typeof (newAmount) === 'number')) {
+                response.setStatus(response.BAD_REQUEST);
+                return { message: `Amount not a number!` };
+            }
+
+            if (newAmount <= 0) {
+                response.setStatus(response.BAD_REQUEST);
+                return { message: `Amount bellow or equals zero!` };
+            }
+
+            const updatedBankAccount = {
+                "Id": bankAccountId,
+                "Name": bankAccount.Name,
+                "IBAN": bankAccount.IBAN,
+                "User": bankAccount.User,
+                "Amount": newAmount,
+                "Currency": bankAccount.Currency,
+                "Type": bankAccount.Type,
+                "Status": bankAccount.Status,
+                "CreationDate": bankAccount.CreationDate
+            }
+
+            this.bankAccountDao.update(updatedBankAccount);
+
+            response.setStatus(response.OK);
+            return {
+                message: "Amount successfully updated!"
+            };
+
+        } catch (e: any) {
+            response.setStatus(response.BAD_REQUEST);
+            return { error: e.message };
+        }
+    }
+
 
     @Post("/userLogin")
     public userLogin(body: any) {
@@ -116,6 +331,59 @@ class BankService {
 
             response.setStatus(response.OK);
             return { "UserId": user[0].Id };
+
+        } catch (e: any) {
+            response.setStatus(response.BAD_REQUEST);
+            return { error: e.message };
+        }
+    }
+
+    @Post("/transaction")
+    public createTransaction(body: any) {
+        try {
+            const requiredFields = ["Reciever", "Sender", "Amount"];
+
+            for (const field of requiredFields) {
+                if (!body.hasOwnProperty(field)) {
+                    response.setStatus(response.BAD_REQUEST);
+                    return { message: `Missing property: ${field}` };
+                }
+            }
+
+            const reciever = this.bankAccountDao.findById(body["Reciever"]);
+
+            if (!reciever) {
+                response.setStatus(response.BAD_REQUEST);
+                return { message: `Bank account with ID ${body["Reciever"]} not found!` };
+            }
+
+            const sender = this.bankAccountDao.findById(body["Sender"]);
+
+            if (!sender) {
+                response.setStatus(response.BAD_REQUEST);
+                return { message: `Bank account with ID ${body["Sender"]} not found!` };
+            }
+
+            const amount = body["Amount"];
+
+            if (!(typeof (amount) === 'number')) {
+                response.setStatus(response.BAD_REQUEST);
+                return { message: `Amount not a number!` };
+            }
+
+            if (amount <= 0) {
+                response.setStatus(response.BAD_REQUEST);
+                return { message: `Amount bellow or equals zero!` };
+            }
+
+            const newTransaction = this.transactionDao.create(body);
+
+            if (!newTransaction) {
+                throw new Error("Failed transaction!");
+            }
+
+            response.setStatus(response.CREATED);
+            return newTransaction;
 
         } catch (e: any) {
             response.setStatus(response.BAD_REQUEST);
