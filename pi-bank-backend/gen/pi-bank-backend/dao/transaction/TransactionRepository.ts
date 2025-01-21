@@ -16,7 +16,6 @@ export interface TransactionCreateEntity {
     readonly Reciever?: number;
     readonly Sender?: number;
     readonly Amount?: number;
-    readonly Date?: Date;
 }
 
 export interface TransactionUpdateEntity extends TransactionCreateEntity {
@@ -153,6 +152,8 @@ export class TransactionRepository {
 
     public create(entity: TransactionCreateEntity): number {
         EntityUtils.setLocalDate(entity, "Date");
+        // @ts-ignore
+        (entity as TransactionEntity).Date = new Date();;
         const id = this.dao.insert(entity);
         this.triggerEvent({
             operation: "create",

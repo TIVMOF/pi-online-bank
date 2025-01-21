@@ -261,10 +261,12 @@
                         "relationshipEntityPerspectiveLabel": "Entities"
                     },
                     {
+                        "calculatedPropertyExpressionCreate": "new Date();",
                         "dataName": "BANKACCOUNT_CREATIONDATE",
                         "dataNullable": "false",
                         "dataType": "DATE",
                         "description": "",
+                        "isCalculatedProperty": "true",
                         "name": "CreationDate",
                         "tooltip": "",
                         "widgetIsMajor": "true",
@@ -645,10 +647,12 @@
                         "widgetType": "NUMBER"
                     },
                     {
+                        "calculatedPropertyExpressionCreate": "new Date();",
                         "dataName": "TRANSACTION_DATE",
                         "dataNullable": "true",
                         "dataType": "DATE",
                         "description": "",
+                        "isCalculatedProperty": "true",
                         "name": "Date",
                         "tooltip": "",
                         "widgetIsMajor": "true",
