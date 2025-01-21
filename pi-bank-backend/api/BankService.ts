@@ -101,7 +101,7 @@ class BankService {
         }
     }
 
-    @Get("/bankAccounts/:bankAccountId")
+    @Get("/bankAccount/:bankAccountId")
     public getBankAccountsFromBankAccountId(_: any, ctx: any) {
         const bankAccountId = ctx.pathParameters.bankAccountId;
 
