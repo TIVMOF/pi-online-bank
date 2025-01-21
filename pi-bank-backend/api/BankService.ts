@@ -267,6 +267,16 @@ class BankService {
 
             const newAmount = body.Amount;
 
+            if (!(typeof (newAmount) === 'number')) {
+                response.setStatus(response.BAD_REQUEST);
+                return { message: `Amount not a number!` };
+            }
+
+            if (newAmount <= 0) {
+                response.setStatus(response.BAD_REQUEST);
+                return { message: `Amount bellow or equals zero!` };
+            }
+
             const updatedBankAccount = {
                 "Id": bankAccountId,
                 "Name": bankAccount.Name,
@@ -338,6 +348,32 @@ class BankService {
                     response.setStatus(response.BAD_REQUEST);
                     return { message: `Missing property: ${field}` };
                 }
+            }
+
+            const reciever = this.bankAccountDao.findById(body["Reciever"]);
+
+            if (!reciever) {
+                response.setStatus(response.BAD_REQUEST);
+                return { message: `Bank account with ID ${body["Reciever"]} not found!` };
+            }
+
+            const sender = this.bankAccountDao.findById(body["Sender"]);
+
+            if (!sender) {
+                response.setStatus(response.BAD_REQUEST);
+                return { message: `Bank account with ID ${body["Sender"]} not found!` };
+            }
+
+            const amount = body["Amount"];
+
+            if (!(typeof (amount) === 'number')) {
+                response.setStatus(response.BAD_REQUEST);
+                return { message: `Amount not a number!` };
+            }
+
+            if (amount <= 0) {
+                response.setStatus(response.BAD_REQUEST);
+                return { message: `Amount bellow or equals zero!` };
             }
 
             const newTransaction = this.transactionDao.create(body);
