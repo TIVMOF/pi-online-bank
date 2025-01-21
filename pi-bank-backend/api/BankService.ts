@@ -36,6 +36,29 @@ class BankService {
         return msg;
     }
 
+    @Get("/userFromBankAccount/:bankAccountId")
+    public getUserFromBankAccount(_: any, ctx: any) {
+        const bankAccountId = ctx.pathParameters.bankAccountId;
+
+        const bankAccount = this.bankAccountDao.findById(bankAccountId);
+
+        if (!bankAccount) {
+            response.setStatus(response.NOT_FOUND);
+            return { message: "Bank Account with that ID doesn't exist!" };
+        }
+
+        const userId = bankAccount.User;
+
+        const user = this.userDao.findById(userId);
+
+        if (!user) {
+            response.setStatus(response.NOT_FOUND);
+            return { message: "User with that ID doesn't exist!" };
+        }
+
+        return user;
+    }
+
     @Get("/bankAccounts/:userId")
     public getBankAccounts(_: any, ctx: any) {
         const userId = ctx.pathParameters.userId;
