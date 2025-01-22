@@ -26,9 +26,7 @@ class _SendPageState extends State<SendPage> {
 
   @override
   void initState() {
-    print("Initializing SendPage1");
     super.initState();
-    print("Initializing SendPage2");
     getData();
   }
 
@@ -37,8 +35,6 @@ class _SendPageState extends State<SendPage> {
       final userId = await storage.read(key: 'userId');
       final accessToken = await storage.read(key: 'backendAccessToken');
 
-      print("test1");
-
       if (userId == null || accessToken == null) {
         setState(() {
           _errorMessage = "Authentication error: Missing credentials.";
@@ -46,18 +42,12 @@ class _SendPageState extends State<SendPage> {
         return;
       }
 
-      print("test2");
-
       await fetchBankAccounts(userId, accessToken);
       await fetchInteractions(userId, accessToken);
-
-      print("test3");
 
       setState(() {
         isDataLoaded = true;
       });
-
-      print("test4");
     } catch (e) {
       setState(() {
         _errorMessage = "An error occurred. Please check your connection.";
@@ -68,24 +58,16 @@ class _SendPageState extends State<SendPage> {
 
   Future<void> fetchBankAccounts(String userId, String accessToken) async {
     try {
-      print("test5");
-
       final response = await http.get(
         Uri.parse(
             'https://proper-invest.tech/services/ts/pi-bank-backend/api/BankService.ts/bankAccounts/$userId'),
         headers: {'Authorization': 'Bearer $accessToken'},
       );
 
-      print("test6");
-
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
 
-        print("test7");
-
         if (data["UserBankAccounts"] != null) {
-          print("test8");
-
           setState(() {
             bankAccounts.clear();
             bankAccounts.addAll(List<Map<String, String>>.from(
@@ -123,18 +105,15 @@ class _SendPageState extends State<SendPage> {
         headers: {'Authorization': 'Bearer $accessToken'},
       );
 
-      print("test9");
-
       if (response.statusCode == 200) {
-        print("test10");
         final data = jsonDecode(response.body);
 
         setState(() {
-          recentInteractions.clear(); // Clear existing interactions
+          recentInteractions.clear();
           recentInteractions.addAll(
             List<Map<String, dynamic>>.from(
               data.map((account) => {
-                    "Name": account["Name:"],
+                    "Name": account["Name"],
                     "IBAN": account["IBAN"],
                     "BankAccountId": account["BankAccountId"].toString(),
                     "Amount": account["Amount"].toString()
@@ -142,8 +121,6 @@ class _SendPageState extends State<SendPage> {
             ),
           );
         });
-
-        print("test11");
       } else {
         throw Exception(
             "Failed to fetch interactions: ${response.reasonPhrase}");
@@ -165,8 +142,6 @@ class _SendPageState extends State<SendPage> {
     }
 
     try {
-      print("test12");
-
       final userId = await storage.read(key: 'userId');
       final accessToken = await storage.read(key: 'backendAccessToken');
       var receiverAccountId = null;
@@ -180,13 +155,8 @@ class _SendPageState extends State<SendPage> {
 
       final senderAccount = bankAccounts
           .firstWhere((account) => account['Id'] == selectedAccountId);
-      print("Sender Account: $senderAccount");
-
       final senderBalance = double.parse(senderAccount['Amount']!);
-      print("Sender Balance: $senderBalance");
-
       final transferAmount = enteredAmount;
-      print("Transfer Amount: $transferAmount");
 
       if (transferAmount <= 0 || transferAmount > senderBalance) {
         setState(() {
@@ -206,13 +176,10 @@ class _SendPageState extends State<SendPage> {
           body: jsonEncode({"IBAN": enteredIBAN}),
         );
 
-        print("BankAccountFromIBAN Response: ${response.body}");
-
         if (response.statusCode == 200) {
           final data = jsonDecode(response.body);
           receiverAccount = data;
           receiverAccountId = data["Id"];
-          print("receiver account id by IBAN: $receiverAccountId");
         } else {
           setState(() {
             _errorMessage = "Invalid IBAN or receiver account not found.";
@@ -221,12 +188,7 @@ class _SendPageState extends State<SendPage> {
         }
       } else {
         receiverAccountId = receiverAccount["BankAccountId"];
-        print("receiver account id without entering IBAN: $receiverAccountId");
       }
-
-      print("Receiver Account: $receiverAccount");
-
-      print("Receiver Account Id: $receiverAccountId");
 
       var response = await http.post(
         Uri.parse(
@@ -242,8 +204,6 @@ class _SendPageState extends State<SendPage> {
         }),
       );
 
-      print("Transaction Response: ${response.body}");
-
       if (response.statusCode != 201) {
         setState(() {
           _errorMessage = "Transaction failed: ${response.reasonPhrase}";
@@ -251,9 +211,7 @@ class _SendPageState extends State<SendPage> {
         return;
       }
 
-      // Deduct from sender and add to receiver
       final newSenderBalance = senderBalance - transferAmount;
-      print("New Sender Balance: $newSenderBalance");
       response = await http.put(
         Uri.parse(
             'https://proper-invest.tech/services/ts/pi-bank-backend/api/BankService.ts/updateBankAccountAmount/$selectedAccountId'),
@@ -264,8 +222,6 @@ class _SendPageState extends State<SendPage> {
         body: jsonEncode({"Amount": newSenderBalance}),
       );
 
-      print("Update Sender response: ${response.body}");
-
       if (response.statusCode != 200) {
         setState(() {
           _errorMessage = "Transaction failed: ${response.reasonPhrase}";
@@ -273,12 +229,8 @@ class _SendPageState extends State<SendPage> {
         return;
       }
 
-      print("test!");
-
       final newReceiverBalance =
           double.parse(receiverAccount["Amount"].toString()) + transferAmount;
-      print("newReceiverBalance: $newReceiverBalance");
-      print("Receiver Account Id: $receiverAccountId");
       response = await http.put(
         Uri.parse(
             'https://proper-invest.tech/services/ts/pi-bank-backend/api/BankService.ts/updateBankAccountAmount/$receiverAccountId'),
@@ -289,16 +241,12 @@ class _SendPageState extends State<SendPage> {
         body: jsonEncode({"Amount": newReceiverBalance}),
       );
 
-      print("Update Receiver response: ${response.body}");
-
       if (response.statusCode != 200) {
         setState(() {
           _errorMessage = "Transaction failed: ${response.reasonPhrase}";
         });
         return;
       }
-
-      print("Receiver update successfull!");
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -317,7 +265,6 @@ class _SendPageState extends State<SendPage> {
       });
       print("Exception during transfer: $e");
 
-      // Display an error message
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text("Transaction failed! Please try again."),
@@ -393,15 +340,11 @@ class _SendPageState extends State<SendPage> {
                                         transfer["IBAN"]),
                                   );
                                 }
-                                return null; // Explicitly return null for entries that don't match
+                                return null;
                               })
-                              .where((item) =>
-                                  item != null) // Filter out null entries
+                              .where((item) => item != null)
                               .toList()
-                              .cast<
-                                  DropdownMenuItem<
-                                      Map<String,
-                                          dynamic>>>(), // Ensure the type matches
+                              .cast<DropdownMenuItem<Map<String, dynamic>>>(),
                           onChanged: (value) {
                             receiverAccount = value;
                           },
