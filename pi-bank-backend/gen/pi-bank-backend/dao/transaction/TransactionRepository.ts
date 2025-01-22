@@ -10,12 +10,14 @@ export interface TransactionEntity {
     Sender?: number;
     Amount?: number;
     Date?: Date;
+    Currency?: number;
 }
 
 export interface TransactionCreateEntity {
     readonly Reciever?: number;
     readonly Sender?: number;
     readonly Amount?: number;
+    readonly Currency?: number;
 }
 
 export interface TransactionUpdateEntity extends TransactionCreateEntity {
@@ -30,6 +32,7 @@ export interface TransactionEntityOptions {
             Sender?: number | number[];
             Amount?: number | number[];
             Date?: Date | Date[];
+            Currency?: number | number[];
         };
         notEquals?: {
             Id?: number | number[];
@@ -37,6 +40,7 @@ export interface TransactionEntityOptions {
             Sender?: number | number[];
             Amount?: number | number[];
             Date?: Date | Date[];
+            Currency?: number | number[];
         };
         contains?: {
             Id?: number;
@@ -44,6 +48,7 @@ export interface TransactionEntityOptions {
             Sender?: number;
             Amount?: number;
             Date?: Date;
+            Currency?: number;
         };
         greaterThan?: {
             Id?: number;
@@ -51,6 +56,7 @@ export interface TransactionEntityOptions {
             Sender?: number;
             Amount?: number;
             Date?: Date;
+            Currency?: number;
         };
         greaterThanOrEqual?: {
             Id?: number;
@@ -58,6 +64,7 @@ export interface TransactionEntityOptions {
             Sender?: number;
             Amount?: number;
             Date?: Date;
+            Currency?: number;
         };
         lessThan?: {
             Id?: number;
@@ -65,6 +72,7 @@ export interface TransactionEntityOptions {
             Sender?: number;
             Amount?: number;
             Date?: Date;
+            Currency?: number;
         };
         lessThanOrEqual?: {
             Id?: number;
@@ -72,6 +80,7 @@ export interface TransactionEntityOptions {
             Sender?: number;
             Amount?: number;
             Date?: Date;
+            Currency?: number;
         };
     },
     $select?: (keyof TransactionEntity)[],
@@ -127,6 +136,11 @@ export class TransactionRepository {
                 name: "Date",
                 column: "TRANSACTION_DATE",
                 type: "DATE",
+            },
+            {
+                name: "Currency",
+                column: "TRANSACTION_CURRENCY",
+                type: "INTEGER",
             }
         ]
     };

@@ -36,86 +36,6 @@ class BankService {
         return msg;
     }
 
-    @Get("/userFromBankAccount/:bankAccountId")
-    public getUserFromBankAccount(_: any, ctx: any) {
-        const bankAccountId = ctx.pathParameters.bankAccountId;
-
-        const bankAccount = this.bankAccountDao.findById(bankAccountId);
-
-        if (!bankAccount) {
-            response.setStatus(response.NOT_FOUND);
-            return { message: "Bank Account with that ID doesn't exist!" };
-        }
-
-        const userId = bankAccount.User;
-
-        const user = this.userDao.findById(userId);
-
-        if (!user) {
-            response.setStatus(response.NOT_FOUND);
-            return { message: "User with that ID doesn't exist!" };
-        }
-
-        return user;
-    }
-
-    @Get("/bankAccounts/:userId")
-    public getBankAccounts(_: any, ctx: any) {
-        const userId = ctx.pathParameters.userId;
-
-        const user = this.userDao.findById(userId);
-
-        if (!user) {
-            response.setStatus(response.NOT_FOUND);
-            return { message: "User with that ID doesn't exist!" };
-        }
-
-        try {
-            const userBankAccounts = this.bankAccountDao.findAll({
-                $filter: {
-                    equals: { User: userId }
-                },
-            });
-
-            if (!userBankAccounts || userBankAccounts.length === 0) {
-                response.setStatus(response.NOT_FOUND);
-                return { message: "User doesn't have Bank Accounts!" };
-            }
-
-            const userIbans = userBankAccounts.map(bankAccount => {
-                return {
-                    "Id": bankAccount.Id,
-                    "IBAN": bankAccount.IBAN,
-                    "Amount": bankAccount.Amount,
-                    "Currency": bankAccount.Currency,
-                    "Type": bankAccount.Type
-                };
-            })
-
-            response.setStatus(response.OK);
-            return { "UserBankAccounts": userIbans };
-
-        } catch (e: any) {
-            response.setStatus(response.BAD_REQUEST);
-            return { error: e.message };
-        }
-    }
-
-    @Get("/bankAccount/:bankAccountId")
-    public getBankAccountsFromBankAccountId(_: any, ctx: any) {
-        const bankAccountId = ctx.pathParameters.bankAccountId;
-
-        const bankAccount = this.bankAccountDao.findById(bankAccountId);
-
-        if (!bankAccount) {
-            response.setStatus(response.NOT_FOUND);
-            return { message: "Bank Account with that ID doesn't exist!" };
-        }
-
-        response.setStatus(response.OK);
-        return bankAccount;
-    }
-
     @Get("/transactions/:userId")
     public getTransactions(_: any, ctx: any) {
         const userId = ctx.pathParameters.userId;
@@ -170,11 +90,14 @@ class BankService {
                 const reciever = this.userDao.findById(recieverBankAccount.User);
                 const sender = this.userDao.findById(senderBankAccount.User);
 
+                const currencyCode = this.currencyDao.findById(transaction.Currency).Code;
+
                 return {
                     "Sender Id": sender.Id,
                     "Receiver": reciever.Username,
                     "Sender": sender.Username,
                     "Amount": transaction.Amount,
+                    "Currency": currencyCode,
                     "Date": formattedDate
                 }
             })
@@ -451,7 +374,7 @@ class BankService {
             const allBankAccounts = this.bankAccountDao.findAll();
 
             for (const bankAccount of allBankAccounts) {
-                if (bankAccount.IBAN === userIBAN) {
+                if (bankAccount.IBAN == userIBAN) {
                     response.setStatus(response.OK);
                     return bankAccount;
                 }
