@@ -64,8 +64,6 @@ class _SendPageState extends State<SendPage> {
         headers: {'Authorization': 'Bearer $accessToken'},
       );
 
-      print("Bank accounts response body: ${response.body}");
-
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
 
@@ -106,8 +104,6 @@ class _SendPageState extends State<SendPage> {
             'https://proper-invest.tech/services/ts/pi-bank-backend/api/BankService.ts/userInteractions/$userId'),
         headers: {'Authorization': 'Bearer $accessToken'},
       );
-
-      print("Interactions response body: ${response.body}");
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);

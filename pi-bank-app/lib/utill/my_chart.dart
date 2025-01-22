@@ -23,68 +23,76 @@ class MyChart extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 20),
       child: SizedBox(
         height: 500,
-        child: SfCartesianChart(
-          backgroundColor: Colors.grey[300],
-          legend: Legend(
-            isVisible: true,
-            position: LegendPosition.bottom,
-            textStyle: const TextStyle(
-              fontSize: 14,
-              color: Colors.black,
+        child: SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: Container(
+            width: series1Data.length * 85.0,
+            child: SfCartesianChart(
+              backgroundColor: Colors.grey[300],
+              legend: Legend(
+                isVisible: true,
+                position: LegendPosition.bottom,
+                textStyle: const TextStyle(
+                  fontSize: 14,
+                  color: Colors.black,
+                ),
+                iconHeight: 20,
+                iconWidth: 20,
+              ),
+              primaryXAxis: CategoryAxis(
+                labelStyle: const TextStyle(
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 12,
+                ),
+                interval: 1, // Ensure each category is displayed
+                labelRotation: 45, // Rotate labels by 45 degrees
+              ),
+              primaryYAxis: NumericAxis(
+                labelFormat: '{value} лв',
+                labelStyle: const TextStyle(
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 12,
+                ),
+              ),
+              zoomPanBehavior: ZoomPanBehavior(
+                enablePanning: true,
+              ),
+              title: ChartTitle(
+                text: title,
+                textStyle: const TextStyle(
+                  fontSize: 18,
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              tooltipBehavior: TooltipBehavior(
+                enable: true,
+                color: Colors.grey.shade400,
+                textStyle: const TextStyle(
+                  color: Colors.black,
+                  fontSize: 14,
+                ),
+              ),
+              series: <CartesianSeries>[
+                AreaSeries<ChartData, String>(
+                  name: series1Name,
+                  dataSource: series1Data,
+                  color: const Color.fromARGB(213, 0, 81, 255),
+                  xValueMapper: (ChartData data, _) => data.x,
+                  yValueMapper: (ChartData data, _) => data.y,
+                ),
+                AreaSeries<ChartData, String>(
+                  name: series2Name,
+                  dataSource: series2Data,
+                  color: const Color.fromARGB(136, 0, 174, 255),
+                  xValueMapper: (ChartData data, _) => data.x,
+                  yValueMapper: (ChartData data, _) => data.y,
+                ),
+              ],
             ),
-            iconHeight: 20,
-            iconWidth: 20,
           ),
-          primaryXAxis: CategoryAxis(
-            labelStyle: const TextStyle(
-              color: Colors.black,
-              fontWeight: FontWeight.bold,
-              fontSize: 12,
-            ),
-          ),
-          primaryYAxis: NumericAxis(
-            labelFormat: '{value} лв',
-            labelStyle: const TextStyle(
-              color: Colors.black,
-              fontWeight: FontWeight.bold,
-              fontSize: 12,
-            ),
-          ),
-          zoomPanBehavior: ZoomPanBehavior(
-            enablePanning: true,
-          ),
-          title: ChartTitle(
-            text: title,
-            textStyle: const TextStyle(
-              fontSize: 18,
-              color: Colors.black,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          tooltipBehavior: TooltipBehavior(
-            enable: true,
-            color: Colors.grey.shade400,
-            textStyle: const TextStyle(
-              color: Colors.black,
-              fontSize: 14,
-            ),
-          ),
-          series: <CartesianSeries>[
-            AreaSeries<ChartData, String>(
-              name: series1Name,
-              dataSource: series1Data,
-              color: const Color.fromARGB(213, 0, 81, 255),
-              xValueMapper: (ChartData data, _) => data.x,
-              yValueMapper: (ChartData data, _) => data.y,
-            ),
-            AreaSeries<ChartData, String>(
-              name: series2Name,
-              dataSource: series2Data,
-              color: const Color.fromARGB(136, 0, 174, 255),
-              xValueMapper: (ChartData data, _) => data.x,
-              yValueMapper: (ChartData data, _) => data.y,
-            ),
-          ],
         ),
       ),
     );

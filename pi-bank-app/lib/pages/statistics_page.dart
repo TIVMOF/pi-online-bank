@@ -1,8 +1,7 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import '../utill/app_bar.dart';
-// import '../utill/my_chart.dart';
+import '../utill/my_chart.dart';
 import '../utill/bottom_app_bar.dart';
 import '../utill/my_transaction.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -20,8 +19,10 @@ class StatsPage extends StatefulWidget {
 class _StatsPageState extends State<StatsPage> {
   final _controller = PageController();
   String? _errorMessage;
-  List<Map<String, String>> transactions = [];
+  List<Map<String, dynamic>> transactions = [];
   String? userId;
+  List<ChartData> incomeData = [];
+  List<ChartData> expenseData = [];
 
   @override
   void initState() {
@@ -41,13 +42,12 @@ class _StatsPageState extends State<StatsPage> {
         return;
       }
 
-      final response = await http.get(
+      // Fetch transactions
+      var response = await http.get(
         Uri.parse(
             'https://proper-invest.tech/services/ts/pi-bank-backend/api/BankService.ts/transactions/$userId'),
         headers: {'Authorization': 'Bearer $accessToken'},
       );
-
-      print("Transaction Response: ${response.body}");
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
@@ -55,8 +55,8 @@ class _StatsPageState extends State<StatsPage> {
         setState(() {
           transactions.clear();
           transactions.addAll(
-            List<Map<String, String>>.from(
-              data.map((transaction) => {
+            List<Map<String, dynamic>>.from(
+              data["UserTransactions"].map((transaction) => {
                     "SenderId": transaction["SenderId"].toString(),
                     "Receiver": transaction["Receiver"].toString(),
                     "Sender": transaction["Sender"].toString(),
@@ -69,7 +69,26 @@ class _StatsPageState extends State<StatsPage> {
         });
       } else {
         throw Exception(
-            "Failed to fetch bank accounts: ${response.reasonPhrase}");
+            "Failed to fetch bank transactions: ${response.reasonPhrase}");
+      }
+
+      // Fetch monthly stats
+      response = await http.get(
+        Uri.parse(
+            'https://proper-invest.tech/services/ts/pi-bank-backend/api/BankService.ts/monthlyStats/$userId'),
+        headers: {'Authorization': 'Bearer $accessToken'},
+      );
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+
+        setState(() {
+          incomeData = _mapStatsToChartData(data['incomes']);
+          expenseData = _mapStatsToChartData(data['expenses']);
+        });
+      } else {
+        throw Exception(
+            "Failed to fetch monthly stats: ${response.reasonPhrase}");
       }
     } catch (e) {
       setState(() {
@@ -77,6 +96,40 @@ class _StatsPageState extends State<StatsPage> {
       });
       print("Error fetching data: $e");
     }
+  }
+
+  List<ChartData> _mapStatsToChartData(Map<String, dynamic> stats) {
+    final sortedEntries = stats.entries.toList()
+      ..sort((a, b) => a.key.compareTo(b.key));
+
+    return sortedEntries
+        .map((entry) => ChartData(
+              _formatMonth(entry.key),
+              entry.value.toDouble(),
+            ))
+        .toList();
+  }
+
+  String _formatMonth(String date) {
+    // Format YYYY-MM to "Month Year"
+    final parts = date.split('-');
+    final year = parts[0];
+    final month = int.parse(parts[1]);
+    final monthNames = [
+      "January",
+      "February",
+      "March",
+      "April",
+      "May",
+      "June",
+      "July",
+      "August",
+      "September",
+      "October",
+      "November",
+      "December"
+    ];
+    return "${monthNames[month - 1]} $year";
   }
 
   @override
@@ -89,19 +142,23 @@ class _StatsPageState extends State<StatsPage> {
           controller: _controller,
           children: [
             MyAppBar(first_name: 'Статистики', second_name: ''),
-            SizedBox(height: 30),
+            const SizedBox(height: 30),
             if (_errorMessage != null)
               Padding(
                 padding: const EdgeInsets.only(top: 10),
                 child: Text(
                   _errorMessage!,
-                  style: TextStyle(color: Colors.red),
+                  style: const TextStyle(color: Colors.red),
                 ),
               ),
-            // MyChart(
-            //   title: 'Разплащания и доходи',
-            // ),
-            SizedBox(height: 20),
+            MyChart(
+              title: 'Разплащания и доходи',
+              series1Data: expenseData,
+              series2Data: incomeData,
+              series1Name: 'Expenses',
+              series2Name: 'Incomes',
+            ),
+            const SizedBox(height: 20),
             Padding(
               padding: const EdgeInsets.only(right: 5),
               child: Column(
@@ -109,8 +166,8 @@ class _StatsPageState extends State<StatsPage> {
                   final isSent = userId != transaction["SenderId"];
                   return MyTransaction(
                     recipient: isSent
-                        ? transaction["Receiver"] ?? "Unknown"
-                        : transaction["Sender"] ?? "Unknown",
+                        ? transaction["Sender"] ?? "Unknown"
+                        : transaction["Receiver"] ?? "Unknown",
                     date: transaction["Date"] ?? "Unknown",
                     sum: double.tryParse(transaction["Amount"] ?? "0") ?? 0.0,
                     currency: transaction["Currency"] ?? "Unknown",
