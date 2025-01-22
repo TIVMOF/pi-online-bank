@@ -4,7 +4,6 @@ import { TransactionRepository as TransactionDao } from "../gen/pi-bank-backend/
 import { UserRepository as UserDao } from "../gen/pi-bank-backend/dao/user/UserRepository";
 import { CardTypeRepository as CardTypeDao } from "../gen/pi-bank-backend/dao/Settings/CardTypeRepository"
 import { CurrencyRepository as CurrencyDao } from "../../codbex-currencies/gen/codbex-currencies/dao/Currencies/CurrencyRepository";
-import { BankAccountTypeRepository as BankAccountTypeDao } from "../gen/pi-bank-backend/dao/Settings/BankAccountTypeRepository";
 
 import { Controller, Get, Put, Post, response } from "sdk/http";
 
