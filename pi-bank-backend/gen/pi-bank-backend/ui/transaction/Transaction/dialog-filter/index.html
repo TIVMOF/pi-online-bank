@@ -71,6 +71,20 @@
                     </fd-form-item>
                     <fd-form-item class="fd-row">
                     	<div class="fd-col fd-col-md--2">
+                        	<fd-form-label for="idCurrency" dg-colon="true">Currency</fd-form-label>
+                        </div>
+                        <div class="fd-col fd-col-md--8">
+	                        <fd-combobox-input id="idCurrency"
+	                            name="Currency"
+	                            state="{{ forms.details['Currency'].$valid ? '' : 'error' }}"
+	                            ng-model="entity.Currency"
+	                            dropdown-items="optionsCurrency"
+	                            dg-placeholder="Search Currency ...">
+	                        </fd-combobox-input>
+	                    </div>
+                    </fd-form-item>
+                    <fd-form-item class="fd-row">
+                    	<div class="fd-col fd-col-md--2">
                         	<fd-form-label for="idDateFrom" dg-colon="true">From Date</fd-form-label>
                         </div>
                         <div class="fd-col fd-col-md--2">
@@ -94,25 +108,6 @@
 	                                state="{{ forms.details['Date'].$valid ? '' : 'error' }}"
 	                                ng-model="entity.DateTo"
 	                                type="date">
-	                            </fd-input>
-	                            <fd-form-message dg-type="error">Incorrect Input</fd-form-message>
-	                        </fd-form-input-message-group>
-	                    </div>
-                    </fd-form-item>
-                    <fd-form-item class="fd-row">
-                    	<div class="fd-col fd-col-md--2">
-                        	<fd-form-label for="idCurrency" dg-colon="true">Currency</fd-form-label>
-                        </div>
-                        <div class="fd-col fd-col-md--8">
-	                        <fd-form-input-message-group dg-inactive="{{ forms.details['Currency'].$valid }}">
-	                            <fd-input id="idCurrency"
-	                                name="Currency"
-	                                state="{{ forms.details['Currency'].$valid ? '' : 'error' }}"
-	                                ng-model="entity.Currency"
-	                                ng-minlength="${property.minLength} || 0"
-	                                ng-maxlength="${property.maxLength} || -1"
-	                                type="text"
-	                                placeholder="Enter Currency">
 	                            </fd-input>
 	                            <fd-form-message dg-type="error">Incorrect Input</fd-form-message>
 	                        </fd-form-input-message-group>

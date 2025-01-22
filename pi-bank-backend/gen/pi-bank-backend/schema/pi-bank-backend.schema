@@ -217,14 +217,14 @@
                         "name": "TRANSACTION_AMOUNT"
                     },
                     {
-                        "type": "DATE",
-                        "nullable": true,
-                        "name": "TRANSACTION_DATE"
-                    },
-                    {
                         "type": "INTEGER",
                         "nullable": true,
                         "name": "TRANSACTION_CURRENCY"
+                    },
+                    {
+                        "type": "DATE",
+                        "nullable": true,
+                        "name": "TRANSACTION_DATE"
                     }
                 ]
             },

@@ -244,34 +244,6 @@ class BankService {
         }
     }
 
-    @Get("/currencyCode/:currencyId")
-    public getCurrency(_: any, ctx: any) {
-        const currencyId = ctx.pathParameters.currencyId;
-
-        const currency = this.currencyDao.findById(currencyId);
-
-        if (!currency) {
-            response.setStatus(response.NOT_FOUND);
-            return { message: "Currency with that ID doesn't exist!" };
-        }
-
-        return { "CurrencyCode": currency.Code };
-    }
-
-    @Get("/bankAccountType/:typeId")
-    public getbankAccountType(_: any, ctx: any) {
-        const typeId = ctx.pathParameters.typeId;
-
-        const bankAccountType = this.bankAccountTypeDao.findById(typeId);
-
-        if (!bankAccountType) {
-            response.setStatus(response.NOT_FOUND);
-            return { message: "Bank Account Type with that ID doesn't exist!" };
-        }
-
-        return { "BankAccountType": bankAccountType.Name };
-    }
-
     @Put("/updateBankAccountAmount/:bankAccountId")
     public updateBankAccountAmount(body: any, ctx: any) {
         const bankAccountId = ctx.pathParameters.bankAccountId;
