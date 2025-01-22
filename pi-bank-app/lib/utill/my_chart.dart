@@ -3,16 +3,24 @@ import 'package:flutter/material.dart';
 
 class MyChart extends StatelessWidget {
   final String title;
+  final List<ChartData> series1Data;
+  final List<ChartData> series2Data;
+  final String series1Name;
+  final String series2Name;
 
   const MyChart({
     super.key,
     required this.title,
+    required this.series1Data,
+    required this.series2Data,
+    this.series1Name = 'Series 1',
+    this.series2Name = 'Series 2',
   });
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.symmetric(vertical: 20),
+      padding: const EdgeInsets.symmetric(vertical: 20),
       child: SizedBox(
         height: 500,
         child: SfCartesianChart(
@@ -20,39 +28,35 @@ class MyChart extends StatelessWidget {
           legend: Legend(
             isVisible: true,
             position: LegendPosition.bottom,
-            textStyle: TextStyle(
-              fontSize: 20,
+            textStyle: const TextStyle(
+              fontSize: 14,
               color: Colors.black,
             ),
-            iconHeight: 25,
-            iconWidth: 25,
+            iconHeight: 20,
+            iconWidth: 20,
           ),
           primaryXAxis: CategoryAxis(
-            interval: 1,
-            maximum: 6, // Adjusted from `visibleMaximum`
-            minimum: 3, // Adjusted from `visibleMinimum`
-            labelStyle: TextStyle(
+            labelStyle: const TextStyle(
               color: Colors.black,
               fontWeight: FontWeight.bold,
-              fontSize: 15,
+              fontSize: 12,
             ),
           ),
           primaryYAxis: NumericAxis(
             labelFormat: '{value} лв',
-            labelStyle: TextStyle(
+            labelStyle: const TextStyle(
               color: Colors.black,
               fontWeight: FontWeight.bold,
-              fontSize: 15,
+              fontSize: 12,
             ),
           ),
           zoomPanBehavior: ZoomPanBehavior(
             enablePanning: true,
           ),
-          enableAxisAnimation: true,
           title: ChartTitle(
             text: title,
-            textStyle: TextStyle(
-              fontSize: 20,
+            textStyle: const TextStyle(
+              fontSize: 18,
               color: Colors.black,
               fontWeight: FontWeight.bold,
             ),
@@ -60,49 +64,23 @@ class MyChart extends StatelessWidget {
           tooltipBehavior: TooltipBehavior(
             enable: true,
             color: Colors.grey.shade400,
-            textStyle: TextStyle(
+            textStyle: const TextStyle(
               color: Colors.black,
-              fontSize: 18,
+              fontSize: 14,
             ),
           ),
           series: <CartesianSeries>[
             AreaSeries<ChartData, String>(
-              name: 'Разплащания',
-              dataSource: [
-                ChartData('Януари', 35),
-                ChartData('Февруари', 28),
-                ChartData('Март', 34),
-                ChartData('Април', 32),
-                ChartData('Май', 40),
-                ChartData('Юни', 45),
-                ChartData('Юли', 65),
-                ChartData('Август', 89),
-                ChartData('Септември', 40),
-                ChartData('Ноември', 23),
-                ChartData('Октомври', 69),
-                ChartData('Декември', 34),
-              ],
-              color: Color.fromARGB(213, 0, 81, 255),
+              name: series1Name,
+              dataSource: series1Data,
+              color: const Color.fromARGB(213, 0, 81, 255),
               xValueMapper: (ChartData data, _) => data.x,
               yValueMapper: (ChartData data, _) => data.y,
             ),
             AreaSeries<ChartData, String>(
-              name: 'Доходи',
-              dataSource: [
-                ChartData('Януари', 25),
-                ChartData('Февруари', 67),
-                ChartData('Март', 58),
-                ChartData('Април', 32),
-                ChartData('Май', 56),
-                ChartData('Юни', 80),
-                ChartData('Юли', 54),
-                ChartData('Август', 53),
-                ChartData('Септември', 78),
-                ChartData('Ноември', 43),
-                ChartData('Октомври', 39),
-                ChartData('Декември', 40),
-              ],
-              color: Color.fromARGB(136, 0, 174, 255),
+              name: series2Name,
+              dataSource: series2Data,
+              color: const Color.fromARGB(136, 0, 174, 255),
               xValueMapper: (ChartData data, _) => data.x,
               yValueMapper: (ChartData data, _) => data.y,
             ),

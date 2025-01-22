@@ -64,6 +64,8 @@ class _SendPageState extends State<SendPage> {
         headers: {'Authorization': 'Bearer $accessToken'},
       );
 
+      print("Bank accounts response body: ${response.body}");
+
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
 
@@ -104,6 +106,8 @@ class _SendPageState extends State<SendPage> {
             'https://proper-invest.tech/services/ts/pi-bank-backend/api/BankService.ts/userInteractions/$userId'),
         headers: {'Authorization': 'Bearer $accessToken'},
       );
+
+      print("Interactions response body: ${response.body}");
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
@@ -156,6 +160,7 @@ class _SendPageState extends State<SendPage> {
       final senderAccount = bankAccounts
           .firstWhere((account) => account['Id'] == selectedAccountId);
       final senderBalance = double.parse(senderAccount['Amount']!);
+      final senderCurrency = senderAccount['Currency'];
       final transferAmount = enteredAmount;
 
       if (transferAmount <= 0 || transferAmount > senderBalance) {
@@ -190,6 +195,16 @@ class _SendPageState extends State<SendPage> {
         receiverAccountId = receiverAccount["BankAccountId"];
       }
 
+      final receiverCurrency = receiverAccount['Currency'];
+
+      if (senderCurrency.toString() != receiverCurrency.toString()) {
+        setState(() {
+          _errorMessage =
+              "Currency mismatch: Sender's currency does not match receiver's currency.";
+        });
+        return;
+      }
+
       var response = await http.post(
         Uri.parse(
             'https://proper-invest.tech/services/ts/pi-bank-backend/api/BankService.ts/transaction'),
@@ -201,6 +216,7 @@ class _SendPageState extends State<SendPage> {
           "Sender": selectedAccountId,
           "Reciever": receiverAccountId,
           "Amount": transferAmount,
+          "Currency": senderCurrency
         }),
       );
 
@@ -284,7 +300,7 @@ class _SendPageState extends State<SendPage> {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              MyAppBar(first_name: 'Proper Invest', second_name: 'Bank'),
+              MyAppBar(first_name: 'Прати', second_name: 'Пари'),
               Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: Form(
@@ -316,13 +332,14 @@ class _SendPageState extends State<SendPage> {
                           Text("Use Dropdown"),
                           Switch(
                             value: useDropdown,
-                            onChanged: isDataLoaded
-                                ? (value) {
-                                    setState(() {
-                                      useDropdown = value;
-                                    });
-                                  }
-                                : null,
+                            onChanged:
+                                (isDataLoaded && recentInteractions.isNotEmpty)
+                                    ? (value) {
+                                        setState(() {
+                                          useDropdown = value;
+                                        });
+                                      }
+                                    : null,
                           ),
                         ],
                       ),

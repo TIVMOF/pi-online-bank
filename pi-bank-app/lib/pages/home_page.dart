@@ -2,7 +2,6 @@
 
 import 'package:flutter/material.dart';
 import 'statistics_page.dart';
-import 'transaction_page.dart';
 import 'transfer_page.dart';
 import '../utill/app_bar.dart';
 import '../utill/bottom_app_bar.dart';
@@ -148,14 +147,6 @@ class _HomePageState extends State<HomePage> {
                     tileSubtitle: 'Разплащания',
                     page: StatsPage(),
                   ),
-
-                  // Transactions
-                  MyListTile(
-                    iconImagePath: 'lib/icons/lending.png',
-                    tileTitle: 'Трансакции',
-                    tileSubtitle: 'История',
-                    page: TransactionPage(),
-                  )
                 ],
               ),
             )
