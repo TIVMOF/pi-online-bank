@@ -188,9 +188,14 @@ class BankService {
                 })
             })
 
-            if (!userTransactions || userTransactions.length === 0) {
+            if (!userTransactions) {
                 response.setStatus(response.NOT_FOUND);
                 return { message: "User doesn't have Transactions!" };
+            }
+
+            if (userTransactions.length === 0) {
+                response.setStatus(response.OK);
+                return userTransactions;
             }
 
             const allBankAccounts = this.bankAccountDao.findAll();
