@@ -1,8 +1,6 @@
 // ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors, sized_box_for_whitespace
 
 import 'package:flutter/material.dart';
-import 'statistics_page.dart';
-import 'transfer_page.dart';
 import '../utill/app_bar.dart';
 import '../utill/bottom_app_bar.dart';
 import '../utill/my_card.dart';
@@ -79,7 +77,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey[300],
-      bottomNavigationBar: AppBarBottom(context: context),
+      bottomNavigationBar: AppBarBottom(),
       body: SafeArea(
         child: Column(
           children: [
@@ -137,7 +135,7 @@ class _HomePageState extends State<HomePage> {
                     iconImagePath: 'lib/icons/send.png',
                     tileTitle: 'Преводи',
                     tileSubtitle: 'Прати по сметка',
-                    page: SendPage(),
+                    routeName: '/transfer',
                   ),
 
                   // Stats
@@ -145,7 +143,7 @@ class _HomePageState extends State<HomePage> {
                     iconImagePath: 'lib/icons/statistics.png',
                     tileTitle: 'Статистики',
                     tileSubtitle: 'Разплащания',
-                    page: StatsPage(),
+                    routeName: '/statistics',
                   ),
                 ],
               ),

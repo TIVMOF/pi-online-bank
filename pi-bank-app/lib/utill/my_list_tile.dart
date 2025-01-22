@@ -1,5 +1,3 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, unnecessary_this
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -7,14 +5,15 @@ class MyListTile extends StatelessWidget {
   final String iconImagePath;
   final String tileTitle;
   final String tileSubtitle;
-  final Widget page;
+  final String routeName;
 
-  const MyListTile(
-      {super.key,
-      required this.iconImagePath,
-      required this.tileTitle,
-      required this.tileSubtitle,
-      required this.page});
+  const MyListTile({
+    super.key,
+    required this.iconImagePath,
+    required this.tileTitle,
+    required this.tileSubtitle,
+    required this.routeName,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -23,8 +22,7 @@ class MyListTile extends StatelessWidget {
       child: ElevatedButton(
         onPressed: () {
           HapticFeedback.vibrate();
-          Navigator.push(
-              context, MaterialPageRoute(builder: (context) => this.page));
+          Navigator.pushNamed(context, routeName); // Use named route here
         },
         style: ElevatedButton.styleFrom(
           shadowColor: Colors.transparent,
@@ -35,7 +33,6 @@ class MyListTile extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            //Icon
             Row(
               children: [
                 Container(
@@ -66,7 +63,6 @@ class MyListTile extends StatelessWidget {
                 ),
               ],
             ),
-
             Icon(Icons.arrow_forward_ios),
           ],
         ),

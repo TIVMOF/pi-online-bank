@@ -45,8 +45,8 @@ class MyChart extends StatelessWidget {
                   fontWeight: FontWeight.bold,
                   fontSize: 12,
                 ),
-                interval: 1, // Ensure each category is displayed
-                labelRotation: 45, // Rotate labels by 45 degrees
+                interval: 1,
+                labelRotation: 45,
               ),
               primaryYAxis: NumericAxis(
                 labelFormat: '{value} лв',

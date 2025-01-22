@@ -42,7 +42,6 @@ class _StatsPageState extends State<StatsPage> {
         return;
       }
 
-      // Fetch transactions
       var response = await http.get(
         Uri.parse(
             'https://proper-invest.tech/services/ts/pi-bank-backend/api/BankService.ts/transactions/$userId'),
@@ -72,7 +71,6 @@ class _StatsPageState extends State<StatsPage> {
             "Failed to fetch bank transactions: ${response.reasonPhrase}");
       }
 
-      // Fetch monthly stats
       response = await http.get(
         Uri.parse(
             'https://proper-invest.tech/services/ts/pi-bank-backend/api/BankService.ts/monthlyStats/$userId'),
@@ -111,7 +109,6 @@ class _StatsPageState extends State<StatsPage> {
   }
 
   String _formatMonth(String date) {
-    // Format YYYY-MM to "Month Year"
     final parts = date.split('-');
     final year = parts[0];
     final month = int.parse(parts[1]);
@@ -136,7 +133,7 @@ class _StatsPageState extends State<StatsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey[300],
-      bottomNavigationBar: AppBarBottom(context: context),
+      bottomNavigationBar: AppBarBottom(),
       body: SafeArea(
         child: ListView(
           controller: _controller,
