@@ -5,6 +5,8 @@ import 'package:http/http.dart' as http;
 import 'package:online_bank/utill/app_bar.dart';
 import 'package:online_bank/utill/bottom_app_bar.dart';
 
+import '../utill/refresh_tokens.dart';
+
 final storage = FlutterSecureStorage();
 
 class SendPage extends StatefulWidget {
@@ -32,6 +34,8 @@ class _SendPageState extends State<SendPage> {
 
   Future<void> getData() async {
     try {
+      await ensureAccessTokenValidity(context);
+
       final userId = await storage.read(key: 'userId');
       final accessToken = await storage.read(key: 'backendAccessToken');
 

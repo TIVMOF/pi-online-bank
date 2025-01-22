@@ -7,6 +7,8 @@ import '../utill/my_transaction.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 
+import '../utill/refresh_tokens.dart';
+
 final storage = FlutterSecureStorage();
 
 class StatsPage extends StatefulWidget {
@@ -32,6 +34,8 @@ class _StatsPageState extends State<StatsPage> {
 
   Future<void> getData() async {
     try {
+      await ensureAccessTokenValidity(context);
+
       userId = await storage.read(key: 'userId');
       final accessToken = await storage.read(key: 'backendAccessToken');
 

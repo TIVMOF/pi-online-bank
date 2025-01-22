@@ -10,6 +10,8 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
+import '../utill/refresh_tokens.dart';
+
 final storage = FlutterSecureStorage();
 
 class HomePage extends StatefulWidget {
@@ -32,6 +34,8 @@ class _HomePageState extends State<HomePage> {
 
   Future<void> _fetchCards() async {
     try {
+      await ensureAccessTokenValidity(context);
+
       final userId = await storage.read(key: 'userId');
       final accessToken = await storage.read(key: 'backendAccessToken');
 
