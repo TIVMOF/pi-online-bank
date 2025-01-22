@@ -5,12 +5,6 @@ import '../utill/bottom_app_bar.dart';
 import '../utill/read_more.dart';
 
 class AboutPage extends StatefulWidget {
-  final BuildContext context;
-
-  AboutPage({
-    required this.context,
-  });
-
   @override
   State<AboutPage> createState() => _AboutPageState();
 }
@@ -20,7 +14,7 @@ class _AboutPageState extends State<AboutPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey[300],
-      bottomNavigationBar: AppBarBottom(context: context),
+      bottomNavigationBar: AppBarBottom(),
       resizeToAvoidBottomInset: false,
       body: SafeArea(
           child: SingleChildScrollView(

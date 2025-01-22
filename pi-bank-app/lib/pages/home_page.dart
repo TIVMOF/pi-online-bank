@@ -1,14 +1,18 @@
 // ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors, sized_box_for_whitespace
 
 import 'package:flutter/material.dart';
-import 'statistics_page.dart';
-import 'transaction_page.dart';
 import '../utill/app_bar.dart';
 import '../utill/bottom_app_bar.dart';
 import '../utill/my_card.dart';
 import '../utill/my_list_tile.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
-import 'package:online_bank/pages/send_page.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+
+import '../utill/refresh_tokens.dart';
+
+final storage = FlutterSecureStorage();
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -19,12 +23,65 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final _controller = PageController();
+  String? _errorMessage;
+  List<Map<String, dynamic>> _cards = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchCards();
+  }
+
+  Future<void> _fetchCards() async {
+    try {
+      await ensureAccessTokenValidity(context);
+
+      final userId = await storage.read(key: 'userId');
+      final accessToken = await storage.read(key: 'backendAccessToken');
+
+      if (userId == null || accessToken == null) {
+        throw Exception("User ID or access token is missing.");
+      }
+
+      final response = await http.get(
+        Uri.parse(
+            'https://proper-invest.tech/services/ts/pi-bank-backend/api/BankService.ts/cards/$userId'),
+        headers: {
+          'Authorization': 'Bearer $accessToken',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final List<dynamic> cardData = json.decode(response.body)["UserCards"];
+
+        setState(() {
+          _cards = cardData
+              .map((card) => {
+                    'balance': card['Balance'] + 0.0,
+                    'cardNumber': card['CardNumber'],
+                    'expiryDate': card['ExpirationDate'],
+                    'color': Colors.blue,
+                  })
+              .toList();
+        });
+      } else {
+        setState(() {
+          _errorMessage = "Failed to load cards. Please try again later.";
+        });
+      }
+    } catch (e) {
+      setState(() {
+        _errorMessage =
+            "An error occurred. Please check your connection and try again.";
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey[300],
-      bottomNavigationBar: AppBarBottom(context: context),
+      bottomNavigationBar: AppBarBottom(),
       body: SafeArea(
         child: Column(
           children: [
@@ -34,44 +91,37 @@ class _HomePageState extends State<HomePage> {
               height: 25,
             ),
 
-            Container(
-                height: 180,
-                child: PageView(
-                  scrollDirection: Axis.horizontal,
-                  controller: _controller,
-                  children: [
-                    MyCard(
-                      balance: 5250.20,
-                      cardNumber: 12345678,
-                      expiryDate: 4,
-                      expiryMonth: 10,
-                      expiryYear: 24,
-                      color: Colors.deepPurple,
+            _errorMessage != null
+                ? Center(
+                    child: Text(
+                      _errorMessage!,
+                      style: TextStyle(color: Colors.red),
                     ),
-                    MyCard(
-                      balance: 4250.24,
-                      cardNumber: 11345678,
-                      expiryDate: 5,
-                      expiryMonth: 11,
-                      expiryYear: 23,
-                      color: Colors.deepOrange,
-                    ),
-                    MyCard(
-                      balance: 250.99,
-                      cardNumber: 12355678,
-                      expiryDate: 3,
-                      expiryMonth: 12,
-                      expiryYear: 25,
-                      color: Colors.blue,
-                    ),
-                  ],
-                )),
+                  )
+                : _cards.isEmpty
+                    ? Center(
+                        child: CircularProgressIndicator(),
+                      )
+                    : Container(
+                        height: 180,
+                        child: PageView(
+                          scrollDirection: Axis.horizontal,
+                          controller: _controller,
+                          children: _cards.map((card) {
+                            return MyCard(
+                              balance: 1.0 * card['balance'],
+                              cardNumber: card['cardNumber'],
+                              expiryDate: card['expiryDate'],
+                              color: card['color'],
+                            );
+                          }).toList(),
+                        )),
 
             SizedBox(height: 15),
 
             SmoothPageIndicator(
               controller: _controller,
-              count: 3,
+              count: _cards.length,
               effect: ExpandingDotsEffect(
                 activeDotColor: Colors.blue.shade900,
               ),
@@ -84,29 +134,21 @@ class _HomePageState extends State<HomePage> {
               padding: const EdgeInsets.all(25.0),
               child: Column(
                 children: [
-                  //Send
+                  // Send
                   MyListTile(
                     iconImagePath: 'lib/icons/send.png',
                     tileTitle: 'Преводи',
                     tileSubtitle: 'Прати по сметка',
-                    page: SendPage(context: context),
+                    routeName: '/transfer',
                   ),
 
-                  //Stats
+                  // Stats
                   MyListTile(
                     iconImagePath: 'lib/icons/statistics.png',
                     tileTitle: 'Статистики',
                     tileSubtitle: 'Разплащания',
-                    page: StatsPage(),
+                    routeName: '/statistics',
                   ),
-
-                  //Transactions
-                  MyListTile(
-                    iconImagePath: 'lib/icons/lending.png',
-                    tileTitle: 'Трансакции',
-                    tileSubtitle: 'История',
-                    page: TransactionPage(),
-                  )
                 ],
               ),
             )

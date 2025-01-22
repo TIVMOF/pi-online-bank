@@ -1,16 +1,7 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import '../pages/about_page.dart';
-
-import '../pages/home_page.dart';
 
 class AppBarBottom extends StatelessWidget {
-  final BuildContext context;
-
-  AppBarBottom({required this.context});
-
   @override
   Widget build(BuildContext context) {
     return BottomAppBar(
@@ -25,12 +16,7 @@ class AppBarBottom extends StatelessWidget {
             ),
             onPressed: () {
               HapticFeedback.vibrate();
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => AboutPage(
-                            context: context,
-                          )));
+              Navigator.pushNamed(context, '/about'); // Use named route
             },
           ),
           IconButton(
@@ -40,18 +26,17 @@ class AppBarBottom extends StatelessWidget {
             ),
             onPressed: () {
               HapticFeedback.vibrate();
-              Navigator.push(
-                  context, MaterialPageRoute(builder: (context) => HomePage()));
+              Navigator.pushNamed(context, '/home'); // Use named route
             },
           ),
           IconButton(
             icon: Icon(
-              Icons.arrow_back,
+              Icons.settings,
               color: Colors.blue.shade800,
             ),
             onPressed: () {
               HapticFeedback.vibrate();
-              Navigator.pop(context);
+              Navigator.pushNamed(context, '/settings'); // Use named route
             },
           ),
         ],
