@@ -62,6 +62,9 @@ angular.module('page', ["ideUI", "ideView"])
 			if (entity.DateTo) {
 				filter.$filter.lessThanOrEqual.Date = entity.DateTo;
 			}
+			if (entity.Currency !== undefined) {
+				filter.$filter.equals.Currency = entity.Currency;
+			}
 			messageHub.postMessage("entitySearch", {
 				entity: entity,
 				filter: filter

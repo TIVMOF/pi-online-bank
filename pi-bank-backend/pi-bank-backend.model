@@ -659,6 +659,22 @@
                         "widgetLength": "20",
                         "widgetSize": "",
                         "widgetType": "DATE"
+                    },
+                    {
+                        "dataName": "TRANSACTION_CURRENCY",
+                        "dataNullable": "true",
+                        "dataType": "INTEGER",
+                        "description": "",
+                        "name": "Currency",
+                        "tooltip": "",
+                        "widgetIsMajor": "true",
+                        "widgetLength": "20",
+                        "widgetSize": "",
+                        "widgetType": "TEXTBOX",
+                        "relationshipName": "Transaction_Currency",
+                        "relationshipEntityName": "Currency",
+                        "relationshipEntityPerspectiveName": "Currencies",
+                        "relationshipEntityPerspectiveLabel": "Currencies"
                     }
                 ],
                 "caption": "Manage entity Transaction",

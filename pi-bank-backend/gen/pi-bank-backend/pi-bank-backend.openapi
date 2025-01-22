@@ -4168,6 +4168,9 @@ components:
           type: number
           format: double
         Date:
+        Currency:
+          type: integer
+          format: int32
     TransactionFilterOptions:
       type: object
       properties:
@@ -4211,6 +4214,14 @@ components:
                         format: double
                 Date:
                   oneOf:
+                Currency:
+                  oneOf:
+                    - type: integer
+                      format: int32
+                    - type: array
+                      items:
+                        type: integer
+                        format: int32
             notEquals:
               type: object
               properties:
@@ -4248,6 +4259,14 @@ components:
                         format: double
                 Date:
                   oneOf:
+                Currency:
+                  oneOf:
+                    - type: integer
+                      format: int32
+                    - type: array
+                      items:
+                        type: integer
+                        format: int32
             contains:
               type: object
               properties:
@@ -4256,6 +4275,7 @@ components:
                 Sender:
                 Amount:
                 Date:
+                Currency:
             greaterThan:
               type: object
               properties:
@@ -4272,6 +4292,9 @@ components:
                   type: number
                   format: double
                 Date:
+                Currency:
+                  type: integer
+                  format: int32
             greaterThanOrEqual:
               type: object
               properties:
@@ -4288,6 +4311,9 @@ components:
                   type: number
                   format: double
                 Date:
+                Currency:
+                  type: integer
+                  format: int32
             lessThan:
               type: object
               properties:
@@ -4304,6 +4330,9 @@ components:
                   type: number
                   format: double
                 Date:
+                Currency:
+                  type: integer
+                  format: int32
             lessThanOrEqual:
               type: object
               properties:
@@ -4320,14 +4349,17 @@ components:
                   type: number
                   format: double
                 Date:
+                Currency:
+                  type: integer
+                  format: int32
         $select:
           type: array
-          example: ["Id", "Reciever", "Sender", "Amount", "Date"]
+          example: ["Id", "Reciever", "Sender", "Amount", "Date", "Currency"]
           items:
             type: string
         $sort:
           - type: string
-            example: "Id,Reciever,Sender,Amount,Date"
+            example: "Id,Reciever,Sender,Amount,Date,Currency"
         $order:
           type: string
           enum: ["asc", "desc"]
