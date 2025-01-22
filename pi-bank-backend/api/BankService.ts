@@ -237,7 +237,6 @@ class BankService {
                         const user = this.userDao.findById(bankAccount.User);
 
                         userInteractions.push({
-                            "User Id": user.Id,
                             "Name:": user.Username,
                             "IBAN": bankAccount.IBAN,
                             "BankAccountId": bankAccount.Id,
