@@ -93,7 +93,7 @@ class BankService {
                 const currencyCode = this.currencyDao.findById(transaction.Currency).Code;
 
                 return {
-                    "Sender Id": sender.Id,
+                    "SenderId": sender.Id,
                     "Receiver": reciever.Username,
                     "Sender": sender.Username,
                     "Amount": transaction.Amount,
