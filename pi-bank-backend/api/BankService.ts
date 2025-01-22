@@ -171,6 +171,7 @@ class BankService {
                 const sender = this.userDao.findById(senderBankAccount.User);
 
                 return {
+                    "Sender Id": sender.Id,
                     "Receiver": reciever.Username,
                     "Sender": sender.Username,
                     "Amount": transaction.Amount,
@@ -233,10 +234,11 @@ class BankService {
             allBankAccounts.forEach(bankAccount => {
                 userTransactions.forEach(transaction => {
                     if (transaction.Sender === bankAccount.Id || transaction.Reciever === bankAccount.Id) {
-                        const username = this.userDao.findById(bankAccount.User).Username;
+                        const user = this.userDao.findById(bankAccount.User);
 
                         userInteractions.push({
-                            "Name:": username,
+                            "User Id": user.Id,
+                            "Name:": user.Username,
                             "IBAN": bankAccount.IBAN,
                             "BankAccountId": bankAccount.Id,
                             "Amount": bankAccount.Amount
