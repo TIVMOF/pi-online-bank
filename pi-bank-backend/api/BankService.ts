@@ -210,7 +210,8 @@ class BankService {
                             "Name": user.Username,
                             "IBAN": bankAccount.IBAN,
                             "BankAccountId": bankAccount.Id,
-                            "Amount": bankAccount.Amount
+                            "Amount": bankAccount.Amount,
+                            "Currency": transaction.Currency
                         })
                     }
                 })
@@ -411,7 +412,7 @@ class BankService {
     @Post("/transaction")
     public createTransaction(body: any) {
         try {
-            const requiredFields = ["Reciever", "Sender", "Amount"];
+            const requiredFields = ["Reciever", "Sender", "Amount", "Currency"];
 
             for (const field of requiredFields) {
                 if (!body.hasOwnProperty(field)) {
