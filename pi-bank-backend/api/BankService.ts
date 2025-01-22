@@ -16,7 +16,6 @@ class BankService {
     private readonly userDao;
     private readonly cardTypeDao;
     private readonly currencyDao;
-    private readonly bankAccountTypeDao;
 
     constructor() {
         this.bankAccountDao = new BankAccountDao();
@@ -25,7 +24,6 @@ class BankService {
         this.userDao = new UserDao();
         this.cardTypeDao = new CardTypeDao();
         this.currencyDao = new CurrencyDao();
-        this.bankAccountTypeDao = new BankAccountTypeDao();
     }
 
     @Get("/test")
@@ -230,6 +228,70 @@ class BankService {
         }
     }
 
+    @Get("/monthlyStats/:userId")
+    public getMonthlyStats(_: any, ctx: any) {
+        const userId = ctx.pathParameters.userId;
+
+        const user = this.userDao.findById(userId);
+
+        if (!user) {
+            response.setStatus(response.NOT_FOUND);
+            return { message: "User with that ID doesn't exist!" };
+        }
+
+        try {
+            const userBankAccounts = this.bankAccountDao.findAll({
+                $filter: {
+                    equals: { User: userId }
+                },
+            });
+
+            if (!userBankAccounts || userBankAccounts.length === 0) {
+                response.setStatus(response.NOT_FOUND);
+                return { message: "User doesn't have Bank Accounts!" };
+            }
+
+            const allTransactions = this.transactionDao.findAll();
+
+            const currentDate = new Date();
+            const lastYearDate = new Date(currentDate.getFullYear(), currentDate.getMonth() - 11, 1); // Start of the 12th month back
+
+            const filteredTransactions = allTransactions.filter((transaction: any) => {
+                const transactionDate = new Date(transaction.Date);
+                return transactionDate >= lastYearDate && transactionDate <= currentDate;
+            });
+
+            const incomes: Record<string, number> = {};
+            const expenses: Record<string, number> = {};
+
+            for (let i = 0; i < 12; i++) {
+                const date = new Date(currentDate.getFullYear(), currentDate.getMonth() - i, 1);
+                const monthKey = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
+                incomes[monthKey] = 0;
+                expenses[monthKey] = 0;
+            }
+
+            userBankAccounts.forEach(bankAccount => {
+                filteredTransactions.forEach(transaction => {
+                    const transactionDate = new Date(transaction.Date);
+                    const monthKey = `${transactionDate.getFullYear()}-${String(transactionDate.getMonth() + 1).padStart(2, '0')}`;
+
+                    if (transaction.Sender === bankAccount.Id) {
+                        expenses[monthKey] += transaction.Amount;
+                    } else if (transaction.Reciever === bankAccount.Id) {
+                        incomes[monthKey] += transaction.Amount;
+                    }
+                });
+            });
+
+            response.setStatus(response.OK);
+            return { incomes, expenses };
+
+        } catch (e: any) {
+            response.setStatus(response.BAD_REQUEST);
+            return { error: e.message };
+        }
+    }
 
 
     @Get("/cards/:userId")
