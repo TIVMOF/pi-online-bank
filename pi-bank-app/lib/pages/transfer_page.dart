@@ -3,17 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:online_bank/utill/app_bar.dart';
-import 'package:online_bank/utill/bottom_app_bar.dart';
+// import 'package:online_bank/utill/bottom_app_bar.dart';
 
 final storage = FlutterSecureStorage();
 
 class SendPage extends StatefulWidget {
-  final BuildContext context;
-
-  const SendPage({
-    required this.context,
-  });
-
   @override
   State<SendPage> createState() => _SendPageState();
 }
@@ -23,17 +17,18 @@ class _SendPageState extends State<SendPage> {
   String? _errorMessage;
   List<Map<String, String>> bankAccounts = [];
   List<Map<String, dynamic>> recentInteractions = [];
-  String? selectedAccountId;
-  var receiverAccount;
-  String? enteredIBAN;
+  String? selectedAccountId = null;
+  var receiverAccount = null;
+  String? enteredIBAN = null;
   double enteredAmount = 0;
   bool useDropdown = false;
   bool isDataLoaded = false;
 
   @override
   void initState() {
+    print("Initializing SendPage1");
     super.initState();
-    print("Initializing SendPage...");
+    print("Initializing SendPage2");
     getData();
   }
 
@@ -42,6 +37,8 @@ class _SendPageState extends State<SendPage> {
       final userId = await storage.read(key: 'userId');
       final accessToken = await storage.read(key: 'backendAccessToken');
 
+      print("test1");
+
       if (userId == null || accessToken == null) {
         setState(() {
           _errorMessage = "Authentication error: Missing credentials.";
@@ -49,12 +46,18 @@ class _SendPageState extends State<SendPage> {
         return;
       }
 
+      print("test2");
+
       await fetchBankAccounts(userId, accessToken);
       await fetchInteractions(userId, accessToken);
+
+      print("test3");
 
       setState(() {
         isDataLoaded = true;
       });
+
+      print("test4");
     } catch (e) {
       setState(() {
         _errorMessage = "An error occurred. Please check your connection.";
@@ -65,18 +68,27 @@ class _SendPageState extends State<SendPage> {
 
   Future<void> fetchBankAccounts(String userId, String accessToken) async {
     try {
+      print("test5");
+
       final response = await http.get(
         Uri.parse(
             'https://proper-invest.tech/services/ts/pi-bank-backend/api/BankService.ts/bankAccounts/$userId'),
         headers: {'Authorization': 'Bearer $accessToken'},
       );
 
+      print("test6");
+
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
 
+        print("test7");
+
         if (data["UserBankAccounts"] != null) {
+          print("test8");
+
           setState(() {
-            bankAccounts = List<Map<String, String>>.from(
+            bankAccounts.clear();
+            bankAccounts.addAll(List<Map<String, String>>.from(
               data["UserBankAccounts"].map((account) => {
                     "Id": account["Id"].toString(),
                     "IBAN": account["IBAN"].toString(),
@@ -84,7 +96,7 @@ class _SendPageState extends State<SendPage> {
                     "Currency": account["Currency"].toString(),
                     "Type": account["Type"].toString(),
                   }),
-            );
+            ));
             selectedAccountId =
                 bankAccounts.isNotEmpty ? bankAccounts[0]["Id"] : null;
           });
@@ -111,19 +123,27 @@ class _SendPageState extends State<SendPage> {
         headers: {'Authorization': 'Bearer $accessToken'},
       );
 
+      print("test9");
+
       if (response.statusCode == 200) {
+        print("test10");
         final data = jsonDecode(response.body);
 
         setState(() {
-          recentInteractions = List<Map<String, dynamic>>.from(
-            data.map((account) => {
-                  "Name": account["Name:"],
-                  "IBAN": account["IBAN"],
-                  "BankAccountId": account["BankAccountId"].toString(),
-                  "Amount": account["Amount"].toString()
-                }),
+          recentInteractions.clear(); // Clear existing interactions
+          recentInteractions.addAll(
+            List<Map<String, dynamic>>.from(
+              data.map((account) => {
+                    "Name": account["Name:"],
+                    "IBAN": account["IBAN"],
+                    "BankAccountId": account["BankAccountId"].toString(),
+                    "Amount": account["Amount"].toString()
+                  }),
+            ),
           );
         });
+
+        print("test11");
       } else {
         throw Exception(
             "Failed to fetch interactions: ${response.reasonPhrase}");
@@ -145,9 +165,11 @@ class _SendPageState extends State<SendPage> {
     }
 
     try {
+      print("test12");
+
       final userId = await storage.read(key: 'userId');
       final accessToken = await storage.read(key: 'backendAccessToken');
-      var receiverAccountId;
+      var receiverAccountId = null;
 
       if (userId == null || accessToken == null) {
         setState(() {
@@ -190,6 +212,7 @@ class _SendPageState extends State<SendPage> {
           final data = jsonDecode(response.body);
           receiverAccount = data;
           receiverAccountId = data["Id"];
+          print("receiver account id by IBAN: $receiverAccountId");
         } else {
           setState(() {
             _errorMessage = "Invalid IBAN or receiver account not found.";
@@ -198,13 +221,14 @@ class _SendPageState extends State<SendPage> {
         }
       } else {
         receiverAccountId = receiverAccount["BankAccountId"];
+        print("receiver account id without entering IBAN: $receiverAccountId");
       }
 
       print("Receiver Account: $receiverAccount");
 
       print("Receiver Account Id: $receiverAccountId");
 
-      final transactionResponse = await http.post(
+      var response = await http.post(
         Uri.parse(
             'https://proper-invest.tech/services/ts/pi-bank-backend/api/BankService.ts/transaction'),
         headers: {
@@ -218,12 +242,11 @@ class _SendPageState extends State<SendPage> {
         }),
       );
 
-      print("Transaction Response: ${transactionResponse.body}");
+      print("Transaction Response: ${response.body}");
 
-      if (transactionResponse.statusCode != 201) {
+      if (response.statusCode != 201) {
         setState(() {
-          _errorMessage =
-              "Transaction failed: ${transactionResponse.reasonPhrase}";
+          _errorMessage = "Transaction failed: ${response.reasonPhrase}";
         });
         return;
       }
@@ -231,7 +254,7 @@ class _SendPageState extends State<SendPage> {
       // Deduct from sender and add to receiver
       final newSenderBalance = senderBalance - transferAmount;
       print("New Sender Balance: $newSenderBalance");
-      await http.put(
+      response = await http.put(
         Uri.parse(
             'https://proper-invest.tech/services/ts/pi-bank-backend/api/BankService.ts/updateBankAccountAmount/$selectedAccountId'),
         headers: {
@@ -241,13 +264,22 @@ class _SendPageState extends State<SendPage> {
         body: jsonEncode({"Amount": newSenderBalance}),
       );
 
+      print("Update Sender response: ${response.body}");
+
+      if (response.statusCode != 200) {
+        setState(() {
+          _errorMessage = "Transaction failed: ${response.reasonPhrase}";
+        });
+        return;
+      }
+
       print("test!");
 
       final newReceiverBalance =
           double.parse(receiverAccount["Amount"].toString()) + transferAmount;
       print("newReceiverBalance: $newReceiverBalance");
       print("Receiver Account Id: $receiverAccountId");
-      await http.put(
+      response = await http.put(
         Uri.parse(
             'https://proper-invest.tech/services/ts/pi-bank-backend/api/BankService.ts/updateBankAccountAmount/$receiverAccountId'),
         headers: {
@@ -257,13 +289,27 @@ class _SendPageState extends State<SendPage> {
         body: jsonEncode({"Amount": newReceiverBalance}),
       );
 
-      // Fetch updated data to refresh the page
-      await getData();
+      print("Update Receiver response: ${response.body}");
 
-      // Reload the page
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => SendPage(context: context)),
+      if (response.statusCode != 200) {
+        setState(() {
+          _errorMessage = "Transaction failed: ${response.reasonPhrase}";
+        });
+        return;
+      }
+
+      print("Receiver update successfull!");
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text("Transaction successful!"),
+          backgroundColor: Colors.green,
+          duration: Duration(seconds: 2),
+        ),
+      );
+
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (context) => SendPage()),
       );
     } catch (e) {
       setState(() {
@@ -286,7 +332,7 @@ class _SendPageState extends State<SendPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey[300],
-      bottomNavigationBar: AppBarBottom(context: widget.context),
+      // bottomNavigationBar: AppBarBottom(context: widget.context),
       body: SafeArea(
         child: SingleChildScrollView(
           child: Column(
@@ -357,9 +403,7 @@ class _SendPageState extends State<SendPage> {
                                       Map<String,
                                           dynamic>>>(), // Ensure the type matches
                           onChanged: (value) {
-                            setState(() {
-                              receiverAccount = value;
-                            });
+                            receiverAccount = value;
                           },
                           decoration: InputDecoration(
                             border: OutlineInputBorder(),
@@ -404,7 +448,9 @@ class _SendPageState extends State<SendPage> {
                         width: 150,
                         child: MaterialButton(
                           color: Colors.blue.shade700,
-                          onPressed: transfer,
+                          onPressed: () {
+                            transfer();
+                          },
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(8.0),
                           ),

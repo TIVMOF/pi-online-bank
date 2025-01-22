@@ -138,7 +138,7 @@ class _HomePageState extends State<HomePage> {
                     iconImagePath: 'lib/icons/send.png',
                     tileTitle: 'Преводи',
                     tileSubtitle: 'Прати по сметка',
-                    page: SendPage(context: context),
+                    page: SendPage(),
                   ),
 
                   // Stats
