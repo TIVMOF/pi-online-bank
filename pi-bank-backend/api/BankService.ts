@@ -3,10 +3,9 @@ import { CardRepository as CardDao } from "../gen/pi-bank-backend/dao/card/CardR
 import { TransactionRepository as TransactionDao } from "../gen/pi-bank-backend/dao/transaction/TransactionRepository";
 import { UserRepository as UserDao } from "../gen/pi-bank-backend/dao/user/UserRepository";
 import { CardTypeRepository as CardTypeDao } from "../gen/pi-bank-backend/dao/Settings/CardTypeRepository"
+import { CurrencyRepository as CurrencyDao } from "../../codbex-currencies/gen/codbex-currencies/dao/Currencies/CurrencyRepository";
 
 import { Controller, Get, Put, Post, response } from "sdk/http";
-
-const keycloakTokenEndpoint = "https://keycloak.proper-invest.tech/realms/pi-bank/protocol/openid-connect/token";
 
 @Controller
 class BankService {
@@ -15,6 +14,7 @@ class BankService {
     private readonly transactionDao;
     private readonly userDao;
     private readonly cardTypeDao;
+    private readonly currencyDao;
 
     constructor() {
         this.bankAccountDao = new BankAccountDao();
@@ -22,6 +22,7 @@ class BankService {
         this.transactionDao = new TransactionDao();
         this.userDao = new UserDao();
         this.cardTypeDao = new CardTypeDao();
+        this.currencyDao = new CurrencyDao();
     }
 
     @Get("/test")
@@ -56,7 +57,13 @@ class BankService {
             }
 
             const userIbans = userBankAccounts.map(bankAccount => {
-                return bankAccount.IBAN;
+                return {
+                    "Id": bankAccount.Id,
+                    "IBAN": bankAccount.IBAN,
+                    "Amount": bankAccount.Amount,
+                    "Currency": bankAccount.Currency,
+                    "Type": bankAccount.Type
+                };
             })
 
             response.setStatus(response.OK);
@@ -114,7 +121,7 @@ class BankService {
                 const month = dateObject.getMonth() + 1;
                 const year = dateObject.getFullYear();
 
-                const formattedDate = `${date} ${month} ${year}`;
+                const formattedDate = `${date}:${month}:${year}`;
 
                 const recieverBankAccount = this.bankAccountDao.findById(transaction.Reciever);
                 const senderBankAccount = this.bankAccountDao.findById(transaction.Sender);
@@ -122,10 +129,14 @@ class BankService {
                 const reciever = this.userDao.findById(recieverBankAccount.User);
                 const sender = this.userDao.findById(senderBankAccount.User);
 
+                const currencyCode = this.currencyDao.findById(transaction.Currency).Code;
+
                 return {
-                    "Reciever": reciever.Username,
+                    "SenderId": sender.Id,
+                    "Receiver": reciever.Username,
                     "Sender": sender.Username,
                     "Amount": transaction.Amount,
+                    "Currency": currencyCode,
                     "Date": formattedDate
                 }
             })
@@ -139,8 +150,8 @@ class BankService {
         }
     }
 
-    @Get("/transactionItems/:userId")
-    public getTransactionItems(_: any, ctx: any) {
+    @Get("/userInteractions/:userId")
+    public getUserInteractions(_: any, ctx: any) {
         const userId = ctx.pathParameters.userId;
 
         const user = this.userDao.findById(userId);
@@ -174,19 +185,113 @@ class BankService {
                 })
             })
 
-            if (!userTransactions || userTransactions.length === 0) {
+            if (!userTransactions) {
                 response.setStatus(response.NOT_FOUND);
                 return { message: "User doesn't have Transactions!" };
             }
 
+            if (userTransactions.length === 0) {
+                response.setStatus(response.OK);
+                return userTransactions;
+            }
+
+            const allBankAccounts = this.bankAccountDao.findAll();
+            let userInteractions: any = [];
+
+            allBankAccounts.forEach(bankAccount => {
+                userTransactions.forEach(transaction => {
+                    if (transaction.Sender === bankAccount.Id || transaction.Reciever === bankAccount.Id) {
+                        const user = this.userDao.findById(bankAccount.User);
+
+                        userInteractions.push({
+                            "Name": user.Username,
+                            "IBAN": bankAccount.IBAN,
+                            "BankAccountId": bankAccount.Id,
+                            "Amount": bankAccount.Amount,
+                            "Currency": transaction.Currency
+                        })
+                    }
+                })
+            })
+
+            userInteractions = Array.from(
+                new Set(userInteractions.map(interaction => JSON.stringify(interaction)))
+            ).map(jsonString => JSON.parse(jsonString));
+
             response.setStatus(response.OK);
-            return { "UserTransactions": userTransactions };
+            return userInteractions;
 
         } catch (e: any) {
             response.setStatus(response.BAD_REQUEST);
             return { error: e.message };
         }
     }
+
+    @Get("/monthlyStats/:userId")
+    public getMonthlyStats(_: any, ctx: any) {
+        const userId = ctx.pathParameters.userId;
+
+        const user = this.userDao.findById(userId);
+
+        if (!user) {
+            response.setStatus(response.NOT_FOUND);
+            return { message: "User with that ID doesn't exist!" };
+        }
+
+        try {
+            const userBankAccounts = this.bankAccountDao.findAll({
+                $filter: {
+                    equals: { User: userId }
+                },
+            });
+
+            if (!userBankAccounts || userBankAccounts.length === 0) {
+                response.setStatus(response.NOT_FOUND);
+                return { message: "User doesn't have Bank Accounts!" };
+            }
+
+            const allTransactions = this.transactionDao.findAll();
+
+            const currentDate = new Date();
+            const lastYearDate = new Date(currentDate.getFullYear(), currentDate.getMonth() - 11, 1); // Start of the 12th month back
+
+            const filteredTransactions = allTransactions.filter((transaction: any) => {
+                const transactionDate = new Date(transaction.Date);
+                return transactionDate >= lastYearDate && transactionDate <= currentDate;
+            });
+
+            const incomes: Record<string, number> = {};
+            const expenses: Record<string, number> = {};
+
+            for (let i = 0; i < 12; i++) {
+                const date = new Date(currentDate.getFullYear(), currentDate.getMonth() - i, 1);
+                const monthKey = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
+                incomes[monthKey] = 0;
+                expenses[monthKey] = 0;
+            }
+
+            userBankAccounts.forEach(bankAccount => {
+                filteredTransactions.forEach(transaction => {
+                    const transactionDate = new Date(transaction.Date);
+                    const monthKey = `${transactionDate.getFullYear()}-${String(transactionDate.getMonth() + 1).padStart(2, '0')}`;
+
+                    if (transaction.Sender === bankAccount.Id) {
+                        expenses[monthKey] += transaction.Amount;
+                    } else if (transaction.Reciever === bankAccount.Id) {
+                        incomes[monthKey] += transaction.Amount;
+                    }
+                });
+            });
+
+            response.setStatus(response.OK);
+            return { incomes, expenses };
+
+        } catch (e: any) {
+            response.setStatus(response.BAD_REQUEST);
+            return { error: e.message };
+        }
+    }
+
 
     @Get("/cards/:userId")
     public getCards(_: any, ctx: any) {
@@ -338,10 +443,37 @@ class BankService {
         }
     }
 
+    @Post("/bankAccountFromIBAN")
+    public getBankAccountFromIBAN(body: any) {
+        try {
+            if (!body.hasOwnProperty("IBAN")) {
+                response.setStatus(response.BAD_REQUEST);
+                return { message: `Missing property: IBAN` };
+            }
+
+            const userIBAN = body["IBAN"];
+            const allBankAccounts = this.bankAccountDao.findAll();
+
+            for (const bankAccount of allBankAccounts) {
+                if (bankAccount.IBAN == userIBAN) {
+                    response.setStatus(response.OK);
+                    return bankAccount;
+                }
+            }
+
+            response.setStatus(response.NOT_FOUND);
+            return { message: "Bank account with that IBAN doesn't exist!" };
+
+        } catch (e: any) {
+            response.setStatus(response.BAD_REQUEST);
+            return { error: e.message };
+        }
+    }
+
     @Post("/transaction")
     public createTransaction(body: any) {
         try {
-            const requiredFields = ["Reciever", "Sender", "Amount"];
+            const requiredFields = ["Reciever", "Sender", "Amount", "Currency"];
 
             for (const field of requiredFields) {
                 if (!body.hasOwnProperty(field)) {

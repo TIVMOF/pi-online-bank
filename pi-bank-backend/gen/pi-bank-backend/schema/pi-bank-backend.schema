@@ -217,6 +217,11 @@
                         "name": "TRANSACTION_AMOUNT"
                     },
                     {
+                        "type": "INTEGER",
+                        "nullable": true,
+                        "name": "TRANSACTION_CURRENCY"
+                    },
+                    {
                         "type": "DATE",
                         "nullable": true,
                         "name": "TRANSACTION_DATE"
@@ -303,6 +308,15 @@
                 "columns": "TRANSACTION_SENDER",
                 "referencedTable": "BANKACCOUNT",
                 "referencedColumns": "BANKACCOUNT_ID"
+            },
+            {
+                "name": "Transaction_Currency",
+                "type": "foreignKey",
+                "table": "TRANSACTION",
+                "constraintName": "Transaction_Currency",
+                "columns": "TRANSACTION_CURRENCY",
+                "referencedTable": "CURRENCY",
+                "referencedColumns": "CURRENCY_ID"
             }
         ]
     },

@@ -647,6 +647,24 @@
                         "widgetType": "NUMBER"
                     },
                     {
+                        "dataName": "TRANSACTION_CURRENCY",
+                        "dataNullable": "true",
+                        "dataType": "INTEGER",
+                        "description": "",
+                        "name": "Currency",
+                        "tooltip": "",
+                        "widgetDropDownKey": "Id",
+                        "widgetDropDownValue": "Code",
+                        "widgetIsMajor": "true",
+                        "widgetLength": "20",
+                        "widgetSize": "",
+                        "widgetType": "DROPDOWN",
+                        "relationshipName": "Transaction_Currency",
+                        "relationshipEntityName": "Currency",
+                        "relationshipEntityPerspectiveName": "Currencies",
+                        "relationshipEntityPerspectiveLabel": "Currencies"
+                    },
+                    {
                         "calculatedPropertyExpressionCreate": "new Date();",
                         "dataName": "TRANSACTION_DATE",
                         "dataNullable": "true",

@@ -9,6 +9,7 @@ export interface TransactionEntity {
     Reciever?: number;
     Sender?: number;
     Amount?: number;
+    Currency?: number;
     Date?: Date;
 }
 
@@ -16,6 +17,7 @@ export interface TransactionCreateEntity {
     readonly Reciever?: number;
     readonly Sender?: number;
     readonly Amount?: number;
+    readonly Currency?: number;
 }
 
 export interface TransactionUpdateEntity extends TransactionCreateEntity {
@@ -29,6 +31,7 @@ export interface TransactionEntityOptions {
             Reciever?: number | number[];
             Sender?: number | number[];
             Amount?: number | number[];
+            Currency?: number | number[];
             Date?: Date | Date[];
         };
         notEquals?: {
@@ -36,6 +39,7 @@ export interface TransactionEntityOptions {
             Reciever?: number | number[];
             Sender?: number | number[];
             Amount?: number | number[];
+            Currency?: number | number[];
             Date?: Date | Date[];
         };
         contains?: {
@@ -43,6 +47,7 @@ export interface TransactionEntityOptions {
             Reciever?: number;
             Sender?: number;
             Amount?: number;
+            Currency?: number;
             Date?: Date;
         };
         greaterThan?: {
@@ -50,6 +55,7 @@ export interface TransactionEntityOptions {
             Reciever?: number;
             Sender?: number;
             Amount?: number;
+            Currency?: number;
             Date?: Date;
         };
         greaterThanOrEqual?: {
@@ -57,6 +63,7 @@ export interface TransactionEntityOptions {
             Reciever?: number;
             Sender?: number;
             Amount?: number;
+            Currency?: number;
             Date?: Date;
         };
         lessThan?: {
@@ -64,6 +71,7 @@ export interface TransactionEntityOptions {
             Reciever?: number;
             Sender?: number;
             Amount?: number;
+            Currency?: number;
             Date?: Date;
         };
         lessThanOrEqual?: {
@@ -71,6 +79,7 @@ export interface TransactionEntityOptions {
             Reciever?: number;
             Sender?: number;
             Amount?: number;
+            Currency?: number;
             Date?: Date;
         };
     },
@@ -122,6 +131,11 @@ export class TransactionRepository {
                 name: "Amount",
                 column: "TRANSACTION_AMOUNT",
                 type: "DOUBLE",
+            },
+            {
+                name: "Currency",
+                column: "TRANSACTION_CURRENCY",
+                type: "INTEGER",
             },
             {
                 name: "Date",
