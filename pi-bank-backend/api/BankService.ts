@@ -36,6 +36,48 @@ class BankService {
         return msg;
     }
 
+    @Get("/bankAccounts/:userId")
+    public getBankAccounts(_: any, ctx: any) {
+        const userId = ctx.pathParameters.userId;
+
+        const user = this.userDao.findById(userId);
+
+        if (!user) {
+            response.setStatus(response.NOT_FOUND);
+            return { message: "User with that ID doesn't exist!" };
+        }
+
+        try {
+            const userBankAccounts = this.bankAccountDao.findAll({
+                $filter: {
+                    equals: { User: userId }
+                },
+            });
+
+            if (!userBankAccounts || userBankAccounts.length === 0) {
+                response.setStatus(response.NOT_FOUND);
+                return { message: "User doesn't have Bank Accounts!" };
+            }
+
+            const userIbans = userBankAccounts.map(bankAccount => {
+                return {
+                    "Id": bankAccount.Id,
+                    "IBAN": bankAccount.IBAN,
+                    "Amount": bankAccount.Amount,
+                    "Currency": bankAccount.Currency,
+                    "Type": bankAccount.Type
+                };
+            })
+
+            response.setStatus(response.OK);
+            return { "UserBankAccounts": userIbans };
+
+        } catch (e: any) {
+            response.setStatus(response.BAD_REQUEST);
+            return { error: e.message };
+        }
+    }
+
     @Get("/transactions/:userId")
     public getTransactions(_: any, ctx: any) {
         const userId = ctx.pathParameters.userId;
