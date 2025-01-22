@@ -124,7 +124,7 @@ class BankService {
                 const month = dateObject.getMonth() + 1;
                 const year = dateObject.getFullYear();
 
-                const formattedDate = `${date} ${month} ${year}`;
+                const formattedDate = `${date}:${month}:${year}`;
 
                 const recieverBankAccount = this.bankAccountDao.findById(transaction.Reciever);
                 const senderBankAccount = this.bankAccountDao.findById(transaction.Sender);
