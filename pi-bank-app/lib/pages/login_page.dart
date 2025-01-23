@@ -2,7 +2,8 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import '../utill/app_bar.dart';
+import 'package:online_bank/utill/app_bar.dart';
+import 'package:online_bank/utill/local_auth.dart';
 
 final storage = FlutterSecureStorage();
 
@@ -12,25 +13,75 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  final BiometricAuthUtils _biometricAuthUtils = BiometricAuthUtils();
+
   final _usernameController = TextEditingController();
   final _passwordController = TextEditingController();
 
   bool _isPasswordVisible = false;
   String? _errorMessage;
+  bool _isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _checkStoredCredentials();
+  }
+
+  Future<void> _checkStoredCredentials() async {
+    final storedUsername = await storage.read(key: 'username');
+    final storedPassword = await storage.read(key: 'password');
+
+    if (storedUsername != null && storedPassword != null) {
+      bool isSupported = await _biometricAuthUtils.isDeviceSupported();
+
+      if (!isSupported) {
+        setState(() {
+          _errorMessage = "Device is not supported!";
+          _isLoading = false;
+        });
+      }
+
+      bool isAuthenticated = await _biometricAuthUtils.authenticate(
+        reason: "Login to PI Smart",
+      );
+
+      if (isAuthenticated == true) {
+        _usernameController.text = storedUsername;
+        _passwordController.text = storedPassword;
+
+        await login();
+      } else {
+        setState(() {
+          _errorMessage = "Authentication failed!";
+          _isLoading = false;
+        });
+      }
+    } else {
+      setState(() {
+        _isLoading = false;
+      });
+    }
+  }
 
   Future<void> login() async {
+    setState(() {
+      _isLoading = true;
+      _errorMessage = null;
+    });
+
     final username = _usernameController.text.trim();
     final password = _passwordController.text.trim();
 
     if (username.isEmpty || password.isEmpty) {
       setState(() {
+        _isLoading = false;
         _errorMessage = "Please enter both username and password.";
       });
       return;
     }
 
     try {
-      // Step 1: Login to Keycloak
       var response = await http.post(
         Uri.parse(
             'https://keycloak.proper-invest.tech/realms/pi-bank/protocol/openid-connect/token'),
@@ -51,7 +102,9 @@ class _LoginPageState extends State<LoginPage> {
         await storage.write(key: 'mobileAccessToken', value: accessToken);
         await storage.write(key: 'mobileRefreshToken', value: refreshToken);
 
-        // Step 2: Token Exchange
+        await storage.write(key: 'username', value: username);
+        await storage.write(key: 'password', value: password);
+
         response = await http.post(
           Uri.parse(
               'https://keycloak.proper-invest.tech/realms/pi-bank/protocol/openid-connect/token'),
@@ -74,7 +127,6 @@ class _LoginPageState extends State<LoginPage> {
           await storage.write(
               key: 'backendRefreshToken', value: backendRefreshToken);
 
-          // Step 3: User Login on Backend
           response = await http.post(
             Uri.parse(
                 'https://proper-invest.tech/services/ts/pi-bank-backend/api/BankService.ts/userLogin'),
@@ -92,6 +144,8 @@ class _LoginPageState extends State<LoginPage> {
               data = jsonDecode(response.body);
               final userId = data['UserId'];
 
+              Navigator.pushReplacementNamed(context, '/home');
+
               await storage.write(key: 'userId', value: userId.toString());
             } catch (e) {
               setState(() {
@@ -107,13 +161,9 @@ class _LoginPageState extends State<LoginPage> {
           }
         } else {
           setState(() {
-            _errorMessage = "Failed token exchange. Please try again.";
+            _errorMessage = "Token exchange failed. Please try again.";
           });
-          return;
         }
-
-        // Navigate to home on success
-        Navigator.pushReplacementNamed(context, '/home');
       } else {
         setState(() {
           _errorMessage = jsonDecode(response.body)['error_description'] ??
@@ -125,6 +175,10 @@ class _LoginPageState extends State<LoginPage> {
         _errorMessage =
             "An error occurred. Please check your connection and try again.";
       });
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
     }
   }
 
@@ -133,87 +187,90 @@ class _LoginPageState extends State<LoginPage> {
     return Scaffold(
       backgroundColor: Colors.grey[300],
       body: SafeArea(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            MyAppBar(first_name: 'Proper Invest', second_name: 'Bank'),
-            Expanded(
-              child: Center(
-                child: Container(
-                  width: 300,
-                  padding: EdgeInsets.all(16.0),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(16),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black26,
-                        blurRadius: 8,
-                        offset: Offset(2, 2),
-                      ),
-                    ],
-                  ),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      // Username Field
-                      TextField(
-                        controller: _usernameController,
-                        decoration: InputDecoration(
-                          labelText: "Username",
-                          border: OutlineInputBorder(),
-                        ),
-                      ),
-                      SizedBox(height: 16),
-                      // Password Field
-                      TextField(
-                        controller: _passwordController,
-                        obscureText: !_isPasswordVisible,
-                        decoration: InputDecoration(
-                          labelText: "Password",
-                          border: OutlineInputBorder(),
-                          suffixIcon: IconButton(
-                            icon: Icon(
-                              _isPasswordVisible
-                                  ? Icons.visibility
-                                  : Icons.visibility_off,
+        child: _isLoading
+            ? Center(child: CircularProgressIndicator())
+            : Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  MyAppBar(first_name: 'Proper Invest', second_name: 'Bank'),
+                  Expanded(
+                    child: Center(
+                      child: Container(
+                        width: 300,
+                        padding: EdgeInsets.all(16.0),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(16),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black26,
+                              blurRadius: 8,
+                              offset: Offset(2, 2),
                             ),
-                            onPressed: () {
-                              setState(() {
-                                _isPasswordVisible = !_isPasswordVisible;
-                              });
-                            },
-                          ),
+                          ],
+                        ),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            // Username Field
+                            TextField(
+                              controller: _usernameController,
+                              decoration: InputDecoration(
+                                labelText: "Username",
+                                border: OutlineInputBorder(),
+                              ),
+                            ),
+                            SizedBox(height: 16),
+                            // Password Field
+                            TextField(
+                              controller: _passwordController,
+                              obscureText: !_isPasswordVisible,
+                              decoration: InputDecoration(
+                                labelText: "Password",
+                                border: OutlineInputBorder(),
+                                suffixIcon: IconButton(
+                                  icon: Icon(
+                                    _isPasswordVisible
+                                        ? Icons.visibility
+                                        : Icons.visibility_off,
+                                  ),
+                                  onPressed: () {
+                                    setState(() {
+                                      _isPasswordVisible = !_isPasswordVisible;
+                                    });
+                                  },
+                                ),
+                              ),
+                            ),
+                            SizedBox(height: 16),
+                            // Error Message
+                            if (_errorMessage != null)
+                              Padding(
+                                padding: const EdgeInsets.only(bottom: 16.0),
+                                child: Text(
+                                  _errorMessage!,
+                                  style: TextStyle(color: Colors.red),
+                                ),
+                              ),
+                            // Login Button
+                            ElevatedButton(
+                              onPressed: login,
+                              style: ElevatedButton.styleFrom(
+                                minimumSize: Size(double.infinity, 50),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                              ),
+                              child:
+                                  Text("Login", style: TextStyle(fontSize: 16)),
+                            ),
+                          ],
                         ),
                       ),
-                      SizedBox(height: 16),
-                      // Error Message
-                      if (_errorMessage != null)
-                        Padding(
-                          padding: const EdgeInsets.only(bottom: 16.0),
-                          child: Text(
-                            _errorMessage!,
-                            style: TextStyle(color: Colors.red),
-                          ),
-                        ),
-                      // Login Button
-                      ElevatedButton(
-                        onPressed: login,
-                        style: ElevatedButton.styleFrom(
-                          minimumSize: Size(double.infinity, 50),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                        ),
-                        child: Text("Login", style: TextStyle(fontSize: 16)),
-                      ),
-                    ],
+                    ),
                   ),
-                ),
+                ],
               ),
-            ),
-          ],
-        ),
       ),
     );
   }
