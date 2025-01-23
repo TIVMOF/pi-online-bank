@@ -137,7 +137,8 @@ class _SendPageState extends State<SendPage> {
                     "Name": account["Name"],
                     "IBAN": account["IBAN"],
                     "BankAccountId": account["BankAccountId"].toString(),
-                    "Amount": account["Amount"].toString()
+                    "Amount": account["Amount"].toString(),
+                    "Currency": account["Currency"]
                   }),
             ),
           );
@@ -163,6 +164,8 @@ class _SendPageState extends State<SendPage> {
     }
 
     try {
+      await ensureAccessTokenValidity(context);
+
       final userId = await storage.read(key: 'userId');
       final accessToken = await storage.read(key: 'backendAccessToken');
       var receiverAccountId = null;
