@@ -34,7 +34,6 @@ Future<void> ensureAccessTokenValidity(BuildContext context) async {
       await storage.write(key: 'backendAccessToken', value: newAccessToken);
       await storage.write(key: 'backendRefreshToken', value: newRefreshToken);
     } else if (response.statusCode == 400 || response.statusCode == 401) {
-      // Refresh token is invalid or expired
       _navigateToLoginPage(context);
     } else {
       throw Exception("Failed to refresh access token.");

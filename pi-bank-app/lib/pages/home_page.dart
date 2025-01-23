@@ -1,16 +1,15 @@
 // ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors, sized_box_for_whitespace
 
 import 'package:flutter/material.dart';
-import '../utill/app_bar.dart';
-import '../utill/bottom_app_bar.dart';
-import '../utill/my_card.dart';
-import '../utill/my_list_tile.dart';
+import 'package:online_bank/utill/app_bar.dart';
+import 'package:online_bank/utill/bottom_app_bar.dart';
+import 'package:online_bank/utill/my_card.dart';
+import 'package:online_bank/utill/my_list_tile.dart';
+import 'package:online_bank/utill/refresh_tokens.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-
-import '../utill/refresh_tokens.dart';
 
 final storage = FlutterSecureStorage();
 

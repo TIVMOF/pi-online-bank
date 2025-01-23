@@ -4,8 +4,8 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:online_bank/utill/app_bar.dart';
 import 'package:online_bank/utill/bottom_app_bar.dart';
-
-import '../utill/refresh_tokens.dart';
+import 'package:online_bank/utill/local_auth.dart';
+import 'package:online_bank/utill/refresh_tokens.dart';
 
 final storage = FlutterSecureStorage();
 
@@ -15,6 +15,7 @@ class SendPage extends StatefulWidget {
 }
 
 class _SendPageState extends State<SendPage> {
+  final BiometricAuthUtils _biometricAuthUtils = BiometricAuthUtils();
   final _formKey = GlobalKey<FormState>();
   String? _errorMessage;
   List<Map<String, String>> bankAccounts = [];
@@ -58,6 +59,22 @@ class _SendPageState extends State<SendPage> {
       });
       print("Error fetching data: $e");
     }
+  }
+
+  Future<bool> _authenticate() async {
+    bool isSupported = await _biometricAuthUtils.isDeviceSupported();
+
+    if (!isSupported) {
+      setState(() {
+        _errorMessage = "Device is not supported!";
+      });
+    }
+
+    bool isAuthenticated = await _biometricAuthUtils.authenticate(
+      reason: "Login to PI Smart",
+    );
+
+    return isAuthenticated;
   }
 
   Future<void> fetchBankAccounts(String userId, String accessToken) async {
@@ -120,7 +137,8 @@ class _SendPageState extends State<SendPage> {
                     "Name": account["Name"],
                     "IBAN": account["IBAN"],
                     "BankAccountId": account["BankAccountId"].toString(),
-                    "Amount": account["Amount"].toString()
+                    "Amount": account["Amount"].toString(),
+                    "Currency": account["Currency"]
                   }),
             ),
           );
@@ -146,6 +164,8 @@ class _SendPageState extends State<SendPage> {
     }
 
     try {
+      await ensureAccessTokenValidity(context);
+
       final userId = await storage.read(key: 'userId');
       final accessToken = await storage.read(key: 'backendAccessToken');
       var receiverAccountId = null;
@@ -408,8 +428,11 @@ class _SendPageState extends State<SendPage> {
                         width: 150,
                         child: MaterialButton(
                           color: Colors.blue.shade700,
-                          onPressed: () {
-                            transfer();
+                          onPressed: () async {
+                            final bool authenticated = await _authenticate();
+                            if (authenticated) {
+                              transfer();
+                            }
                           },
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(8.0),
