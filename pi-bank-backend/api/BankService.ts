@@ -4,6 +4,7 @@ import { TransactionRepository as TransactionDao } from "../gen/pi-bank-backend/
 import { UserRepository as UserDao } from "../gen/pi-bank-backend/dao/user/UserRepository";
 import { CardTypeRepository as CardTypeDao } from "../gen/pi-bank-backend/dao/Settings/CardTypeRepository"
 import { CurrencyRepository as CurrencyDao } from "../../codbex-currencies/gen/codbex-currencies/dao/Currencies/CurrencyRepository";
+import { CountryRepository as CountryDao } from "../../codbex-countries/gen/codbex-countries/dao/Countries/CountryRepository";
 
 import { Controller, Get, Put, Post, response } from "sdk/http";
 
@@ -15,6 +16,7 @@ class BankService {
     private readonly userDao;
     private readonly cardTypeDao;
     private readonly currencyDao;
+    private readonly countryDao;
 
     constructor() {
         this.bankAccountDao = new BankAccountDao();
@@ -23,6 +25,7 @@ class BankService {
         this.userDao = new UserDao();
         this.cardTypeDao = new CardTypeDao();
         this.currencyDao = new CurrencyDao();
+        this.countryDao = new CountryDao();
     }
 
     @Get("/test")
@@ -31,6 +34,29 @@ class BankService {
 
         response.setStatus(response.OK);
         return msg;
+    }
+
+    @Get("/user/:userId")
+    public getUser(_: any, ctx: any) {
+        const userId = ctx.pathParameters.userId;
+
+        const user = this.userDao.findById(userId);
+
+        if (!user) {
+            response.setStatus(response.NOT_FOUND);
+            return { message: "User with that ID doesn't exist!" };
+        }
+
+        const countryName = this.countryDao.findById(user.Country).Name;
+
+        return {
+            "Username": user.Username,
+            "Name": user.Name,
+            "Password": user.Password,
+            "Email": user.Email,
+            "Phone": user.Phone,
+            "Country": countryName
+        }
     }
 
     @Get("/bankAccounts/:userId")
@@ -406,7 +432,6 @@ class BankService {
             return { error: e.message };
         }
     }
-
 
     @Post("/userLogin")
     public userLogin(body: any) {
