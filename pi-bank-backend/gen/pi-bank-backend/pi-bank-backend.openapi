@@ -1083,6 +1083,7 @@ paths:
                       Id: 33
                     contains:
                       CardNumber: "abcd"
+                      CV: "abcd"
                     greaterThan:
                       Id: 0
                     lessThanOrEqual:
@@ -1105,6 +1106,7 @@ paths:
                   $filter:
                     contains:
                       CardNumber: "abcd"
+                      CV: "abcd"
               countWithGreaterThan:
                 summary: Count with Greater Than
                 value:
@@ -1169,6 +1171,7 @@ paths:
                       Id: 33
                     contains:
                       CardNumber: "abcd"
+                      CV: "abcd"
                     greaterThan:
                       Id: 0
                     lessThanOrEqual:
@@ -1191,6 +1194,7 @@ paths:
                   $filter:
                     contains:
                       CardNumber: "abcd"
+                      CV: "abcd"
               searchWithGreaterThan:
                 summary: Search with Greater Than
                 value:
@@ -3528,6 +3532,10 @@ components:
           type: string
           minLength: 0
           maxLength: 255
+        CV:
+          type: string
+          minLength: 0
+          maxLength: 20
         ExpirationDate:
         CardType:
           type: integer
@@ -3563,6 +3571,17 @@ components:
                         format: double
                         minLength: 0
                         maxLength: 255
+                CV:
+                  oneOf:
+                    - type: string
+                      minLength: 0
+                      maxLength: 20
+                    - type: array
+                      items:
+                        type: string
+                        format: double
+                        minLength: 0
+                        maxLength: 20
                 ExpirationDate:
                   oneOf:
                 CardType:
@@ -3603,6 +3622,17 @@ components:
                         format: double
                         minLength: 0
                         maxLength: 255
+                CV:
+                  oneOf:
+                    - type: string
+                      minLength: 0
+                      maxLength: 20
+                    - type: array
+                      items:
+                        type: string
+                        format: double
+                        minLength: 0
+                        maxLength: 20
                 ExpirationDate:
                   oneOf:
                 CardType:
@@ -3629,6 +3659,10 @@ components:
                   type: string
                   minLength: 0
                   maxLength: 255
+                CV:
+                  type: string
+                  minLength: 0
+                  maxLength: 20
                 ExpirationDate:
                 CardType:
                 BankAccount:
@@ -3642,6 +3676,10 @@ components:
                   type: string
                   minLength: 0
                   maxLength: 255
+                CV:
+                  type: string
+                  minLength: 0
+                  maxLength: 20
                 ExpirationDate:
                 CardType:
                   type: integer
@@ -3659,6 +3697,10 @@ components:
                   type: string
                   minLength: 0
                   maxLength: 255
+                CV:
+                  type: string
+                  minLength: 0
+                  maxLength: 20
                 ExpirationDate:
                 CardType:
                   type: integer
@@ -3676,6 +3718,10 @@ components:
                   type: string
                   minLength: 0
                   maxLength: 255
+                CV:
+                  type: string
+                  minLength: 0
+                  maxLength: 20
                 ExpirationDate:
                 CardType:
                   type: integer
@@ -3693,6 +3739,10 @@ components:
                   type: string
                   minLength: 0
                   maxLength: 255
+                CV:
+                  type: string
+                  minLength: 0
+                  maxLength: 20
                 ExpirationDate:
                 CardType:
                   type: integer
@@ -3702,12 +3752,12 @@ components:
                   format: int32
         $select:
           type: array
-          example: ["Id", "CardNumber", "ExpirationDate", "CardType", "BankAccount"]
+          example: ["Id", "CardNumber", "CV", "ExpirationDate", "CardType", "BankAccount"]
           items:
             type: string
         $sort:
           - type: string
-            example: "Id,CardNumber,ExpirationDate,CardType,BankAccount"
+            example: "Id,CardNumber,CV,ExpirationDate,CardType,BankAccount"
         $order:
           type: string
           enum: ["asc", "desc"]
@@ -4117,6 +4167,9 @@ components:
         Amount:
           type: number
           format: double
+        Currency:
+          type: integer
+          format: int32
         Date:
     TransactionFilterOptions:
       type: object
@@ -4159,6 +4212,14 @@ components:
                       items:
                         type: number
                         format: double
+                Currency:
+                  oneOf:
+                    - type: integer
+                      format: int32
+                    - type: array
+                      items:
+                        type: integer
+                        format: int32
                 Date:
                   oneOf:
             notEquals:
@@ -4196,6 +4257,14 @@ components:
                       items:
                         type: number
                         format: double
+                Currency:
+                  oneOf:
+                    - type: integer
+                      format: int32
+                    - type: array
+                      items:
+                        type: integer
+                        format: int32
                 Date:
                   oneOf:
             contains:
@@ -4205,6 +4274,7 @@ components:
                 Reciever:
                 Sender:
                 Amount:
+                Currency:
                 Date:
             greaterThan:
               type: object
@@ -4221,6 +4291,9 @@ components:
                 Amount:
                   type: number
                   format: double
+                Currency:
+                  type: integer
+                  format: int32
                 Date:
             greaterThanOrEqual:
               type: object
@@ -4237,6 +4310,9 @@ components:
                 Amount:
                   type: number
                   format: double
+                Currency:
+                  type: integer
+                  format: int32
                 Date:
             lessThan:
               type: object
@@ -4253,6 +4329,9 @@ components:
                 Amount:
                   type: number
                   format: double
+                Currency:
+                  type: integer
+                  format: int32
                 Date:
             lessThanOrEqual:
               type: object
@@ -4269,15 +4348,18 @@ components:
                 Amount:
                   type: number
                   format: double
+                Currency:
+                  type: integer
+                  format: int32
                 Date:
         $select:
           type: array
-          example: ["Id", "Reciever", "Sender", "Amount", "Date"]
+          example: ["Id", "Reciever", "Sender", "Amount", "Currency", "Date"]
           items:
             type: string
         $sort:
           - type: string
-            example: "Id,Reciever,Sender,Amount,Date"
+            example: "Id,Reciever,Sender,Amount,Currency,Date"
         $order:
           type: string
           enum: ["asc", "desc"]

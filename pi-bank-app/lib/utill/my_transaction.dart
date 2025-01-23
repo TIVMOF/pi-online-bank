@@ -4,6 +4,7 @@ class MyTransaction extends StatelessWidget {
   final String recipient;
   final String date;
   final double sum;
+  final String currency;
   final bool sentOrReceived;
 
   MyTransaction({
@@ -11,6 +12,7 @@ class MyTransaction extends StatelessWidget {
     required this.recipient,
     required this.date,
     required this.sum,
+    required this.currency,
     required this.sentOrReceived,
   });
 
@@ -27,84 +29,96 @@ class MyTransaction extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 20, left: 20, right: 20),
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
       child: Container(
-        height: 80,
-        padding: EdgeInsets.only(top: 15, bottom: 15, left: 10, right: 10),
+        constraints: BoxConstraints(minHeight: 100), // Increase height
+        padding: EdgeInsets.all(10),
         decoration: BoxDecoration(
-            color: sentOrReceived ? backgroundReceived : backgroundSent,
-            borderRadius: BorderRadius.circular(5),
-            boxShadow: [
-              BoxShadow(
-                color: Color.fromARGB(193, 158, 158, 158).withValues(),
-                spreadRadius: 5,
-                blurRadius: 10,
-                offset: Offset(4, 8),
-              )
-            ]),
+          color: sentOrReceived ? backgroundReceived : backgroundSent,
+          borderRadius: BorderRadius.circular(5),
+          boxShadow: [
+            BoxShadow(
+              color: Color.fromARGB(193, 158, 158, 158),
+              spreadRadius: 5,
+              blurRadius: 10,
+              offset: Offset(4, 8),
+            ),
+          ],
+        ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Row(
-                  children: [
-                    Text(
-                      sentOrReceived ? textReceived : textSent,
-                      overflow: TextOverflow.ellipsis,
-                      style:
-                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                    ),
-                    SizedBox(
-                      width: 10,
-                    ),
-                    Text(
-                      recipient,
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment:
+                    MainAxisAlignment.spaceEvenly, // Adjust alignment
+                children: [
+                  Row(
+                    children: [
+                      Text(
+                        sentOrReceived ? textReceived : textSent,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
-                    ),
-                  ],
-                ),
-                Row(
-                  children: [
-                    Text(
-                      'Прехвърлени:',
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.grey.shade800,
+                      SizedBox(width: 10),
+                      Flexible(
+                        child: Text(
+                          recipient,
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 1,
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
                       ),
-                    ),
-                    SizedBox(
-                      width: 5,
-                    ),
-                    Text(
-                      date,
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.grey.shade700,
+                    ],
+                  ),
+                  SizedBox(height: 5), // Add spacing between rows
+                  Row(
+                    children: [
+                      Text(
+                        'Дата:',
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.grey.shade800,
+                        ),
                       ),
-                    ),
-                  ],
-                ),
-              ],
+                      SizedBox(width: 5),
+                      Flexible(
+                        child: Text(
+                          date,
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 1,
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.grey.shade700,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
+            SizedBox(width: 10), // Add spacing
             Text(
               (sentOrReceived ? plus : minus) +
                   ' ' +
                   sum.toStringAsFixed(2) +
-                  'лв',
+                  " " +
+                  currency,
               overflow: TextOverflow.ellipsis,
+              maxLines: 1,
               style: TextStyle(
-                fontSize: 18,
+                fontSize: 16,
                 color: sentOrReceived ? colorReceived : colorSent,
                 fontWeight: FontWeight.bold,
               ),

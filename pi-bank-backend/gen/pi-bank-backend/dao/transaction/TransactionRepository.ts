@@ -9,6 +9,7 @@ export interface TransactionEntity {
     Reciever?: number;
     Sender?: number;
     Amount?: number;
+    Currency?: number;
     Date?: Date;
 }
 
@@ -16,7 +17,7 @@ export interface TransactionCreateEntity {
     readonly Reciever?: number;
     readonly Sender?: number;
     readonly Amount?: number;
-    readonly Date?: Date;
+    readonly Currency?: number;
 }
 
 export interface TransactionUpdateEntity extends TransactionCreateEntity {
@@ -30,6 +31,7 @@ export interface TransactionEntityOptions {
             Reciever?: number | number[];
             Sender?: number | number[];
             Amount?: number | number[];
+            Currency?: number | number[];
             Date?: Date | Date[];
         };
         notEquals?: {
@@ -37,6 +39,7 @@ export interface TransactionEntityOptions {
             Reciever?: number | number[];
             Sender?: number | number[];
             Amount?: number | number[];
+            Currency?: number | number[];
             Date?: Date | Date[];
         };
         contains?: {
@@ -44,6 +47,7 @@ export interface TransactionEntityOptions {
             Reciever?: number;
             Sender?: number;
             Amount?: number;
+            Currency?: number;
             Date?: Date;
         };
         greaterThan?: {
@@ -51,6 +55,7 @@ export interface TransactionEntityOptions {
             Reciever?: number;
             Sender?: number;
             Amount?: number;
+            Currency?: number;
             Date?: Date;
         };
         greaterThanOrEqual?: {
@@ -58,6 +63,7 @@ export interface TransactionEntityOptions {
             Reciever?: number;
             Sender?: number;
             Amount?: number;
+            Currency?: number;
             Date?: Date;
         };
         lessThan?: {
@@ -65,6 +71,7 @@ export interface TransactionEntityOptions {
             Reciever?: number;
             Sender?: number;
             Amount?: number;
+            Currency?: number;
             Date?: Date;
         };
         lessThanOrEqual?: {
@@ -72,6 +79,7 @@ export interface TransactionEntityOptions {
             Reciever?: number;
             Sender?: number;
             Amount?: number;
+            Currency?: number;
             Date?: Date;
         };
     },
@@ -125,6 +133,11 @@ export class TransactionRepository {
                 type: "DOUBLE",
             },
             {
+                name: "Currency",
+                column: "TRANSACTION_CURRENCY",
+                type: "INTEGER",
+            },
+            {
                 name: "Date",
                 column: "TRANSACTION_DATE",
                 type: "DATE",
@@ -153,6 +166,8 @@ export class TransactionRepository {
 
     public create(entity: TransactionCreateEntity): number {
         EntityUtils.setLocalDate(entity, "Date");
+        // @ts-ignore
+        (entity as TransactionEntity).Date = new Date();;
         const id = this.dao.insert(entity);
         this.triggerEvent({
             operation: "create",

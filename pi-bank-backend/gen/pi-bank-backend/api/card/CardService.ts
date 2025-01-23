@@ -125,6 +125,9 @@ class CardService {
         if (entity.CardNumber?.length > 255) {
             throw new ValidationError(`The 'CardNumber' exceeds the maximum length of [255] characters`);
         }
+        if (entity.CV?.length > 20) {
+            throw new ValidationError(`The 'CV' exceeds the maximum length of [20] characters`);
+        }
         if (entity.ExpirationDate === null || entity.ExpirationDate === undefined) {
             throw new ValidationError(`The 'ExpirationDate' property is required, provide a valid value`);
         }

@@ -48,8 +48,8 @@ class _LoginPageState extends State<LoginPage> {
         final accessToken = data['access_token'];
         final refreshToken = data['refresh_token'];
 
-        await storage.write(key: 'mobile_access_token', value: accessToken);
-        await storage.write(key: 'mobile_refresh_token', value: refreshToken);
+        await storage.write(key: 'mobileAccessToken', value: accessToken);
+        await storage.write(key: 'mobileRefreshToken', value: refreshToken);
 
         // Step 2: Token Exchange
         response = await http.post(
@@ -70,9 +70,9 @@ class _LoginPageState extends State<LoginPage> {
           final backendRefreshToken = data['refresh_token'];
 
           await storage.write(
-              key: 'backend_access_token', value: backendAccessToken);
+              key: 'backendAccessToken', value: backendAccessToken);
           await storage.write(
-              key: 'backend_refresh_token', value: backendRefreshToken);
+              key: 'backendRefreshToken', value: backendRefreshToken);
 
           // Step 3: User Login on Backend
           response = await http.post(

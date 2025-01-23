@@ -50,6 +50,9 @@ angular.module('page', ["ideUI", "ideView"])
 			if (entity.CardNumber) {
 				filter.$filter.contains.CardNumber = entity.CardNumber;
 			}
+			if (entity.CV) {
+				filter.$filter.contains.CV = entity.CV;
+			}
 			if (entity.ExpirationDateFrom) {
 				filter.$filter.greaterThanOrEqual.ExpirationDate = entity.ExpirationDateFrom;
 			}

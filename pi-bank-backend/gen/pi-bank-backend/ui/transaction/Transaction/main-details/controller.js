@@ -42,6 +42,7 @@ angular.module('page', ["ideUI", "ideView", "entityApi"])
 				$scope.entity = {};
 				$scope.optionsReciever = [];
 				$scope.optionsSender = [];
+				$scope.optionsCurrency = [];
 				$scope.action = 'select';
 			});
 		});
@@ -54,6 +55,7 @@ angular.module('page', ["ideUI", "ideView", "entityApi"])
 				$scope.entity = msg.data.entity;
 				$scope.optionsReciever = msg.data.optionsReciever;
 				$scope.optionsSender = msg.data.optionsSender;
+				$scope.optionsCurrency = msg.data.optionsCurrency;
 				$scope.action = 'select';
 			});
 		});
@@ -63,6 +65,7 @@ angular.module('page', ["ideUI", "ideView", "entityApi"])
 				$scope.entity = {};
 				$scope.optionsReciever = msg.data.optionsReciever;
 				$scope.optionsSender = msg.data.optionsSender;
+				$scope.optionsCurrency = msg.data.optionsCurrency;
 				$scope.action = 'create';
 			});
 		});
@@ -75,12 +78,14 @@ angular.module('page', ["ideUI", "ideView", "entityApi"])
 				$scope.entity = msg.data.entity;
 				$scope.optionsReciever = msg.data.optionsReciever;
 				$scope.optionsSender = msg.data.optionsSender;
+				$scope.optionsCurrency = msg.data.optionsCurrency;
 				$scope.action = 'update';
 			});
 		});
 
 		$scope.serviceReciever = "/services/ts/pi-bank-backend/gen/pi-bank-backend/api/bankAccount/BankAccountService.ts";
 		$scope.serviceSender = "/services/ts/pi-bank-backend/gen/pi-bank-backend/api/bankAccount/BankAccountService.ts";
+		$scope.serviceCurrency = "/services/ts/codbex-currencies/gen/codbex-currencies/api/Currencies/CurrencyService.ts";
 
 		//-----------------Events-------------------//
 
