@@ -362,14 +362,13 @@ class BankService {
 
                         const formattedDate = `${month}/${year}`;
 
-                        const cardTypeName = this.cardTypeDao.findById(card.CardType).Name;
                         const bankAccount = this.bankAccountDao.findById(card.BankAccount);
                         const currencyCode = this.currencyDao.findById(bankAccount.Currency).Code;
 
                         userCards.push({
                             "CardNumber": card.CardNumber,
                             "ExpirationDate": formattedDate,
-                            "CardType": cardTypeName,
+                            "CV": card.CV,
                             "Balance": bankAccount.Amount,
                             "BankAccount": bankAccount.Id,
                             "Currency": currencyCode
