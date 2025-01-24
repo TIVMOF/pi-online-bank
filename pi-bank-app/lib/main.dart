@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:online_bank/pages/map_page.dart';
 import 'package:online_bank/pages/statistics_page.dart';
 import 'package:online_bank/pages/transfer_page.dart';
 import 'package:online_bank/pages/home_page.dart';
@@ -31,7 +32,8 @@ class MyApp extends StatelessWidget {
         '/about': (context) => AboutPage(),
         '/settings': (context) => SettingsPage(),
         '/transfer': (context) => SendPage(),
-        '/statistics': (context) => StatsPage()
+        '/statistics': (context) => StatsPage(),
+        '/map': (context) => MapPage()
       },
     );
   }
