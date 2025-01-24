@@ -6,7 +6,6 @@ import { EntityUtils } from "../utils/EntityUtils";
 
 export interface BankAccountEntity {
     readonly Id: number;
-    Name?: string;
     IBAN: string;
     User?: number;
     Amount: number;
@@ -17,7 +16,6 @@ export interface BankAccountEntity {
 }
 
 export interface BankAccountCreateEntity {
-    readonly Name?: string;
     readonly IBAN: string;
     readonly User?: number;
     readonly Amount: number;
@@ -34,7 +32,6 @@ export interface BankAccountEntityOptions {
     $filter?: {
         equals?: {
             Id?: number | number[];
-            Name?: string | string[];
             IBAN?: string | string[];
             User?: number | number[];
             Amount?: number | number[];
@@ -45,7 +42,6 @@ export interface BankAccountEntityOptions {
         };
         notEquals?: {
             Id?: number | number[];
-            Name?: string | string[];
             IBAN?: string | string[];
             User?: number | number[];
             Amount?: number | number[];
@@ -56,7 +52,6 @@ export interface BankAccountEntityOptions {
         };
         contains?: {
             Id?: number;
-            Name?: string;
             IBAN?: string;
             User?: number;
             Amount?: number;
@@ -67,7 +62,6 @@ export interface BankAccountEntityOptions {
         };
         greaterThan?: {
             Id?: number;
-            Name?: string;
             IBAN?: string;
             User?: number;
             Amount?: number;
@@ -78,7 +72,6 @@ export interface BankAccountEntityOptions {
         };
         greaterThanOrEqual?: {
             Id?: number;
-            Name?: string;
             IBAN?: string;
             User?: number;
             Amount?: number;
@@ -89,7 +82,6 @@ export interface BankAccountEntityOptions {
         };
         lessThan?: {
             Id?: number;
-            Name?: string;
             IBAN?: string;
             User?: number;
             Amount?: number;
@@ -100,7 +92,6 @@ export interface BankAccountEntityOptions {
         };
         lessThanOrEqual?: {
             Id?: number;
-            Name?: string;
             IBAN?: string;
             User?: number;
             Amount?: number;
@@ -143,11 +134,6 @@ export class BankAccountRepository {
                 type: "INTEGER",
                 id: true,
                 autoIncrement: true,
-            },
-            {
-                name: "Name",
-                column: "BANKACCOUNT_NAME",
-                type: "VARCHAR",
             },
             {
                 name: "IBAN",
