@@ -1,6 +1,8 @@
 // ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors, sized_box_for_whitespace
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:online_bank/pages/bank-account-page.dart';
 import 'package:online_bank/utill/app_bar.dart';
 import 'package:online_bank/utill/bottom_app_bar.dart';
 import 'package:online_bank/utill/my_card.dart';
@@ -10,6 +12,7 @@ import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:online_bank/utill/local_auth.dart';
 
 final storage = FlutterSecureStorage();
 
@@ -21,6 +24,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  final BiometricAuthUtils _biometricAuthUtils = BiometricAuthUtils();
   final _controller = PageController();
   String? _errorMessage;
   List<Map<String, dynamic>> _cards = [];
@@ -56,9 +60,12 @@ class _HomePageState extends State<HomePage> {
         setState(() {
           _cards = cardData
               .map((card) => {
+                    'bankAccount': card['BankAccount'],
                     'balance': card['Balance'] + 0.0,
                     'cardNumber': card['CardNumber'],
                     'expiryDate': card['ExpirationDate'],
+                    'currency': card['Currency'],
+                    'cv': card["CV"],
                     'color': Colors.blue,
                   })
               .toList();
@@ -107,14 +114,37 @@ class _HomePageState extends State<HomePage> {
                           scrollDirection: Axis.horizontal,
                           controller: _controller,
                           children: _cards.map((card) {
-                            return MyCard(
-                              balance: 1.0 * card['balance'],
-                              cardNumber: card['cardNumber'],
-                              expiryDate: card['expiryDate'],
-                              color: card['color'],
+                            return InkWell(
+                              onTap: () async {
+                                HapticFeedback.vibrate();
+
+                                bool isAuthenticated =
+                                    await _biometricAuthUtils.authenticate();
+
+                                if (isAuthenticated) {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => BankAccountPage(
+                                        bankAccountId: card['bankAccount'],
+                                      ),
+                                    ),
+                                  );
+                                }
+                              },
+                              child: MyCard(
+                                balance: 1.0 * card['balance'],
+                                cardNumber: card['cardNumber'],
+                                expiryDate: card['expiryDate'],
+                                currency: card['currency'],
+                                cv: card['cv'],
+                                color: card['color'],
+                                isHidden: true,
+                              ),
                             );
                           }).toList(),
-                        )),
+                        ),
+                      ),
 
             SizedBox(height: 15),
 

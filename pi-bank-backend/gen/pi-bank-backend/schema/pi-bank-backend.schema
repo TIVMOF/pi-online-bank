@@ -58,12 +58,6 @@
                     },
                     {
                         "type": "VARCHAR",
-                        "length": 500,
-                        "nullable": true,
-                        "name": "BANKACCOUNT_NAME"
-                    },
-                    {
-                        "type": "VARCHAR",
                         "length": 20,
                         "name": "BANKACCOUNT_PROPERTY3"
                     },

@@ -148,19 +148,6 @@
                         "widgetType": "TEXTBOX"
                     },
                     {
-                        "dataLength": "500",
-                        "dataName": "BANKACCOUNT_NAME",
-                        "dataNullable": "true",
-                        "dataType": "VARCHAR",
-                        "description": "",
-                        "name": "Name",
-                        "tooltip": "",
-                        "widgetIsMajor": "true",
-                        "widgetLength": "500",
-                        "widgetSize": "",
-                        "widgetType": "TEXTBOX"
-                    },
-                    {
                         "dataLength": "20",
                         "dataName": "BANKACCOUNT_PROPERTY3",
                         "dataNullable": "false",
@@ -605,7 +592,7 @@
                         "name": "Reciever",
                         "tooltip": "",
                         "widgetDropDownKey": "Id",
-                        "widgetDropDownValue": "Name",
+                        "widgetDropDownValue": "IBAN",
                         "widgetIsMajor": "true",
                         "widgetLength": "20",
                         "widgetSize": "",
@@ -623,7 +610,7 @@
                         "name": "Sender",
                         "tooltip": "",
                         "widgetDropDownKey": "Id",
-                        "widgetDropDownValue": "Name",
+                        "widgetDropDownValue": "IBAN",
                         "widgetIsMajor": "true",
                         "widgetLength": "20",
                         "widgetSize": "",

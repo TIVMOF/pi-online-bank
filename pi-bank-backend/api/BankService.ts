@@ -2,8 +2,11 @@ import { BankAccountRepository as BankAccountDao } from "../gen/pi-bank-backend/
 import { CardRepository as CardDao } from "../gen/pi-bank-backend/dao/card/CardRepository";
 import { TransactionRepository as TransactionDao } from "../gen/pi-bank-backend/dao/transaction/TransactionRepository";
 import { UserRepository as UserDao } from "../gen/pi-bank-backend/dao/user/UserRepository";
-import { CardTypeRepository as CardTypeDao } from "../gen/pi-bank-backend/dao/Settings/CardTypeRepository"
+import { CardTypeRepository as CardTypeDao } from "../gen/pi-bank-backend/dao/Settings/CardTypeRepository";
+import { BankAccountTypeRepository as BankAccountTypeDao } from "../gen/pi-bank-backend/dao/Settings/BankAccountTypeRepository";
+import { BankAccountStatusRepository as BankAccountStatusDao } from "../gen/pi-bank-backend/dao/Settings/BankAccountStatusRepository";
 import { CurrencyRepository as CurrencyDao } from "../../codbex-currencies/gen/codbex-currencies/dao/Currencies/CurrencyRepository";
+import { CountryRepository as CountryDao } from "../../codbex-countries/gen/codbex-countries/dao/Countries/CountryRepository";
 
 import { Controller, Get, Put, Post, response } from "sdk/http";
 
@@ -14,7 +17,10 @@ class BankService {
     private readonly transactionDao;
     private readonly userDao;
     private readonly cardTypeDao;
+    private readonly bankAccountTypeDao;
+    private readonly bankAccountStatusDao;
     private readonly currencyDao;
+    private readonly countryDao;
 
     constructor() {
         this.bankAccountDao = new BankAccountDao();
@@ -22,7 +28,10 @@ class BankService {
         this.transactionDao = new TransactionDao();
         this.userDao = new UserDao();
         this.cardTypeDao = new CardTypeDao();
+        this.bankAccountTypeDao = new BankAccountTypeDao();
+        this.bankAccountStatusDao = new BankAccountStatusDao();
         this.currencyDao = new CurrencyDao();
+        this.countryDao = new CountryDao();
     }
 
     @Get("/test")
@@ -31,6 +40,29 @@ class BankService {
 
         response.setStatus(response.OK);
         return msg;
+    }
+
+    @Get("/user/:userId")
+    public getUser(_: any, ctx: any) {
+        const userId = ctx.pathParameters.userId;
+
+        const user = this.userDao.findById(userId);
+
+        if (!user) {
+            response.setStatus(response.NOT_FOUND);
+            return { message: "User with that ID doesn't exist!" };
+        }
+
+        const countryName = this.countryDao.findById(user.Country).Name;
+
+        return {
+            "Username": user.Username,
+            "Name": user.Name,
+            "Password": user.Password,
+            "Email": user.Email,
+            "Phone": user.Phone,
+            "Country": countryName
+        }
     }
 
     @Get("/bankAccounts/:userId")
@@ -323,29 +355,98 @@ class BankService {
             userBankAccounts.forEach(bankAccount => {
                 allCards.forEach(card => {
                     if (card.BankAccount === bankAccount.Id) {
-                        userCards.push(card);
+                        const expirationDate = new Date(card.ExpirationDate);
+
+                        const month = (expirationDate.getMonth() + 1).toString().padStart(2, '0');
+                        const year = expirationDate.getFullYear().toString().slice(-2);
+
+                        const formattedDate = `${month}/${year}`;
+
+                        const bankAccount = this.bankAccountDao.findById(card.BankAccount);
+                        const currencyCode = this.currencyDao.findById(bankAccount.Currency).Code;
+
+                        userCards.push({
+                            "CardNumber": card.CardNumber,
+                            "ExpirationDate": formattedDate,
+                            "CV": card.CV,
+                            "Balance": bankAccount.Amount,
+                            "BankAccount": bankAccount.Id,
+                            "Currency": currencyCode
+                        });
                     }
                 })
             })
 
-            const finalizaedUserCards = userCards.map(card => {
+            response.setStatus(response.OK);
+            return { "UserCards": userCards };
+
+        } catch (e: any) {
+            response.setStatus(response.BAD_REQUEST);
+            return { error: e.message };
+        }
+    }
+
+    @Get("/bankAccountInfo/:bankAccountId")
+    public getBankAccountInfo(_: any, ctx: any) {
+        const bankAccountId = ctx.pathParameters.bankAccountId;
+
+        const bankAccount = this.bankAccountDao.findById(bankAccountId);
+
+        if (!bankAccount) {
+            response.setStatus(response.NOT_FOUND);
+            return { message: "Bank Account with that ID doesn't exist!" };
+        }
+
+        try {
+            const creationDate = new Date(bankAccount.CreationDate);
+
+            const date = creationDate.getDate();
+            const month = (creationDate.getMonth() + 1).toString().padStart(2, '0');
+            const year = creationDate.getFullYear().toString();
+
+            const formattedCreationDate = `${date}/${month}/${year}`;
+
+            const bankAccountInfo = {
+                "IBAN": bankAccount.IBAN,
+                "User": this.userDao.findById(bankAccount.User).Name,
+                "Amount": bankAccount.Amount,
+                "Currency": this.currencyDao.findById(bankAccount.Currency).Code,
+                "Type": this.bankAccountTypeDao.findById(bankAccount.Type).Name,
+                "Status": this.bankAccountStatusDao.findById(bankAccount.Status).Name,
+                "CreationDate": formattedCreationDate
+            }
+            const bankAccountCards = this.cardDao.findAll({
+                $filter: {
+                    equals: { BankAccount: bankAccountId }
+                }
+            })
+
+            const finalizedBankAccountCards = bankAccountCards.map(card => {
                 const expirationDate = new Date(card.ExpirationDate);
 
                 const month = (expirationDate.getMonth() + 1).toString().padStart(2, '0');
                 const year = expirationDate.getFullYear().toString().slice(-2);
 
-                const formattedDate = `${month}/${year}`;
+                const formattedExpirationDate = `${month}/${year}`;
+
+                const cardTypeName = this.cardTypeDao.findById(card.CardType).Name;
+                const currencyCode = this.currencyDao.findById(bankAccount.Currency).Code;
 
                 return {
                     "CardNumber": card.CardNumber,
-                    "ExpirationDate": formattedDate,
-                    "CardType": this.cardTypeDao.findById(card.CardType).Name,
-                    "Balance": this.bankAccountDao.findById(card.BankAccount).Amount
+                    "ExpirationDate": formattedExpirationDate,
+                    "CardType": cardTypeName,
+                    "Balance": bankAccount.Amount,
+                    "CV": card.CV,
+                    "Currency": currencyCode
                 }
-            });
+            })
 
             response.setStatus(response.OK);
-            return { "UserCards": finalizaedUserCards };
+            return {
+                "BankAccount": bankAccountInfo,
+                "BankAccountCards": finalizedBankAccountCards
+            };
 
         } catch (e: any) {
             response.setStatus(response.BAD_REQUEST);
@@ -406,7 +507,6 @@ class BankService {
             return { error: e.message };
         }
     }
-
 
     @Post("/userLogin")
     public userLogin(body: any) {
