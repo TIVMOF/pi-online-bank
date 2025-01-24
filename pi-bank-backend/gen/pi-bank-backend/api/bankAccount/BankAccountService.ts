@@ -119,9 +119,6 @@ class BankAccountService {
     }
 
     private validateEntity(entity: any): void {
-        if (entity.Name?.length > 500) {
-            throw new ValidationError(`The 'Name' exceeds the maximum length of [500] characters`);
-        }
         if (entity.IBAN === null || entity.IBAN === undefined) {
             throw new ValidationError(`The 'IBAN' property is required, provide a valid value`);
         }
