@@ -43,7 +43,12 @@ Future<void> ensureAccessTokenValidity(BuildContext context) async {
   }
 }
 
-void _navigateToLoginPage(BuildContext context) {
-  storage.deleteAll();
+Future<void> _navigateToLoginPage(BuildContext context) async {
+  await storage.delete(key: 'mobileAccessToken');
+  await storage.delete(key: 'mobileRefreshToken');
+  await storage.delete(key: 'backendAccessToken');
+  await storage.delete(key: 'backendRefreshToken');
+  await storage.delete(key: 'userId');
+
   Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
 }
