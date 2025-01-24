@@ -22,7 +22,7 @@ class MyListTile extends StatelessWidget {
       child: ElevatedButton(
         onPressed: () {
           HapticFeedback.vibrate();
-          Navigator.pushNamed(context, routeName); // Use named route here
+          Navigator.pushNamed(context, routeName);
         },
         style: ElevatedButton.styleFrom(
           shadowColor: Colors.transparent,

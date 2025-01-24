@@ -6,6 +6,7 @@ class MyCard extends StatelessWidget {
   final double balance;
   final String cardNumber;
   final String expiryDate;
+  final String currency;
   final color;
 
   const MyCard({
@@ -13,6 +14,7 @@ class MyCard extends StatelessWidget {
     required this.balance,
     required this.cardNumber,
     required this.expiryDate,
+    required this.currency,
     required this.color,
   });
 
@@ -39,7 +41,7 @@ class MyCard extends StatelessWidget {
               ),
               SizedBox(height: 10),
               Text(
-                balance.toStringAsFixed(2) + 'лв',
+                balance.toStringAsFixed(2) + " " + currency,
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 26,
