@@ -65,6 +65,7 @@ class _HomePageState extends State<HomePage> {
                     'cardNumber': card['CardNumber'],
                     'expiryDate': card['ExpirationDate'],
                     'currency': card['Currency'],
+                    'cv': card["CV"],
                     'color': Colors.blue,
                   })
               .toList();
@@ -136,7 +137,9 @@ class _HomePageState extends State<HomePage> {
                                 cardNumber: card['cardNumber'],
                                 expiryDate: card['expiryDate'],
                                 currency: card['currency'],
+                                cv: card['cv'],
                                 color: card['color'],
+                                isHidden: true,
                               ),
                             );
                           }).toList(),

@@ -6,6 +6,7 @@ import 'package:online_bank/utill/bottom_app_bar.dart';
 import 'package:online_bank/utill/my_card.dart';
 import 'package:online_bank/utill/refresh_tokens.dart';
 import 'package:http/http.dart' as http;
+import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class BankAccountPage extends StatefulWidget {
   final int bankAccountId;
@@ -129,11 +130,22 @@ class _BankAccountPageState extends State<BankAccountPage> {
                             cardNumber: card['cardNumber'],
                             expiryDate: card['expiryDate'],
                             currency: card['currency'],
+                            cv: card['cv'],
                             color: card['color'],
+                            isHidden: false,
                           );
                         }).toList(),
                       ),
                     ),
+                    SizedBox(height: 15),
+                    SmoothPageIndicator(
+                      controller: _controller,
+                      count: _cards.length,
+                      effect: ExpandingDotsEffect(
+                        activeDotColor: Colors.blue.shade900,
+                      ),
+                    ),
+                    SizedBox(height: 20),
                     Card(
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
@@ -145,9 +157,14 @@ class _BankAccountPageState extends State<BankAccountPage> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              'IBAN: ${_bankAccount!['IBAN']}',
+                              'Bank Account Info:',
                               style: const TextStyle(
                                   fontSize: 18, fontWeight: FontWeight.bold),
+                            ),
+                            const SizedBox(height: 8),
+                            Text(
+                              'IBAN: ${_bankAccount!['IBAN']}',
+                              style: const TextStyle(fontSize: 18),
                             ),
                             const SizedBox(height: 8),
                             Text(
