@@ -247,36 +247,6 @@ class _SendPageState extends State<SendPage> {
         return;
       }
 
-      final newSenderBalance = senderBalance - transferAmount;
-      response = await http.put(
-        Uri.parse(
-            'https://proper-invest.tech/services/ts/pi-bank-backend/api/BankService.ts/updateBankAccountAmount/$selectedAccountId'),
-        headers: {
-          'Authorization': 'Bearer $accessToken',
-          'Content-Type': 'application/json',
-        },
-        body: jsonEncode({"Amount": newSenderBalance}),
-      );
-
-      if (response.statusCode != 200) {
-        setState(() {
-          _errorMessage = "Transaction failed: ${response.reasonPhrase}";
-        });
-        return;
-      }
-
-      final newReceiverBalance =
-          double.parse(receiverAccount["Amount"].toString()) + transferAmount;
-      response = await http.put(
-        Uri.parse(
-            'https://proper-invest.tech/services/ts/pi-bank-backend/api/BankService.ts/updateBankAccountAmount/$receiverAccountId'),
-        headers: {
-          'Authorization': 'Bearer $accessToken',
-          'Content-Type': 'application/json',
-        },
-        body: jsonEncode({"Amount": newReceiverBalance}),
-      );
-
       if (response.statusCode != 200) {
         setState(() {
           _errorMessage = "Transaction failed: ${response.reasonPhrase}";
