@@ -178,6 +178,14 @@ class _HomePageState extends State<HomePage> {
                     tileSubtitle: 'Разплащания',
                     routeName: '/statistics',
                   ),
+
+                  // Map
+                  MyListTile(
+                    iconImagePath: 'lib/icons/map.png',
+                    tileTitle: 'Клонове',
+                    tileSubtitle: 'Получи консултация',
+                    routeName: '/map',
+                  ),
                 ],
               ),
             )
