@@ -32,6 +32,28 @@
       "delimEnclosing": "\"",
       "distinguishEmptyFromNull": true,
       "version": "1.0"
+    },
+    {
+      "table": "BANKFACILITYSTATUS",
+      "schema": "PUBLIC",
+      "file": "pi-bank-backend/data/bank-facility-statuses.csv",
+      "header": true,
+      "useHeaderNames": true,
+      "delimField": ",",
+      "delimEnclosing": "\"",
+      "distinguishEmptyFromNull": true,
+      "version": "1.0"
+    },
+    {
+      "table": "BANKFACILITYTYPE",
+      "schema": "PUBLIC",
+      "file": "pi-bank-backend/data/bank-facility-types.csv",
+      "header": true,
+      "useHeaderNames": true,
+      "delimField": ",",
+      "delimEnclosing": "\"",
+      "distinguishEmptyFromNull": true,
+      "version": "1.0"
     }
   ]
 }
