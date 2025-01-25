@@ -278,138 +278,150 @@ class _SendPageState extends State<SendPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey[300],
-      // bottomNavigationBar: AppBarBottom(context: widget.context),
       body: SafeArea(
         child: SingleChildScrollView(
           child: Column(
             children: [
               MyAppBar(first_name: 'Прати', second_name: 'Пари'),
-              Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Form(
-                  key: _formKey,
-                  child: Column(
-                    children: [
-                      DropdownButtonFormField<String>(
-                        value: selectedAccountId,
-                        items: bankAccounts.map((account) {
-                          return DropdownMenuItem(
-                            value: account["Id"],
-                            child: Text(account["IBAN"] ?? "Unknown IBAN"),
-                          );
-                        }).toList(),
-                        onChanged: (value) {
-                          setState(() {
-                            selectedAccountId = value;
-                          });
-                        },
-                        decoration: InputDecoration(
-                          border: OutlineInputBorder(),
-                          hintText: "Select Account",
-                        ),
-                      ),
-                      SizedBox(height: 20),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text("Use Dropdown"),
-                          Switch(
-                            value: useDropdown,
-                            onChanged:
-                                (isDataLoaded && recentInteractions.isNotEmpty)
-                                    ? (value) {
-                                        setState(() {
-                                          useDropdown = value;
-                                        });
+              isDataLoaded
+                  ? Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Form(
+                        key: _formKey,
+                        child: Column(
+                          children: [
+                            DropdownButtonFormField<String>(
+                              value: selectedAccountId,
+                              items: bankAccounts.map((account) {
+                                return DropdownMenuItem(
+                                  value: account["Id"],
+                                  child:
+                                      Text(account["IBAN"] ?? "Unknown IBAN"),
+                                );
+                              }).toList(),
+                              onChanged: (value) {
+                                setState(() {
+                                  selectedAccountId = value;
+                                });
+                              },
+                              decoration: InputDecoration(
+                                border: OutlineInputBorder(),
+                                hintText: "Select Account",
+                              ),
+                            ),
+                            SizedBox(height: 20),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text("Use Dropdown"),
+                                Switch(
+                                  value: useDropdown,
+                                  onChanged: (isDataLoaded &&
+                                          recentInteractions.isNotEmpty)
+                                      ? (value) {
+                                          setState(() {
+                                            useDropdown = value;
+                                          });
+                                        }
+                                      : null,
+                                ),
+                              ],
+                            ),
+                            if (useDropdown)
+                              DropdownButtonFormField<Map<String, dynamic>>(
+                                value: null,
+                                items: recentInteractions
+                                    .map((transfer) {
+                                      if (selectedAccountId !=
+                                          transfer["BankAccountId"]
+                                              .toString()) {
+                                        return DropdownMenuItem(
+                                          value: transfer,
+                                          child: Text(transfer["Name"] +
+                                              ": " +
+                                              transfer["IBAN"]),
+                                        );
                                       }
-                                    : null,
-                          ),
-                        ],
-                      ),
-                      if (useDropdown)
-                        DropdownButtonFormField<Map<String, dynamic>>(
-                          value: null,
-                          items: recentInteractions
-                              .map((transfer) {
-                                if (selectedAccountId !=
-                                    transfer["BankAccountId"].toString()) {
-                                  return DropdownMenuItem(
-                                    value: transfer,
-                                    child: Text(transfer["Name"] +
-                                        ": " +
-                                        transfer["IBAN"]),
-                                  );
+                                      return null;
+                                    })
+                                    .where((item) => item != null)
+                                    .toList()
+                                    .cast<
+                                        DropdownMenuItem<
+                                            Map<String, dynamic>>>(),
+                                onChanged: (value) {
+                                  receiverAccount = value;
+                                },
+                                decoration: InputDecoration(
+                                  border: OutlineInputBorder(),
+                                  hintText: "Select User",
+                                ),
+                              )
+                            else
+                              TextFormField(
+                                decoration: InputDecoration(
+                                  border: OutlineInputBorder(),
+                                  hintText: "Enter IBAN",
+                                ),
+                                onChanged: (value) {
+                                  enteredIBAN = value;
+                                },
+                              ),
+                            SizedBox(height: 20),
+                            TextFormField(
+                              keyboardType: TextInputType.number,
+                              decoration: InputDecoration(
+                                border: OutlineInputBorder(),
+                                hintText: "Amount (e.g., 150.00)",
+                              ),
+                              onChanged: (value) {
+                                final amount = double.tryParse(value);
+                                if (amount != null) {
+                                  enteredAmount = amount;
                                 }
-                                return null;
-                              })
-                              .where((item) => item != null)
-                              .toList()
-                              .cast<DropdownMenuItem<Map<String, dynamic>>>(),
-                          onChanged: (value) {
-                            receiverAccount = value;
-                          },
-                          decoration: InputDecoration(
-                            border: OutlineInputBorder(),
-                            hintText: "Select User",
-                          ),
-                        )
-                      else
-                        TextFormField(
-                          decoration: InputDecoration(
-                            border: OutlineInputBorder(),
-                            hintText: "Enter IBAN",
-                          ),
-                          onChanged: (value) {
-                            enteredIBAN = value;
-                          },
-                        ),
-                      SizedBox(height: 20),
-                      TextFormField(
-                        keyboardType: TextInputType.number,
-                        decoration: InputDecoration(
-                          border: OutlineInputBorder(),
-                          hintText: "Amount (e.g., 150.00)",
-                        ),
-                        onChanged: (value) {
-                          final amount = double.tryParse(value);
-                          if (amount != null) {
-                            enteredAmount = amount;
-                          }
-                        },
-                      ),
-                      SizedBox(height: 30),
-                      if (_errorMessage != null)
-                        Padding(
-                          padding: const EdgeInsets.only(top: 10),
-                          child: Text(
-                            _errorMessage!,
-                            style: TextStyle(color: Colors.red),
-                          ),
-                        ),
-                      SizedBox(
-                        height: 50,
-                        width: 150,
-                        child: MaterialButton(
-                          color: Colors.blue.shade700,
-                          onPressed: () async {
-                            final bool authenticated = await _authenticate();
-                            if (authenticated) {
-                              transfer();
-                            }
-                          },
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8.0),
-                          ),
-                          child: Text(
-                            'Send',
-                            style: TextStyle(fontSize: 20, color: Colors.white),
-                          ),
+                              },
+                            ),
+                            SizedBox(height: 30),
+                            if (_errorMessage != null)
+                              Padding(
+                                padding: const EdgeInsets.only(top: 10),
+                                child: Text(
+                                  _errorMessage!,
+                                  style: TextStyle(color: Colors.red),
+                                ),
+                              ),
+                            SizedBox(
+                              height: 50,
+                              width: 150,
+                              child: MaterialButton(
+                                color: Colors.blue.shade700,
+                                onPressed: () async {
+                                  final bool authenticated =
+                                      await _authenticate();
+                                  if (authenticated) {
+                                    transfer();
+                                  }
+                                },
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8.0),
+                                ),
+                                child: Text(
+                                  'Send',
+                                  style: TextStyle(
+                                      fontSize: 20, color: Colors.white),
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
-                    ],
-                  ),
-                ),
-              ),
+                    )
+                  : Column(
+                      children: [
+                        SizedBox(height: 30),
+                        const Center(child: CircularProgressIndicator()),
+                      ],
+                    ),
             ],
           ),
         ),
