@@ -223,6 +223,77 @@
                 ]
             },
             {
+                "name": "BANKFACILITY",
+                "type": "TABLE",
+                "columns": [
+                    {
+                        "type": "INTEGER",
+                        "primaryKey": true,
+                        "identity": true,
+                        "nullable": true,
+                        "name": "BANKFACILITIES_ID"
+                    },
+                    {
+                        "type": "DOUBLE",
+                        "nullable": true,
+                        "name": "BANKFACILITIES_LATITUDE"
+                    },
+                    {
+                        "type": "DOUBLE",
+                        "nullable": true,
+                        "name": "BANKFACILITY_LONGITUDE"
+                    },
+                    {
+                        "type": "INTEGER",
+                        "nullable": true,
+                        "name": "BANKFACILITY_BANKFACILITYTYPE"
+                    },
+                    {
+                        "type": "INTEGER",
+                        "nullable": true,
+                        "name": "BANKFACILITY_BANKFACILITYSTATUS"
+                    }
+                ]
+            },
+            {
+                "name": "BANKFACILITYTYPE",
+                "type": "TABLE",
+                "columns": [
+                    {
+                        "type": "INTEGER",
+                        "primaryKey": true,
+                        "identity": true,
+                        "nullable": true,
+                        "name": "BANKFACILITYTYPE_ID"
+                    },
+                    {
+                        "type": "VARCHAR",
+                        "length": 50,
+                        "nullable": true,
+                        "name": "BANKFACILITYTYPE_NAME"
+                    }
+                ]
+            },
+            {
+                "name": "BANKFACILITYSTATUS",
+                "type": "TABLE",
+                "columns": [
+                    {
+                        "type": "INTEGER",
+                        "primaryKey": true,
+                        "identity": true,
+                        "nullable": true,
+                        "name": "BANKFACILITYSTATUS_ID"
+                    },
+                    {
+                        "type": "VARCHAR",
+                        "length": 50,
+                        "nullable": true,
+                        "name": "BANKFACILITYSTATUS_NAME"
+                    }
+                ]
+            },
+            {
                 "name": "User_Country",
                 "type": "foreignKey",
                 "table": "USER",
@@ -311,6 +382,24 @@
                 "columns": "TRANSACTION_CURRENCY",
                 "referencedTable": "CURRENCY",
                 "referencedColumns": "CURRENCY_ID"
+            },
+            {
+                "name": "BankFacility_BankFacilityType",
+                "type": "foreignKey",
+                "table": "BANKFACILITY",
+                "constraintName": "BankFacility_BankFacilityType",
+                "columns": "BANKFACILITY_BANKFACILITYTYPE",
+                "referencedTable": "BANKFACILITYTYPE",
+                "referencedColumns": "BANKFACILITYTYPE_ID"
+            },
+            {
+                "name": "BankFacility_BankFacilityStatus",
+                "type": "foreignKey",
+                "table": "BANKFACILITY",
+                "constraintName": "BankFacility_BankFacilityStatus",
+                "columns": "BANKFACILITY_BANKFACILITYSTATUS",
+                "referencedTable": "BANKFACILITYSTATUS",
+                "referencedColumns": "BANKFACILITYSTATUS_ID"
             }
         ]
     },
