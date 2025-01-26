@@ -234,7 +234,7 @@ class _SendPageState extends State<SendPage> {
         return;
       }
 
-      var response = await http.post(
+      final response = await http.post(
         Uri.parse(
             'https://proper-invest.tech/services/ts/pi-bank-backend/api/BankService.ts/transaction'),
         headers: {
@@ -253,13 +253,6 @@ class _SendPageState extends State<SendPage> {
       );
 
       if (response.statusCode != 201) {
-        setState(() {
-          _errorMessage = "Transaction failed: ${response.reasonPhrase}";
-        });
-        return;
-      }
-
-      if (response.statusCode != 200) {
         setState(() {
           _errorMessage = "Transaction failed: ${response.reasonPhrase}";
         });
