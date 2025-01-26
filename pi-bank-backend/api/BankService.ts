@@ -11,7 +11,7 @@ import { BankFacilityTypeRepository as BankFacilityTypeDao } from "../gen/pi-ban
 import { CurrencyRepository as CurrencyDao } from "../../codbex-currencies/gen/codbex-currencies/dao/Currencies/CurrencyRepository";
 import { CountryRepository as CountryDao } from "../../codbex-countries/gen/codbex-countries/dao/Countries/CountryRepository";
 
-import { Controller, Get, Put, Post, response } from "sdk/http";
+import { Controller, Get, Post, response } from "sdk/http";
 
 @Controller
 class BankService {

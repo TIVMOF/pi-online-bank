@@ -1,0 +1,5 @@
+{
+    "extensionPoint": "pi-bank-backend-transaction-Transaction",
+    "description": "Transactions extension",
+    "module": "pi-bank-backend/events/Transactions/TransactionHandler.ts"
+}

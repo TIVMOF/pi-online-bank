@@ -6,6 +6,7 @@ class AppBarBottom extends StatelessWidget {
   Widget build(BuildContext context) {
     return BottomAppBar(
       color: Colors.grey.shade200,
+      height: 60,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: <Widget>[
