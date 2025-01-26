@@ -119,6 +119,9 @@ class BankFacilityService {
     }
 
     private validateEntity(entity: any): void {
+        if (entity.Name?.length > 200) {
+            throw new ValidationError(`The 'Name' exceeds the maximum length of [200] characters`);
+        }
         for (const next of validationModules) {
             next.validate(entity);
         }

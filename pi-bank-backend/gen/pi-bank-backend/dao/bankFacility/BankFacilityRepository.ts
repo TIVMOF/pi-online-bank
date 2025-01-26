@@ -5,6 +5,7 @@ import { dao as daoApi } from "sdk/db";
 
 export interface BankFacilityEntity {
     readonly Id: number;
+    Name?: string;
     Latitude?: number;
     Longitude?: number;
     Type?: number;
@@ -12,6 +13,7 @@ export interface BankFacilityEntity {
 }
 
 export interface BankFacilityCreateEntity {
+    readonly Name?: string;
     readonly Latitude?: number;
     readonly Longitude?: number;
     readonly Type?: number;
@@ -26,6 +28,7 @@ export interface BankFacilityEntityOptions {
     $filter?: {
         equals?: {
             Id?: number | number[];
+            Name?: string | string[];
             Latitude?: number | number[];
             Longitude?: number | number[];
             Type?: number | number[];
@@ -33,6 +36,7 @@ export interface BankFacilityEntityOptions {
         };
         notEquals?: {
             Id?: number | number[];
+            Name?: string | string[];
             Latitude?: number | number[];
             Longitude?: number | number[];
             Type?: number | number[];
@@ -40,6 +44,7 @@ export interface BankFacilityEntityOptions {
         };
         contains?: {
             Id?: number;
+            Name?: string;
             Latitude?: number;
             Longitude?: number;
             Type?: number;
@@ -47,6 +52,7 @@ export interface BankFacilityEntityOptions {
         };
         greaterThan?: {
             Id?: number;
+            Name?: string;
             Latitude?: number;
             Longitude?: number;
             Type?: number;
@@ -54,6 +60,7 @@ export interface BankFacilityEntityOptions {
         };
         greaterThanOrEqual?: {
             Id?: number;
+            Name?: string;
             Latitude?: number;
             Longitude?: number;
             Type?: number;
@@ -61,6 +68,7 @@ export interface BankFacilityEntityOptions {
         };
         lessThan?: {
             Id?: number;
+            Name?: string;
             Latitude?: number;
             Longitude?: number;
             Type?: number;
@@ -68,6 +76,7 @@ export interface BankFacilityEntityOptions {
         };
         lessThanOrEqual?: {
             Id?: number;
+            Name?: string;
             Latitude?: number;
             Longitude?: number;
             Type?: number;
@@ -107,6 +116,11 @@ export class BankFacilityRepository {
                 type: "INTEGER",
                 id: true,
                 autoIncrement: true,
+            },
+            {
+                name: "Name",
+                column: "BANKFACILITY_NAME",
+                type: "VARCHAR",
             },
             {
                 name: "Latitude",
