@@ -24,8 +24,10 @@ class _SendPageState extends State<SendPage> {
   var receiverAccount = null;
   String? enteredIBAN = null;
   double enteredAmount = 0;
-  bool useDropdown = false;
+  bool userDropdown = false;
+  bool scheduleTransaction = false;
   bool isDataLoaded = false;
+  DateTime? selectedDate;
 
   @override
   void initState() {
@@ -190,7 +192,7 @@ class _SendPageState extends State<SendPage> {
         return;
       }
 
-      if (!useDropdown) {
+      if (!userDropdown) {
         final response = await http.post(
           Uri.parse(
               'https://proper-invest.tech/services/ts/pi-bank-backend/api/BankService.ts/bankAccountFromIBAN'),
@@ -225,6 +227,13 @@ class _SendPageState extends State<SendPage> {
         return;
       }
 
+      if (scheduleTransaction && selectedDate == null) {
+        setState(() {
+          _errorMessage = "Please select a date for the scheduled transaction.";
+        });
+        return;
+      }
+
       var response = await http.post(
         Uri.parse(
             'https://proper-invest.tech/services/ts/pi-bank-backend/api/BankService.ts/transaction'),
@@ -236,7 +245,10 @@ class _SendPageState extends State<SendPage> {
           "Sender": selectedAccountId,
           "Reciever": receiverAccountId,
           "Amount": transferAmount,
-          "Currency": senderCurrency
+          "Currency": senderCurrency,
+          "Date": scheduleTransaction
+              ? "ScheduledDate"
+              : selectedDate?.toIso8601String()
         }),
       );
 
@@ -312,28 +324,27 @@ class _SendPageState extends State<SendPage> {
                         },
                         decoration: InputDecoration(
                           border: OutlineInputBorder(),
-                          hintText: "Select Account",
+                          hintText: "Избери сметка",
                         ),
                       ),
-                      SizedBox(height: 20),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text("Use Dropdown"),
+                          Text("Избери от списъка"),
                           Switch(
-                            value: useDropdown,
+                            value: userDropdown,
                             onChanged:
                                 (isDataLoaded && recentInteractions.isNotEmpty)
                                     ? (value) {
                                         setState(() {
-                                          useDropdown = value;
+                                          userDropdown = value;
                                         });
                                       }
                                     : null,
                           ),
                         ],
                       ),
-                      if (useDropdown)
+                      if (userDropdown)
                         DropdownButtonFormField<Map<String, dynamic>>(
                           value: null,
                           items: recentInteractions
@@ -357,14 +368,14 @@ class _SendPageState extends State<SendPage> {
                           },
                           decoration: InputDecoration(
                             border: OutlineInputBorder(),
-                            hintText: "Select User",
+                            hintText: "Избери потребител",
                           ),
                         )
                       else
                         TextFormField(
                           decoration: InputDecoration(
                             border: OutlineInputBorder(),
-                            hintText: "Enter IBAN",
+                            hintText: "Въведи IBAN",
                           ),
                           onChanged: (value) {
                             enteredIBAN = value;
@@ -375,7 +386,7 @@ class _SendPageState extends State<SendPage> {
                         keyboardType: TextInputType.number,
                         decoration: InputDecoration(
                           border: OutlineInputBorder(),
-                          hintText: "Amount (e.g., 150.00)",
+                          hintText: "Въведи сума",
                         ),
                         onChanged: (value) {
                           final amount = double.tryParse(value);
@@ -384,6 +395,61 @@ class _SendPageState extends State<SendPage> {
                           }
                         },
                       ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text("Насрочи трансакцията"),
+                          Switch(
+                            value: scheduleTransaction,
+                            onChanged: (isDataLoaded)
+                                ? (value) {
+                                    setState(() {
+                                      scheduleTransaction = value;
+                                    });
+                                  }
+                                : null,
+                          ),
+                        ],
+                      ),
+                      if (scheduleTransaction)
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            TextFormField(
+                              readOnly: true,
+                              decoration: InputDecoration(
+                                border: OutlineInputBorder(),
+                                hintText: selectedDate == null
+                                    ? "Избери дата"
+                                    : "${selectedDate!.day}/${selectedDate!.month}/${selectedDate!.year}",
+                              ),
+                              onTap: () async {
+                                final pickedDate = await showDatePicker(
+                                  context: context,
+                                  initialDate: DateTime.now(),
+                                  firstDate: DateTime.now(),
+                                  lastDate:
+                                      DateTime.now().add(Duration(days: 365)),
+                                );
+
+                                if (pickedDate != null &&
+                                    pickedDate.isAfter(DateTime.now())) {
+                                  setState(() {
+                                    selectedDate = pickedDate;
+                                  });
+                                } else {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text(
+                                          "Please select a valid future date."),
+                                      backgroundColor: Colors.red,
+                                    ),
+                                  );
+                                }
+                              },
+                            ),
+                          ],
+                        ),
                       SizedBox(height: 30),
                       if (_errorMessage != null)
                         Padding(
