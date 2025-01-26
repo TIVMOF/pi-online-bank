@@ -5726,7 +5726,7 @@ components:
         Name:
           type: string
           minLength: 0
-          maxLength: 20
+          maxLength: 50
     BankFacilityTypeFilterOptions:
       type: object
       properties:
@@ -5748,13 +5748,13 @@ components:
                   oneOf:
                     - type: string
                       minLength: 0
-                      maxLength: 20
+                      maxLength: 50
                     - type: array
                       items:
                         type: string
                         format: double
                         minLength: 0
-                        maxLength: 20
+                        maxLength: 50
             notEquals:
               type: object
               properties:
@@ -5770,13 +5770,13 @@ components:
                   oneOf:
                     - type: string
                       minLength: 0
-                      maxLength: 20
+                      maxLength: 50
                     - type: array
                       items:
                         type: string
                         format: double
                         minLength: 0
-                        maxLength: 20
+                        maxLength: 50
             contains:
               type: object
               properties:
@@ -5784,7 +5784,7 @@ components:
                 Name:
                   type: string
                   minLength: 0
-                  maxLength: 20
+                  maxLength: 50
             greaterThan:
               type: object
               properties:
@@ -5794,7 +5794,7 @@ components:
                 Name:
                   type: string
                   minLength: 0
-                  maxLength: 20
+                  maxLength: 50
             greaterThanOrEqual:
               type: object
               properties:
@@ -5804,7 +5804,7 @@ components:
                 Name:
                   type: string
                   minLength: 0
-                  maxLength: 20
+                  maxLength: 50
             lessThan:
               type: object
               properties:
@@ -5814,7 +5814,7 @@ components:
                 Name:
                   type: string
                   minLength: 0
-                  maxLength: 20
+                  maxLength: 50
             lessThanOrEqual:
               type: object
               properties:
@@ -5824,7 +5824,7 @@ components:
                 Name:
                   type: string
                   minLength: 0
-                  maxLength: 20
+                  maxLength: 50
         $select:
           type: array
           example: ["Id", "Name"]
@@ -5853,7 +5853,7 @@ components:
         Name:
           type: string
           minLength: 0
-          maxLength: 20
+          maxLength: 50
     BankFacilityStatusFilterOptions:
       type: object
       properties:
@@ -5875,13 +5875,13 @@ components:
                   oneOf:
                     - type: string
                       minLength: 0
-                      maxLength: 20
+                      maxLength: 50
                     - type: array
                       items:
                         type: string
                         format: double
                         minLength: 0
-                        maxLength: 20
+                        maxLength: 50
             notEquals:
               type: object
               properties:
@@ -5897,13 +5897,13 @@ components:
                   oneOf:
                     - type: string
                       minLength: 0
-                      maxLength: 20
+                      maxLength: 50
                     - type: array
                       items:
                         type: string
                         format: double
                         minLength: 0
-                        maxLength: 20
+                        maxLength: 50
             contains:
               type: object
               properties:
@@ -5911,7 +5911,7 @@ components:
                 Name:
                   type: string
                   minLength: 0
-                  maxLength: 20
+                  maxLength: 50
             greaterThan:
               type: object
               properties:
@@ -5921,7 +5921,7 @@ components:
                 Name:
                   type: string
                   minLength: 0
-                  maxLength: 20
+                  maxLength: 50
             greaterThanOrEqual:
               type: object
               properties:
@@ -5931,7 +5931,7 @@ components:
                 Name:
                   type: string
                   minLength: 0
-                  maxLength: 20
+                  maxLength: 50
             lessThan:
               type: object
               properties:
@@ -5941,7 +5941,7 @@ components:
                 Name:
                   type: string
                   minLength: 0
-                  maxLength: 20
+                  maxLength: 50
             lessThanOrEqual:
               type: object
               properties:
@@ -5951,7 +5951,7 @@ components:
                 Name:
                   type: string
                   minLength: 0
-                  maxLength: 20
+                  maxLength: 50
         $select:
           type: array
           example: ["Id", "Name"]

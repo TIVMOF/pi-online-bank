@@ -927,9 +927,9 @@
                         "name": "Latitude",
                         "tooltip": "",
                         "widgetIsMajor": "true",
-                        "widgetLength": "20",
+                        "widgetLength": "200",
                         "widgetSize": "",
-                        "widgetType": "TEXTBOX"
+                        "widgetType": "NUMBER"
                     },
                     {
                         "dataName": "BANKFACILITY_LONGITUDE",
@@ -939,9 +939,9 @@
                         "name": "Longitude",
                         "tooltip": "",
                         "widgetIsMajor": "true",
-                        "widgetLength": "20",
+                        "widgetLength": "200",
                         "widgetSize": "",
-                        "widgetType": "TEXTBOX"
+                        "widgetType": "NUMBER"
                     },
                     {
                         "dataName": "BANKFACILITY_BANKFACILITYTYPE",
@@ -1021,7 +1021,7 @@
                         "widgetType": "TEXTBOX"
                     },
                     {
-                        "dataLength": "20",
+                        "dataLength": "50",
                         "dataName": "BANKFACILITYTYPE_NAME",
                         "dataNullable": "true",
                         "dataType": "VARCHAR",
@@ -1029,7 +1029,7 @@
                         "name": "Name",
                         "tooltip": "",
                         "widgetIsMajor": "true",
-                        "widgetLength": "20",
+                        "widgetLength": "50",
                         "widgetSize": "",
                         "widgetType": "TEXTBOX"
                     }
@@ -1075,7 +1075,7 @@
                         "widgetType": "TEXTBOX"
                     },
                     {
-                        "dataLength": "20",
+                        "dataLength": "50",
                         "dataName": "BANKFACILITYSTATUS_NAME",
                         "dataNullable": "true",
                         "dataType": "VARCHAR",
@@ -1083,7 +1083,7 @@
                         "name": "Name",
                         "tooltip": "",
                         "widgetIsMajor": "true",
-                        "widgetLength": "20",
+                        "widgetLength": "50",
                         "widgetSize": "",
                         "widgetType": "TEXTBOX"
                     }
