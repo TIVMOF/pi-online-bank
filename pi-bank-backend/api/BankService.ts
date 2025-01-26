@@ -488,60 +488,6 @@ class BankService {
         return stylizedBankFacilities;
     }
 
-    @Put("/updateBankAccountAmount/:bankAccountId")
-    public updateBankAccountAmount(body: any, ctx: any) {
-        const bankAccountId = ctx.pathParameters.bankAccountId;
-
-        const bankAccount = this.bankAccountDao.findById(bankAccountId);
-
-        if (!bankAccount) {
-            response.setStatus(response.NOT_FOUND);
-            return { message: "Bank Account with that ID doesn't exist!" };
-        }
-
-        try {
-            if (!body.hasOwnProperty("Amount")) {
-                response.setStatus(response.BAD_REQUEST);
-                return { message: "Missing property: Amount" };
-            }
-
-            const newAmount = body.Amount;
-
-            if (!(typeof (newAmount) === 'number')) {
-                response.setStatus(response.BAD_REQUEST);
-                return { message: `Amount not a number!` };
-            }
-
-            if (newAmount <= 0) {
-                response.setStatus(response.BAD_REQUEST);
-                return { message: `Amount bellow or equals zero!` };
-            }
-
-            const updatedBankAccount = {
-                "Id": bankAccountId,
-                "Name": bankAccount.Name,
-                "IBAN": bankAccount.IBAN,
-                "User": bankAccount.User,
-                "Amount": newAmount,
-                "Currency": bankAccount.Currency,
-                "Type": bankAccount.Type,
-                "Status": bankAccount.Status,
-                "CreationDate": bankAccount.CreationDate
-            }
-
-            this.bankAccountDao.update(updatedBankAccount);
-
-            response.setStatus(response.OK);
-            return {
-                message: "Amount successfully updated!"
-            };
-
-        } catch (e: any) {
-            response.setStatus(response.BAD_REQUEST);
-            return { error: e.message };
-        }
-    }
-
     @Post("/userLogin")
     public userLogin(body: any) {
         try {
