@@ -465,7 +465,27 @@ class BankService {
 
     @Get("/bankFacilities")
     public getBankFacilities() {
-        const bankFacilities = this.bankFacilityDao.fin
+        const bankFacilities = this.bankFacilityDao.findAll();
+
+        if (bankFacilities.length <= 0) {
+            response.setStatus(response.NOT_FOUND);
+            return { message: "No bank facilities!" };
+        }
+
+        const stylizedBankFacilities = bankFacilities.map(facility => {
+            const facilityTypeName = this.bankFacilityTypeDao.findById(facility.Type).Name;
+            const facilityStatusName = this.bankFacilityStatusDao.findById(facility.Status).Name;
+
+            return {
+                "Latitude": facility.Latitude,
+                "Longitude": facility.Longitude,
+                "Type": facilityTypeName,
+                "Status": facilityStatusName
+            }
+        })
+
+        response.setStatus(response.OK)
+        return stylizedBankFacilities;
     }
 
     @Put("/updateBankAccountAmount/:bankAccountId")
