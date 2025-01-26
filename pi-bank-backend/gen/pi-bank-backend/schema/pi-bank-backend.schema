@@ -234,6 +234,12 @@
                         "name": "BANKFACILITIES_ID"
                     },
                     {
+                        "type": "VARCHAR",
+                        "length": 200,
+                        "nullable": true,
+                        "name": "BANKFACILITY_NAME"
+                    },
+                    {
                         "type": "DOUBLE",
                         "nullable": true,
                         "name": "BANKFACILITIES_LATITUDE"

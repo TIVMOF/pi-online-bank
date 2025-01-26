@@ -477,6 +477,7 @@ class BankService {
             const facilityStatusName = this.bankFacilityStatusDao.findById(facility.Status).Name;
 
             return {
+                "Name": facility.Name,
                 "Latitude": facility.Latitude,
                 "Longitude": facility.Longitude,
                 "Type": facilityTypeName,

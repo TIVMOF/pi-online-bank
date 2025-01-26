@@ -920,6 +920,19 @@
                         "widgetType": "TEXTBOX"
                     },
                     {
+                        "dataLength": "200",
+                        "dataName": "BANKFACILITY_NAME",
+                        "dataNullable": "true",
+                        "dataType": "VARCHAR",
+                        "description": "",
+                        "name": "Name",
+                        "tooltip": "",
+                        "widgetIsMajor": "true",
+                        "widgetLength": "200",
+                        "widgetSize": "",
+                        "widgetType": "TEXTBOX"
+                    },
+                    {
                         "dataName": "BANKFACILITIES_LATITUDE",
                         "dataNullable": "true",
                         "dataType": "DOUBLE",

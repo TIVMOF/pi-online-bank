@@ -48,8 +48,9 @@
 						navigated="next.Id === selectedEntity.Id"
 						ng-click="action == 'select' ? selectEntity(next) : ''">
 						<fd-list-content
-							item-title="{{next.Latitude}}">
+							item-title="{{next.Name}}">
 							<fd-list-byline dg-align="left">
+								{{next.Latitude}} |
 								{{next.Longitude}} |
 								{{optionsTypeValue(next.Type)}} |
 								{{optionsStatusValue(next.Status)}}

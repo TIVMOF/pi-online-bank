@@ -3068,6 +3068,8 @@ paths:
                   $filter:
                     notEquals:
                       Id: 33
+                    contains:
+                      Name: "abcd"
                     greaterThan:
                       Id: 0
                     lessThanOrEqual:
@@ -3084,6 +3086,12 @@ paths:
                   $filter:
                     notEquals:
                       Id: 0
+              countWithContains:
+                summary: Count with Contains
+                value:
+                  $filter:
+                    contains:
+                      Name: "abcd"
               countWithGreaterThan:
                 summary: Count with Greater Than
                 value:
@@ -3146,6 +3154,8 @@ paths:
                   $filter:
                     notEquals:
                       Id: 33
+                    contains:
+                      Name: "abcd"
                     greaterThan:
                       Id: 0
                     lessThanOrEqual:
@@ -3162,6 +3172,12 @@ paths:
                   $filter:
                     notEquals:
                       Id: 0
+              searchWithContains:
+                summary: Search with Contains
+                value:
+                  $filter:
+                    contains:
+                      Name: "abcd"
               searchWithGreaterThan:
                 summary: Search with Greater Than
                 value:
@@ -5514,6 +5530,10 @@ components:
         Id:
           type: integer
           format: int32
+        Name:
+          type: string
+          minLength: 0
+          maxLength: 200
         Latitude:
           type: number
           format: double
@@ -5543,6 +5563,17 @@ components:
                       items:
                         type: integer
                         format: int32
+                Name:
+                  oneOf:
+                    - type: string
+                      minLength: 0
+                      maxLength: 200
+                    - type: array
+                      items:
+                        type: string
+                        format: double
+                        minLength: 0
+                        maxLength: 200
                 Latitude:
                   oneOf:
                     - type: number
@@ -5586,6 +5617,17 @@ components:
                       items:
                         type: integer
                         format: int32
+                Name:
+                  oneOf:
+                    - type: string
+                      minLength: 0
+                      maxLength: 200
+                    - type: array
+                      items:
+                        type: string
+                        format: double
+                        minLength: 0
+                        maxLength: 200
                 Latitude:
                   oneOf:
                     - type: number
@@ -5622,6 +5664,10 @@ components:
               type: object
               properties:
                 Id:
+                Name:
+                  type: string
+                  minLength: 0
+                  maxLength: 200
                 Latitude:
                 Longitude:
                 Type:
@@ -5632,6 +5678,10 @@ components:
                 Id:
                   type: integer
                   format: int32
+                Name:
+                  type: string
+                  minLength: 0
+                  maxLength: 200
                 Latitude:
                   type: number
                   format: double
@@ -5650,6 +5700,10 @@ components:
                 Id:
                   type: integer
                   format: int32
+                Name:
+                  type: string
+                  minLength: 0
+                  maxLength: 200
                 Latitude:
                   type: number
                   format: double
@@ -5668,6 +5722,10 @@ components:
                 Id:
                   type: integer
                   format: int32
+                Name:
+                  type: string
+                  minLength: 0
+                  maxLength: 200
                 Latitude:
                   type: number
                   format: double
@@ -5686,6 +5744,10 @@ components:
                 Id:
                   type: integer
                   format: int32
+                Name:
+                  type: string
+                  minLength: 0
+                  maxLength: 200
                 Latitude:
                   type: number
                   format: double
@@ -5700,12 +5762,12 @@ components:
                   format: int32
         $select:
           type: array
-          example: ["Id", "Latitude", "Longitude", "Type", "Status"]
+          example: ["Id", "Name", "Latitude", "Longitude", "Type", "Status"]
           items:
             type: string
         $sort:
           - type: string
-            example: "Id,Latitude,Longitude,Type,Status"
+            example: "Id,Name,Latitude,Longitude,Type,Status"
         $order:
           type: string
           enum: ["asc", "desc"]
