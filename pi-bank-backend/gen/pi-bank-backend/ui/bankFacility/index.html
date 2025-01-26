@@ -65,7 +65,7 @@
                     };
                     Extensions.get('view', 'pi-bank-backend-view').then(function (response) {
                         $scope.layoutModel = {
-                            views: response.filter(e => !e.isLaunchpad && e.perspectiveName === 'bankAccountFacility').map(e => e.id)
+                            views: response.filter(e => !e.isLaunchpad && e.perspectiveName === 'bankFacility').map(e => e.id)
                         };
                         $scope.state.isBusy = false;
                     }, function (error) {

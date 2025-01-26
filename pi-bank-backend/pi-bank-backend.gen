@@ -162,7 +162,7 @@
       "icon": "/services/web/resources/unicons/dollar-alt.svg",
       "role": ""
     },
-    "bankAccountFacility": {
+    "bankFacility": {
       "views": [
         "BankFacility",
         "BankFacility-details",
@@ -185,8 +185,8 @@
         "BankFacility-details",
         "BankFacility-details"
       ],
-      "name": "bankAccountFacility",
-      "label": "bankAccountFacility",
+      "name": "bankFacility",
+      "label": "bankFacility",
       "order": "100",
       "icon": "/services/web/resources/unicons/building.svg",
       "role": ""
@@ -2449,8 +2449,8 @@
       "name": "BankFacility",
       "navigationPath": "/Home",
       "perspectiveIcon": "/services/web/resources/unicons/building.svg",
-      "perspectiveLabel": "BankAccountFacility",
-      "perspectiveName": "bankAccountFacility",
+      "perspectiveLabel": "BankFacility",
+      "perspectiveName": "bankFacility",
       "perspectiveOrder": "100",
       "perspectiveRole": "",
       "title": "BankFacility",

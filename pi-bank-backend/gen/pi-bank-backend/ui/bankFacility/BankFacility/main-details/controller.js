@@ -1,9 +1,9 @@
 angular.module('page', ["ideUI", "ideView", "entityApi"])
 	.config(["messageHubProvider", function (messageHubProvider) {
-		messageHubProvider.eventIdPrefix = 'pi-bank-backend.bankAccountFacility.BankFacility';
+		messageHubProvider.eventIdPrefix = 'pi-bank-backend.bankFacility.BankFacility';
 	}])
 	.config(["entityApiProvider", function (entityApiProvider) {
-		entityApiProvider.baseUrl = "/services/ts/pi-bank-backend/gen/pi-bank-backend/api/bankAccountFacility/BankFacilityService.ts";
+		entityApiProvider.baseUrl = "/services/ts/pi-bank-backend/gen/pi-bank-backend/api/bankFacility/BankFacilityService.ts";
 	}])
 	.controller('PageController', ['$scope', 'Extensions', 'messageHub', 'entityApi', function ($scope, Extensions, messageHub, entityApi) {
 
@@ -20,7 +20,7 @@ angular.module('page', ["ideUI", "ideView", "entityApi"])
 
 		//-----------------Custom Actions-------------------//
 		Extensions.get('dialogWindow', 'pi-bank-backend-custom-action').then(function (response) {
-			$scope.entityActions = response.filter(e => e.perspective === "bankAccountFacility" && e.view === "BankFacility" && e.type === "entity");
+			$scope.entityActions = response.filter(e => e.perspective === "bankFacility" && e.view === "BankFacility" && e.type === "entity");
 		});
 
 		$scope.triggerEntityAction = function (action) {

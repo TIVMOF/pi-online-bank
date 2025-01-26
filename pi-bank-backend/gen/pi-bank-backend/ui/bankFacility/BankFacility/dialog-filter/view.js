@@ -6,8 +6,8 @@
 const viewData = {
     id: "BankFacility-filter",
     label: "BankFacility Filter",
-    link: "/services/web/pi-bank-backend/gen/pi-bank-backend/ui/bankAccountFacility/BankFacility/dialog-filter/index.html",
-    perspectiveName: "bankAccountFacility",
+    link: "/services/web/pi-bank-backend/gen/pi-bank-backend/ui/bankFacility/BankFacility/dialog-filter/index.html",
+    perspectiveName: "bankFacility",
 };
 
 if (typeof exports !== 'undefined') {

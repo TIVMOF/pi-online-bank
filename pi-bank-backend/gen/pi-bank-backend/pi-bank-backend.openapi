@@ -16,7 +16,7 @@ tags:
   - name: Settings
   - name: Settings
   - name: transaction
-  - name: bankAccountFacility
+  - name: bankFacility
   - name: Settings
   - name: Settings
 paths:
@@ -2824,7 +2824,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-  /pi-bank-backend/gen/pi-bank-backend/api/bankAccountFacility/BankFacilityService.ts:
+  /pi-bank-backend/gen/pi-bank-backend/api/bankFacility/BankFacilityService.ts:
     get:
       summary: List BankFacility
       parameters:
@@ -2845,7 +2845,7 @@ paths:
             type: integer
             allowEmptyValue: true
       tags:
-        - bankAccountFacility
+        - bankFacility
       responses:
         200:
           description: Successful Request
@@ -2876,7 +2876,7 @@ paths:
     post:
       summary: Create BankFacility
       tags:
-        - bankAccountFacility
+        - bankFacility
       requestBody:
         content:
           application/json:
@@ -2908,7 +2908,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-  /pi-bank-backend/gen/pi-bank-backend/api/bankAccountFacility/BankFacilityService.ts/{id}:
+  /pi-bank-backend/gen/pi-bank-backend/api/bankFacility/BankFacilityService.ts/{id}:
     get:
       summary: Get BankFacility by Id
       parameters:
@@ -2919,7 +2919,7 @@ paths:
           schema:
             type: string
       tags:
-        - bankAccountFacility
+        - bankFacility
       responses:
         200:
           description: Successful Request
@@ -2957,7 +2957,7 @@ paths:
           schema:
             type: string
       tags:
-        - bankAccountFacility
+        - bankFacility
       requestBody:
         content:
           application/json:
@@ -3005,7 +3005,7 @@ paths:
           schema:
             type: string
       tags:
-        - bankAccountFacility
+        - bankFacility
       responses:
         204:
           description: Successful Request
@@ -3027,11 +3027,11 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-  /pi-bank-backend/gen/pi-bank-backend/api/bankAccountFacility/BankFacilityService.ts/count:
+  /pi-bank-backend/gen/pi-bank-backend/api/bankFacility/BankFacilityService.ts/count:
     get:
       summary: Count the number of BankFacility
       tags:
-        - bankAccountFacility
+        - bankFacility
       responses:
         200:
           description: Successful Request
@@ -3055,7 +3055,7 @@ paths:
     post:
       summary: Count the number of BankFacility by BankFacilityFilterOptions
       tags:
-        - bankAccountFacility
+        - bankFacility
       requestBody:
         content:
           application/json:
@@ -3129,11 +3129,11 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-  /pi-bank-backend/gen/pi-bank-backend/api/bankAccountFacility/BankFacilityService.ts/search:
+  /pi-bank-backend/gen/pi-bank-backend/api/bankFacility/BankFacilityService.ts/search:
     post:
       summary: Search BankFacility by BankFacilityFilterOptions
       tags:
-        - bankAccountFacility
+        - bankFacility
       requestBody:
         content:
           application/json:

@@ -4,9 +4,9 @@
  * Do not modify the content as it may be re-generated again.
  */
 const perspectiveData = {
-	id: 'bankAccountFacility',
-	name: 'BankAccountFacility',
-	link: '/services/web/pi-bank-backend/gen/pi-bank-backend/ui/bankAccountFacility/index.html',
+	id: 'bankFacility',
+	name: 'BankFacility',
+	link: '/services/web/pi-bank-backend/gen/pi-bank-backend/ui/bankFacility/index.html',
 	order: 100,
 	icon: '/services/web/resources/unicons/building.svg',
 };

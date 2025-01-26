@@ -224,7 +224,7 @@ export class BankFacilityRepository {
     }
 
     private async triggerEvent(data: BankFacilityEntityEvent | BankFacilityUpdateEntityEvent) {
-        const triggerExtensions = await extensions.loadExtensionModules("pi-bank-backend-bankAccountFacility-BankFacility", ["trigger"]);
+        const triggerExtensions = await extensions.loadExtensionModules("pi-bank-backend-bankFacility-BankFacility", ["trigger"]);
         triggerExtensions.forEach(triggerExtension => {
             try {
                 triggerExtension.trigger(data);
@@ -232,6 +232,6 @@ export class BankFacilityRepository {
                 console.error(error);
             }            
         });
-        producer.topic("pi-bank-backend-bankAccountFacility-BankFacility").send(JSON.stringify(data));
+        producer.topic("pi-bank-backend-bankFacility-BankFacility").send(JSON.stringify(data));
     }
 }

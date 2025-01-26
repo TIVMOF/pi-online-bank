@@ -1,5 +1,5 @@
 {
-    "module": "pi-bank-backend/gen/pi-bank-backend/ui/bankAccountFacility/BankFacility/dialog-filter/view.js",
+    "module": "pi-bank-backend/gen/pi-bank-backend/ui/bankFacility/BankFacility/dialog-filter/view.js",
     "extensionPoint": "pi-bank-backend-dialog-window",
     "description": "pi-bank-backend - Application Dialog Window"
 }

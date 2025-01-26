@@ -8,8 +8,8 @@ const viewData = {
     label: "BankFacility",
     factory: "frame",
     region: "left",
-    link: "/services/web/pi-bank-backend/gen/pi-bank-backend/ui/bankAccountFacility/BankFacility/index.html",
-    perspectiveName: "bankAccountFacility",
+    link: "/services/web/pi-bank-backend/gen/pi-bank-backend/ui/bankFacility/BankFacility/index.html",
+    perspectiveName: "bankFacility",
 };
 
 if (typeof exports !== 'undefined') {

@@ -1,6 +1,6 @@
 angular.module('page', ["ideUI", "ideView"])
 	.config(["messageHubProvider", function (messageHubProvider) {
-		messageHubProvider.eventIdPrefix = 'pi-bank-backend.bankAccountFacility.BankFacility';
+		messageHubProvider.eventIdPrefix = 'pi-bank-backend.bankFacility.BankFacility';
 	}])
 	.controller('PageController', ['$scope', 'messageHub', 'ViewParameters', function ($scope, messageHub, ViewParameters) {
 

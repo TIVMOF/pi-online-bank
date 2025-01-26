@@ -12,7 +12,7 @@ exports.getTile = function () {
         type: "PRIMARY",
         report: "false",
         icon: "/services/web/resources/unicons/file.svg",
-        location: "/services/web/pi-bank-backend/gen/pi-bank-backend/ui/bankAccountFacility/index.html",
+        location: "/services/web/pi-bank-backend/gen/pi-bank-backend/ui/bankFacility/index.html",
         order: "100",
         groupOrder: "100",
     };

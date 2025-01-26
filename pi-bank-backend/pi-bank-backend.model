@@ -996,8 +996,8 @@
                 "name": "BankFacility",
                 "navigationPath": "/Home",
                 "perspectiveIcon": "/services/web/resources/unicons/building.svg",
-                "perspectiveLabel": "BankAccountFacility",
-                "perspectiveName": "bankAccountFacility",
+                "perspectiveLabel": "BankFacility",
+                "perspectiveName": "bankFacility",
                 "perspectiveOrder": "100",
                 "perspectiveRole": "",
                 "title": "BankFacility",
@@ -1150,8 +1150,8 @@
                 "role": {}
             },
             {
-                "name": "bankAccountFacility",
-                "label": "BankAccountFacility",
+                "name": "bankFacility",
+                "label": "BankFacility",
                 "icon": "/services/web/resources/unicons/building.svg",
                 "order": "100",
                 "role": {}
