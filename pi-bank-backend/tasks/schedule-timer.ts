@@ -20,7 +20,10 @@ if (scheduledTime <= currentTime) {
     throw new Error("Transaction date has already passed.");
 }
 
-const delay = Math.floor((scheduledTime.getTime() - currentTime.getTime()) / 1000);
-process.setVariable(executionId, "TimerDelay", delay);
+// const delay = Math.floor((scheduledTime.getTime() - currentTime.getTime()) / 1000);
+// process.setVariable(executionId, "TimerDelay", delay);
 
-console.log(`Timer scheduled for ${delay} seconds.`);
+process.setVariable(executionId, "TimerDelay", scheduledTime.toISOString());
+
+
+// console.log(`Timer scheduled for ${delay} seconds.`);

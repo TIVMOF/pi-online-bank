@@ -4,21 +4,23 @@
     <startEvent id="start-event"/>
     <endEvent id="end-event"/>
     <intermediateCatchEvent id="timer-intermediate-event" name="Timer Intermediate Event">
-      <timerEventDefinition/>
+      <timerEventDefinition>
+        <timeDate>${TimerDelay}</timeDate>
+      </timerEventDefinition>
     </intermediateCatchEvent>
-    <serviceTask id="process-transaction" name="Process Transaction" flowable:async="true" flowable:class="pi-bank-backend/tasks/process-transaction.ts">
+    <serviceTask id="process-transaction" name="Process Transaction" flowable:async="true" flowable:delegateExpression="${JSTask}">
       <extensionElements>
         <flowable:field name="handler">
-          <flowable:string><![CDATA[myproject/my-service-task.ts]]></flowable:string>
+          <flowable:string><![CDATA[pi-bank-backend/tasks/process-transaction.ts]]></flowable:string>
         </flowable:field>
       </extensionElements>
     </serviceTask>
     <sequenceFlow id="sid-F59CB901-036E-4B7A-9C4D-28030447541A" sourceRef="timer-intermediate-event" targetRef="process-transaction"/>
     <sequenceFlow id="sid-988B236A-24CE-4D38-BF56-6BF64EEBF8FD" sourceRef="process-transaction" targetRef="end-event"/>
-    <serviceTask id="schedule-timer" name="Schedule Timer" flowable:async="true" flowable:class="pi-bank-backend/tasks/schedule-timer.ts">
+    <serviceTask id="schedule-timer" name="Schedule Timer" flowable:async="true" flowable:delegateExpression="${JSTask}">
       <extensionElements>
         <flowable:field name="handler">
-          <flowable:string><![CDATA[myproject/my-service-task.ts]]></flowable:string>
+          <flowable:string><![CDATA[pi-bank-backend/tasks/schedule-timer.ts]]></flowable:string>
         </flowable:field>
       </extensionElements>
     </serviceTask>
