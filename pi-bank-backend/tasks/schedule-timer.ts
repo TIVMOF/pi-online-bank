@@ -22,5 +22,5 @@ if (scheduledTime <= currentTime) {
 
 // process.setVariable(executionId, "TimerDelay", scheduledTime.toISOString());
 
-const testTime = new Date(currentTime.getTime() + 2 * 60 * 1000);
+const testTime = new Date(currentTime.getTime() + 1 * 60 * 1000);
 process.setVariable(executionId, "TimerDelay", testTime.toISOString());

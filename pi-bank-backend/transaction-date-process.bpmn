@@ -8,7 +8,7 @@
         <timeDate>${TimerDelay}</timeDate>
       </timerEventDefinition>
     </intermediateCatchEvent>
-    <serviceTask id="process-transaction" name="Process Transaction" flowable:async="true" flowable:exclusive="false" flowable:delegateExpression="${JSTask}">
+    <serviceTask id="process-transaction" name="Process Transaction" flowable:async="true" flowable:delegateExpression="${JSTask}">
       <extensionElements>
         <flowable:field name="handler">
           <flowable:string><![CDATA[pi-bank-backend/tasks/process-transaction.ts]]></flowable:string>
