@@ -1,0 +1,5 @@
+BANKFACILITYTYPE_ID,BANKFACILITYTYPE_NAME
+1,ATM
+2,Bank Branch
+3,Specialized Banking Facility
+4,Bank Central

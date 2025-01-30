@@ -18,6 +18,7 @@ class StatsPage extends StatefulWidget {
 }
 
 class _StatsPageState extends State<StatsPage> {
+  bool _isLoading = true;
   final _controller = PageController();
   String? _errorMessage;
   List<Map<String, dynamic>> transactions = [];
@@ -70,6 +71,9 @@ class _StatsPageState extends State<StatsPage> {
           );
         });
       } else {
+        setState(() {
+          _isLoading = false;
+        });
         throw Exception(
             "Failed to fetch bank transactions: ${response.reasonPhrase}");
       }
@@ -86,13 +90,17 @@ class _StatsPageState extends State<StatsPage> {
         setState(() {
           incomeData = _mapStatsToChartData(data['incomes']);
           expenseData = _mapStatsToChartData(data['expenses']);
+
+          _isLoading = false;
         });
       } else {
+        _isLoading = false;
         throw Exception(
             "Failed to fetch monthly stats: ${response.reasonPhrase}");
       }
     } catch (e) {
       setState(() {
+        _isLoading = false;
         _errorMessage = "An error occurred. Please check your connection.";
       });
       print("Error fetching data: $e");
@@ -138,46 +146,54 @@ class _StatsPageState extends State<StatsPage> {
       backgroundColor: Colors.grey[300],
       bottomNavigationBar: AppBarBottom(),
       body: SafeArea(
-        child: ListView(
-          controller: _controller,
-          children: [
-            MyAppBar(first_name: 'Статистики', second_name: ''),
-            const SizedBox(height: 30),
-            if (_errorMessage != null)
-              Padding(
-                padding: const EdgeInsets.only(top: 10),
-                child: Text(
-                  _errorMessage!,
-                  style: const TextStyle(color: Colors.red),
-                ),
+        child: _isLoading
+            ? Column(
+                children: [
+                  SizedBox(height: 30),
+                  const Center(child: CircularProgressIndicator()),
+                ],
+              )
+            : ListView(
+                controller: _controller,
+                children: [
+                  MyAppBar(first_name: 'Статистики', second_name: ''),
+                  const SizedBox(height: 30),
+                  if (_errorMessage != null)
+                    Padding(
+                      padding: const EdgeInsets.only(top: 10),
+                      child: Text(
+                        _errorMessage!,
+                        style: const TextStyle(color: Colors.red),
+                      ),
+                    ),
+                  MyChart(
+                    title: 'Разплащания и доходи',
+                    series1Data: expenseData,
+                    series2Data: incomeData,
+                    series1Name: 'Expenses',
+                    series2Name: 'Incomes',
+                  ),
+                  const SizedBox(height: 20),
+                  Padding(
+                    padding: const EdgeInsets.only(right: 5),
+                    child: Column(
+                      children: transactions.map((transaction) {
+                        final isSent = userId != transaction["SenderId"];
+                        return MyTransaction(
+                          recipient: isSent
+                              ? transaction["Sender"] ?? "Unknown"
+                              : transaction["Receiver"] ?? "Unknown",
+                          date: transaction["Date"] ?? "Unknown",
+                          sum: double.tryParse(transaction["Amount"] ?? "0") ??
+                              0.0,
+                          currency: transaction["Currency"] ?? "Unknown",
+                          sentOrReceived: isSent,
+                        );
+                      }).toList(),
+                    ),
+                  ),
+                ],
               ),
-            MyChart(
-              title: 'Разплащания и доходи',
-              series1Data: expenseData,
-              series2Data: incomeData,
-              series1Name: 'Expenses',
-              series2Name: 'Incomes',
-            ),
-            const SizedBox(height: 20),
-            Padding(
-              padding: const EdgeInsets.only(right: 5),
-              child: Column(
-                children: transactions.map((transaction) {
-                  final isSent = userId != transaction["SenderId"];
-                  return MyTransaction(
-                    recipient: isSent
-                        ? transaction["Sender"] ?? "Unknown"
-                        : transaction["Receiver"] ?? "Unknown",
-                    date: transaction["Date"] ?? "Unknown",
-                    sum: double.tryParse(transaction["Amount"] ?? "0") ?? 0.0,
-                    currency: transaction["Currency"] ?? "Unknown",
-                    sentOrReceived: isSent,
-                  );
-                }).toList(),
-              ),
-            ),
-          ],
-        ),
       ),
     );
   }

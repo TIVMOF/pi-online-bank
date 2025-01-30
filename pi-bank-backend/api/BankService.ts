@@ -2,9 +2,12 @@ import { BankAccountRepository as BankAccountDao } from "../gen/pi-bank-backend/
 import { CardRepository as CardDao } from "../gen/pi-bank-backend/dao/card/CardRepository";
 import { TransactionRepository as TransactionDao } from "../gen/pi-bank-backend/dao/transaction/TransactionRepository";
 import { UserRepository as UserDao } from "../gen/pi-bank-backend/dao/user/UserRepository";
+import { BankFacilityRepository as BankFacilityDao } from "../gen/pi-bank-backend/dao/bankFacility/BankFacilityRepository";
 import { CardTypeRepository as CardTypeDao } from "../gen/pi-bank-backend/dao/Settings/CardTypeRepository";
 import { BankAccountTypeRepository as BankAccountTypeDao } from "../gen/pi-bank-backend/dao/Settings/BankAccountTypeRepository";
 import { BankAccountStatusRepository as BankAccountStatusDao } from "../gen/pi-bank-backend/dao/Settings/BankAccountStatusRepository";
+import { BankFacilityStatusRepository as BankFacilityStatusDao } from "../gen/pi-bank-backend/dao/Settings/BankFacilityStatusRepository";
+import { BankFacilityTypeRepository as BankFacilityTypeDao } from "../gen/pi-bank-backend/dao/Settings/BankFacilityTypeRepository";
 import { CurrencyRepository as CurrencyDao } from "../../codbex-currencies/gen/codbex-currencies/dao/Currencies/CurrencyRepository";
 import { CountryRepository as CountryDao } from "../../codbex-countries/gen/codbex-countries/dao/Countries/CountryRepository";
 
@@ -17,9 +20,12 @@ class BankService {
     private readonly cardDao;
     private readonly transactionDao;
     private readonly userDao;
+    private readonly bankFacilityDao;
     private readonly cardTypeDao;
     private readonly bankAccountTypeDao;
     private readonly bankAccountStatusDao;
+    private readonly bankFacilityStatusDao;
+    private readonly bankFacilityTypeDao;
     private readonly currencyDao;
     private readonly countryDao;
 
@@ -28,9 +34,12 @@ class BankService {
         this.cardDao = new CardDao();
         this.transactionDao = new TransactionDao();
         this.userDao = new UserDao();
+        this.bankFacilityDao = new BankFacilityDao();
         this.cardTypeDao = new CardTypeDao();
         this.bankAccountTypeDao = new BankAccountTypeDao();
         this.bankAccountStatusDao = new BankAccountStatusDao();
+        this.bankFacilityStatusDao = new BankFacilityStatusDao();
+        this.bankFacilityTypeDao = new BankFacilityTypeDao();
         this.currencyDao = new CurrencyDao();
         this.countryDao = new CountryDao();
     }
@@ -453,6 +462,32 @@ class BankService {
             response.setStatus(response.BAD_REQUEST);
             return { error: e.message };
         }
+    }
+
+    @Get("/bankFacilities")
+    public getBankFacilities() {
+        const bankFacilities = this.bankFacilityDao.findAll();
+
+        if (bankFacilities.length <= 0) {
+            response.setStatus(response.NOT_FOUND);
+            return { message: "No bank facilities!" };
+        }
+
+        const stylizedBankFacilities = bankFacilities.map(facility => {
+            const facilityTypeName = this.bankFacilityTypeDao.findById(facility.Type).Name;
+            const facilityStatusName = this.bankFacilityStatusDao.findById(facility.Status).Name;
+
+            return {
+                "Name": facility.Name,
+                "Latitude": facility.Latitude,
+                "Longitude": facility.Longitude,
+                "Type": facilityTypeName,
+                "Status": facilityStatusName
+            }
+        })
+
+        response.setStatus(response.OK)
+        return stylizedBankFacilities;
     }
 
     @Post("/userLogin")
