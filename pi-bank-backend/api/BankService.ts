@@ -12,6 +12,7 @@ import { CurrencyRepository as CurrencyDao } from "../../codbex-currencies/gen/c
 import { CountryRepository as CountryDao } from "../../codbex-countries/gen/codbex-countries/dao/Countries/CountryRepository";
 
 import { Controller, Get, Post, response } from "sdk/http";
+import { process } from "sdk/bpm";
 
 @Controller
 class BankService {
@@ -563,44 +564,79 @@ class BankService {
                 }
             }
 
-            const reciever = this.bankAccountDao.findById(body["Reciever"]);
-
-            if (!reciever) {
+            const receiver = this.bankAccountDao.findById(body["Reciever"]);
+            if (!receiver) {
                 response.setStatus(response.BAD_REQUEST);
                 return { message: `Bank account with ID ${body["Reciever"]} not found!` };
             }
 
             const sender = this.bankAccountDao.findById(body["Sender"]);
-
             if (!sender) {
                 response.setStatus(response.BAD_REQUEST);
                 return { message: `Bank account with ID ${body["Sender"]} not found!` };
             }
 
             const amount = body["Amount"];
-
-            if (!(typeof (amount) === 'number')) {
+            if (!(typeof amount === "number")) {
                 response.setStatus(response.BAD_REQUEST);
-                return { message: `Amount not a number!` };
+                return { message: `Amount is not a number! Received type: ${typeof amount}.` };
             }
 
             if (amount <= 0) {
                 response.setStatus(response.BAD_REQUEST);
-                return { message: `Amount bellow or equals zero!` };
+                return { message: "Amount must be greater than zero." };
             }
 
-            const newTransaction = this.transactionDao.create(body);
+            if (body.hasOwnProperty("Date")) {
+                const transactionDateString = body["Date"];
 
-            if (!newTransaction) {
-                throw new Error("Failed transaction!");
+                if (typeof transactionDateString !== "string") {
+                    response.setStatus(response.BAD_REQUEST);
+                    return { message: "Date must be a string in ISO format." };
+                }
+                const transactionDate = new Date(transactionDateString);
+
+                if (isNaN(transactionDate.getTime())) {
+                    response.setStatus(response.BAD_REQUEST);
+                    return { message: "Entered Date is not a valid date." };
+                }
+
+                const currentTime = new Date();
+
+                if (transactionDate <= currentTime) {
+                    response.setStatus(response.BAD_REQUEST);
+                    return { message: "Transaction date must be in the future." };
+                }
+
+                const processInstanceId = process.start("transaction-date-process", {
+                    TransactionDate: body["Date"],
+                    Sender: body["Sender"],
+                    Receiver: body["Reciever"],
+                    Amount: body["Amount"],
+                    Currency: body["Currency"],
+                });
+
+                if (processInstanceId == null) {
+                    response.setStatus(response.INTERNAL_SERVER_ERROR);
+                    return { message: "Failed to create transaction schedule process!" };
+                }
+
+                response.setStatus(response.CREATED);
+                return { message: `Transaction scheduled. Process Instance ID: ${processInstanceId}` };
+            } else {
+                const newTransaction = this.transactionDao.create(body);
+
+                if (!newTransaction) {
+                    throw new Error("Transaction creation failed!");
+                }
+
+                response.setStatus(response.CREATED);
+                return newTransaction;
             }
-
-            response.setStatus(response.CREATED);
-            return newTransaction;
-
         } catch (e: any) {
             response.setStatus(response.BAD_REQUEST);
             return { error: e.message };
         }
     }
+
 }

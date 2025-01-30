@@ -1,7 +1,6 @@
 import { BankAccountRepository } from "../../gen/pi-bank-backend/dao/bankAccount/BankAccountRepository";
 
 export const trigger = (event) => {
-    console.log("test");
     const BankAccountDao = new BankAccountRepository();
 
     if (event.operation === "create") {
@@ -9,7 +8,6 @@ export const trigger = (event) => {
         const transaction = event.entity;
 
         const sender = transaction.Sender;
-
         const receiver = transaction.Reciever;
         const amount = transaction.Amount;
 

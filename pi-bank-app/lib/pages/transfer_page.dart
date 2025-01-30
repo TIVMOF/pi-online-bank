@@ -24,8 +24,10 @@ class _SendPageState extends State<SendPage> {
   var receiverAccount = null;
   String? enteredIBAN = null;
   double enteredAmount = 0;
-  bool useDropdown = false;
+  bool userDropdown = false;
+  bool scheduleTransaction = false;
   bool isDataLoaded = false;
+  DateTime? selectedDate;
 
   @override
   void initState() {
@@ -190,7 +192,7 @@ class _SendPageState extends State<SendPage> {
         return;
       }
 
-      if (!useDropdown) {
+      if (!userDropdown) {
         final response = await http.post(
           Uri.parse(
               'https://proper-invest.tech/services/ts/pi-bank-backend/api/BankService.ts/bankAccountFromIBAN'),
@@ -225,6 +227,13 @@ class _SendPageState extends State<SendPage> {
         return;
       }
 
+      if (scheduleTransaction && selectedDate == null) {
+        setState(() {
+          _errorMessage = "Please select a date for the scheduled transaction.";
+        });
+        return;
+      }
+
       final response = await http.post(
         Uri.parse(
             'https://proper-invest.tech/services/ts/pi-bank-backend/api/BankService.ts/transaction'),
@@ -236,7 +245,10 @@ class _SendPageState extends State<SendPage> {
           "Sender": selectedAccountId,
           "Reciever": receiverAccountId,
           "Amount": transferAmount,
-          "Currency": senderCurrency
+          "Currency": senderCurrency,
+          "Date": scheduleTransaction
+              ? "ScheduledDate"
+              : selectedDate?.toIso8601String()
         }),
       );
 
