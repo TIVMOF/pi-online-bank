@@ -31,7 +31,7 @@ class MyTransaction extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
       child: Container(
-        constraints: BoxConstraints(minHeight: 100), // Increase height
+        constraints: BoxConstraints(minHeight: 100),
         padding: EdgeInsets.all(10),
         decoration: BoxDecoration(
           color: sentOrReceived ? backgroundReceived : backgroundSent,
@@ -52,7 +52,7 @@ class MyTransaction extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment:
-                    MainAxisAlignment.spaceEvenly, // Adjust alignment
+                    MainAxisAlignment.spaceEvenly,
                 children: [
                   Row(
                     children: [
@@ -78,7 +78,7 @@ class MyTransaction extends StatelessWidget {
                       ),
                     ],
                   ),
-                  SizedBox(height: 5), // Add spacing between rows
+                  SizedBox(height: 5),
                   Row(
                     children: [
                       Text(
@@ -108,7 +108,7 @@ class MyTransaction extends StatelessWidget {
                 ],
               ),
             ),
-            SizedBox(width: 10), // Add spacing
+            SizedBox(width: 10),
             Text(
               (sentOrReceived ? plus : minus) +
                   ' ' +

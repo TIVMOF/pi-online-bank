@@ -4,7 +4,6 @@ import 'package:local_auth/local_auth.dart';
 class BiometricAuthUtils {
   final LocalAuthentication _auth = LocalAuthentication();
 
-  /// Check if the device supports biometrics
   Future<bool> isDeviceSupported() async {
     try {
       return await _auth.isDeviceSupported();
@@ -14,7 +13,6 @@ class BiometricAuthUtils {
     }
   }
 
-  /// Get available biometric types on the device
   Future<List<BiometricType>> getAvailableBiometrics() async {
     try {
       return await _auth.getAvailableBiometrics();
@@ -24,7 +22,6 @@ class BiometricAuthUtils {
     }
   }
 
-  /// Authenticate the user using biometrics or device PIN/password
   Future<bool> authenticate({String reason = "Authenticate to proceed"}) async {
     try {
       return await _auth.authenticate(
