@@ -158,7 +158,6 @@ class _HomePageState extends State<HomePage> {
 
             SizedBox(height: 20),
 
-            // column -> stats + transaction
             Padding(
               padding: const EdgeInsets.all(25.0),
               child: Column(
