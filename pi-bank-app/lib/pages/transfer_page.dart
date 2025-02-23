@@ -327,19 +327,19 @@ class _SendPageState extends State<SendPage> {
                               children: [
                                 Text("Use Dropdown"),
                                 Switch(
-                                  value: useDropdown,
+                                  value: userDropdown,
                                   onChanged: (isDataLoaded &&
                                           recentInteractions.isNotEmpty)
                                       ? (value) {
                                           setState(() {
-                                            useDropdown = value;
+                                            userDropdown = value;
                                           });
                                         }
                                       : null,
                                 ),
                               ],
                             ),
-                            if (useDropdown)
+                            if (userDropdown)
                               DropdownButtonFormField<Map<String, dynamic>>(
                                 value: null,
                                 items: recentInteractions
