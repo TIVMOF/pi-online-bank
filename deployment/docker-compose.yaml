@@ -40,9 +40,9 @@ services:
     command: start-dev
     environment:
       jgroups.dns.query: keycloak
-      KC_HEALTH_ENABLED: true
-      KC_METRICS_ENABLED: true
-      KC_HTTP_ENABLED: true
+      KC_HEALTH_ENABLED: "true"
+      KC_METRICS_ENABLED: "true"
+      KC_HTTP_ENABLED: "true"
       KC_DB: postgres
       KC_DB_URL: jdbc:postgresql://keycloak-db:5432/keycloak
       KC_DB_URL_HOST: keycloak-db
@@ -54,10 +54,8 @@ services:
       KEYCLOAK_ADMIN_PASSWORD: admin
       KC_HOSTNAME: https://keycloak.proper-invest.tech
       KC_PROXY: edge
-      PROXY_ADDRESS_FORWARDING: true
+      PROXY_ADDRESS_FORWARDING: "true"
       KC_FEATURES: preview
-    ports:
-      - "8080:8080"
     depends_on:
       keycloak-db:
         condition: service_healthy
@@ -68,12 +66,12 @@ services:
     image: ghcr.io/tivmof/pi-bank-backend:latest
     container_name: pi-bank-backend
     environment:
-      DIRIGIBLE_MULTI_TENANT_MODE: false
+      DIRIGIBLE_MULTI_TENANT_MODE: "false"
       SPRING_PROFILES_ACTIVE: keycloak
       DIRIGIBLE_KEYCLOAK_AUTH_SERVER_URL: https://keycloak.proper-invest.tech/realms/pi-bank
       DIRIGIBLE_KEYCLOAK_CLIENT_ID: pi-bank-backend
       DIRIGIBLE_KEYCLOAK_CLIENT_SECRET: ${BACKEND_CLIENT_SECRET}
-      DIRIGIBLE_TRIAL_ENABLED: true
+      DIRIGIBLE_TRIAL_ENABLED: "true"
       DIRIGIBLE_DATABASE_CUSTOM_DATASOURCES: PostgreSQL
       PostgreSQL_DRIVER: org.postgresql.Driver
       PostgreSQL_URL: jdbc:postgresql://pi-bank-db:5432/dirigible

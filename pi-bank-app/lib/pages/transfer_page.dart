@@ -157,6 +157,19 @@ class _SendPageState extends State<SendPage> {
     }
   }
 
+  Future<void> _selectDate(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime.now(),
+      lastDate: DateTime(2101),
+    );
+    if (picked != null && picked != selectedDate)
+      setState(() {
+        selectedDate = picked;
+      });
+  }
+
   Future<void> transfer() async {
     if (!_formKey.currentState!.validate()) {
       setState(() {
@@ -246,15 +259,13 @@ class _SendPageState extends State<SendPage> {
           "Reciever": receiverAccountId,
           "Amount": transferAmount,
           "Currency": senderCurrency,
-          "Date": scheduleTransaction
-              ? "ScheduledDate"
-              : selectedDate?.toIso8601String()
+          if (scheduleTransaction) "Date": selectedDate?.toIso8601String(),
         }),
       );
 
       if (response.statusCode != 201) {
         setState(() {
-          _errorMessage = "Transaction failed: ${response.reasonPhrase}";
+          _errorMessage = "Transaction failed: ${response.body}";
         });
         return;
       }
@@ -321,11 +332,11 @@ class _SendPageState extends State<SendPage> {
                                 hintText: "Select Account",
                               ),
                             ),
-                            SizedBox(height: 20),
+                            SizedBox(height: 10),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Text("Use Dropdown"),
+                                Text("Избери от скорошни"),
                                 Switch(
                                   value: userDropdown,
                                   onChanged: (isDataLoaded &&
@@ -366,14 +377,14 @@ class _SendPageState extends State<SendPage> {
                                 },
                                 decoration: InputDecoration(
                                   border: OutlineInputBorder(),
-                                  hintText: "Select User",
+                                  hintText: "Избери Потребител",
                                 ),
                               )
                             else
                               TextFormField(
                                 decoration: InputDecoration(
                                   border: OutlineInputBorder(),
-                                  hintText: "Enter IBAN",
+                                  hintText: "Въведи IBAN",
                                 ),
                                 onChanged: (value) {
                                   enteredIBAN = value;
@@ -384,7 +395,7 @@ class _SendPageState extends State<SendPage> {
                               keyboardType: TextInputType.number,
                               decoration: InputDecoration(
                                 border: OutlineInputBorder(),
-                                hintText: "Amount (e.g., 150.00)",
+                                hintText: "Въведи сума",
                               ),
                               onChanged: (value) {
                                 final amount = double.tryParse(value);
@@ -393,6 +404,33 @@ class _SendPageState extends State<SendPage> {
                                 }
                               },
                             ),
+                            SizedBox(height: 10),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text("Насрочи транзакция"),
+                                Switch(
+                                  value: scheduleTransaction,
+                                  onChanged: (value) {
+                                    setState(() {
+                                      scheduleTransaction = value;
+                                      if (!value) selectedDate = null;
+                                    });
+                                  },
+                                ),
+                              ],
+                            ),
+                            if (scheduleTransaction)
+                              Column(
+                                children: [
+                                  ElevatedButton(
+                                    onPressed: () => _selectDate(context),
+                                    child: Text(selectedDate == null
+                                        ? "Избери Дата"
+                                        : "Scheduled Date: ${selectedDate!.toLocal()}"),
+                                  ),
+                                ],
+                              ),
                             SizedBox(height: 30),
                             if (_errorMessage != null)
                               Padding(
