@@ -4,7 +4,6 @@ export const trigger = (event) => {
     const BankAccountDao = new BankAccountRepository();
 
     if (event.operation === "create") {
-        console.log("test");
         const transaction = event.entity;
 
         const sender = transaction.Sender;
@@ -13,9 +12,6 @@ export const trigger = (event) => {
 
         const senderAccount = BankAccountDao.findById(sender);
         const receiverAccount = BankAccountDao.findById(receiver);
-
-        console.log(senderAccount);
-        console.log(receiverAccount);
 
         if (!senderAccount) {
             return;
